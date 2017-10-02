@@ -10,6 +10,7 @@ do
       self.distance = math.sqrt(math.pow(self.goalX - self.x, 2) + math.pow(self.goalY - self.y, 2))
       self.directionX = (self.dx) / self.distance
       self.directionY = (self.dy) / self.distance
+      return self.body:setAngle(math.atan2(self.dy, self.dx) + math.pi / 2)
     end,
     fire = function(self)
       return self.body:setLinearVelocity(self.directionX * self.speed, self.directionY * self.speed)
@@ -21,9 +22,9 @@ do
     __init = function(self, x, y, goalX, goalY, speed, width, height, damage)
       self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage = x, y, goalX, goalY, speed, width, height, damage
       _class_0.__parent.__init(self, self.x, self.y, {
-        self.width,
-        self.height
-      }, "dynamic", "circle")
+        5,
+        12
+      }, "dynamic", "rectangle")
       self:calculateDirections()
       self.body:setBullet(true)
       return self.fixture:setFilterData(1, 4, 0)

@@ -2,8 +2,11 @@ Bullet = require "bullet"
 
 {graphics: g} = love
 
+gunShot = love.audio.newSource "audio/gunshot.wav", "static"
+gunShot\setVolume .1
+
 class Weapon
-  new: (@x, @y, @magazineSize, @sprayAngle=math.pi/250) =>
+  new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100) =>
     @ammoCount = @magazineSize
     -- @drawOffset = {x: @sprite\getWidth! / 4, y: @sprite\getHeight! / 2}
     @fireControl = "auto"
@@ -12,7 +15,7 @@ class Weapon
 
   bullets: {}
   canShoot: true
-  rateOfFire: {time: 0, max: .12}
+  rateOfFire: {time: 0, max: .15}
 
   updateRateOfFire: (dt) =>
     if @rateOfFire.time < @rateOfFire.max and not @canShoot
@@ -49,15 +52,22 @@ class Weapon
       @bulletSpeed, @bulletSize, @bulletSize
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
+    bullet\calculateDirections!
     bullet\fire!
 
     -- Add bullet to world
     @bullets[#@bullets+1] = bullet
 
+    if gunShot\isPlaying!
+      gunShot\stop!
+      gunShot\play!
+    else
+      gunShot\play!
+
   shootAuto: (x, y) =>
     local targetX, targetY
-    targetX = x + 8
-    targetY = y + 8
+    targetX = x
+    targetY = y
     if love.mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
       @shootBullet targetX, targetY
 

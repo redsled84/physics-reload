@@ -1,6 +1,8 @@
 local Bullet = require("bullet")
 local g
 g = love.graphics
+local gunShot = love.audio.newSource("audio/gunshot.wav", "static")
+gunShot:setVolume(.1)
 local Weapon
 do
   local _class_0
@@ -9,7 +11,7 @@ do
     canShoot = true,
     rateOfFire = {
       time = 0,
-      max = .12
+      max = .15
     },
     updateRateOfFire = function(self, dt)
       if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
@@ -31,13 +33,20 @@ do
       self.ammoCount = self.ammoCount - 1
       bullet = Bullet(self.x - self.bulletSize, self.y - self.bulletSize, x - self.bulletSize, y - self.bulletSize, self.bulletSpeed, self.bulletSize, self.bulletSize)
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
+      bullet:calculateDirections()
       bullet:fire()
       self.bullets[#self.bullets + 1] = bullet
+      if gunShot:isPlaying() then
+        gunShot:stop()
+        return gunShot:play()
+      else
+        return gunShot:play()
+      end
     end,
     shootAuto = function(self, x, y)
       local targetX, targetY
-      targetX = x + 8
-      targetY = y + 8
+      targetX = x
+      targetY = y
       if love.mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
         return self:shootBullet(targetX, targetY)
       end
@@ -69,7 +78,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y, magazineSize, sprayAngle)
       if sprayAngle == nil then
-        sprayAngle = math.pi / 250
+        sprayAngle = math.pi / 100
       end
       self.x, self.y, self.magazineSize, self.sprayAngle = x, y, magazineSize, sprayAngle
       self.ammoCount = self.magazineSize
