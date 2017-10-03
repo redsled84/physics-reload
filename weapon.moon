@@ -3,7 +3,8 @@ Bullet = require "bullet"
 {graphics: g} = love
 
 gunShot = love.audio.newSource "audio/gunshot.wav", "static"
-gunShot\setVolume .1
+gunShot\setVolume .5
+ammoFont = g.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
   new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100) =>
@@ -32,7 +33,7 @@ class Weapon
       1000 * (angle + @sprayAngle)) / 1000
 
     -- negative bullet.distance because of how the trig functions return value
-    -- with wrong sign
+    -- with wrong sign?
     -- Polar coordinates are found like this:
     --   x = r * cos(theta)
     --   y = r * sin(theta)
@@ -48,8 +49,7 @@ class Weapon
     @canShoot = false
     @ammoCount -= 1
 
-    bullet = Bullet @x-@bulletSize, @y-@bulletSize, x-@bulletSize, y-@bulletSize,
-      @bulletSpeed, @bulletSize, @bulletSize
+    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
     bullet\calculateDirections!
@@ -87,6 +87,12 @@ class Weapon
       b = @bullets[i]
       if not b.body\isDestroyed!
         b\draw!
+
+  drawAmmoCount: =>
+    g.setFont ammoFont
+    g.setColor 255, 255, 255
+    g.print @ammoCount, 35, g\getHeight! - 45
+
 
   -- draw: (x, y) =>
     -- g.setColor 255, 255, 255

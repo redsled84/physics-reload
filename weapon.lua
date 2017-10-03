@@ -2,7 +2,8 @@ local Bullet = require("bullet")
 local g
 g = love.graphics
 local gunShot = love.audio.newSource("audio/gunshot.wav", "static")
-gunShot:setVolume(.1)
+gunShot:setVolume(.5)
+local ammoFont = g.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
   local _class_0
@@ -31,7 +32,7 @@ do
       local bullet
       self.canShoot = false
       self.ammoCount = self.ammoCount - 1
-      bullet = Bullet(self.x - self.bulletSize, self.y - self.bulletSize, x - self.bulletSize, y - self.bulletSize, self.bulletSpeed, self.bulletSize, self.bulletSize)
+      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize)
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()
       bullet:fire()
@@ -72,6 +73,11 @@ do
           b:draw()
         end
       end
+    end,
+    drawAmmoCount = function(self)
+      g.setFont(ammoFont)
+      g.setColor(255, 255, 255)
+      return g.print(self.ammoCount, 35, g:getHeight() - 45)
     end
   }
   _base_0.__index = _base_0

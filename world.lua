@@ -1,5 +1,5 @@
 inspect = require "inspect"
-world = love.physics.newWorld(0, 650, true)
+world = love.physics.newWorld(0, 1050, true)
 
 local function beginContact(a, b, coll)
 
@@ -18,19 +18,25 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
 
   local player = getObject(obj1, obj2, "Player")
   local bullet = getObject(obj1, obj2, "Bullet")
+  local floater = getObject(obj1, obj2, "Floater")
 
   if player then
     if math.abs(x) == 1 then
       player.xVelocity = 0
     end
-    if y == 1 then
+    if y > 0 and y <= 1 then
       player.onGround = true
     end
+
+    player:setNormal({x, y})
   end
 
   if bullet then
-    print (true)
     bullet.body:destroy()
+  end
+
+  if floater and bullet and not floater.body:isDestroyed() then
+    floater:damage(10)
   end
 
 end

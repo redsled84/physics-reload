@@ -44,19 +44,26 @@ do
       end
     end,
     jump = function(self, key)
-      if key == "space" and self.onGround then
-        local xv, _
-        xv, _ = self.body:getLinearVelocity()
-        return self.body:setLinearVelocity(xv, self.jumpVelocity)
+      if #self.normal >= 2 then
+        if key == "space" and self.onGround then
+          local xv, _
+          xv, _ = self.body:getLinearVelocity()
+          return self.body:setLinearVelocity(xv, self.jumpVelocity)
+        end
       end
     end
   }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y)
-      self.x, self.y = x, y
-      self.width, self.height = 32, 64
+    __init = function(self, x, y, width, height)
+      if width == nil then
+        width = 50
+      end
+      if height == nil then
+        height = 100
+      end
+      self.x, self.y, self.width, self.height = x, y, width, height
       self.onGround = false
       _class_0.__parent.__init(self, self.x, self.y, {
         self.width,
@@ -66,7 +73,7 @@ do
       self.fixture:setFilterData(3, 4, 0)
       self.xVelocity = 0
       self.terminalVelocity = 800
-      self.jumpVelocity = -300
+      self.jumpVelocity = -700
     end,
     __base = _base_0,
     __name = "Player",

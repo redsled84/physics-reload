@@ -1,3 +1,8 @@
+local atan2, sqrt, pow, pi
+do
+  local _obj_0 = math
+  atan2, sqrt, pow, pi = _obj_0.atan2, _obj_0.sqrt, _obj_0.pow, _obj_0.pi
+end
 local Entity = require("entity")
 local Bullet
 do
@@ -7,13 +12,15 @@ do
     calculateDirections = function(self)
       self.dx = self.goalX - self.x
       self.dy = self.goalY - self.y
-      self.distance = math.sqrt(math.pow(self.goalX - self.x, 2) + math.pow(self.goalY - self.y, 2))
+      self.distance = sqrt(pow(self.goalX - self.x, 2) + pow(self.goalY - self.y, 2))
       self.directionX = (self.dx) / self.distance
       self.directionY = (self.dy) / self.distance
       return self.body:setAngle(math.atan2(self.dy, self.dx) + math.pi / 2)
     end,
     fire = function(self)
-      return self.body:setLinearVelocity(self.directionX * self.speed, self.directionY * self.speed)
+      self:calculateDirections()
+      self.body:setAngle(atan2(self.dy, self.dx) + pi / 2)
+      return self.body:setLinearVelocity(self.directionX * self.speed * 10, self.directionY * self.speed * 10)
     end
   }
   _base_0.__index = _base_0
@@ -23,9 +30,10 @@ do
       self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage = x, y, goalX, goalY, speed, width, height, damage
       _class_0.__parent.__init(self, self.x, self.y, {
         5,
-        12
+        18
       }, "dynamic", "rectangle")
       self:calculateDirections()
+      self.body:setFixedRotation(false)
       self.body:setBullet(true)
       return self.fixture:setFilterData(1, 4, 0)
     end,

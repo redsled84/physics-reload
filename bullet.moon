@@ -1,10 +1,13 @@
+import atan2, sqrt, pow, pi from math
 Entity = require "entity"
 
 class Bullet extends Entity
   new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage) =>
-    super @x, @y, {5, 12}, "dynamic", "rectangle"
-    -- @fixture\setFilterData 1, 0, 0
+    super @x, @y, {5, 18}, "dynamic", "rectangle"
     @calculateDirections!
+
+    -- @fixture\setFilterData 1, 0, 0
+    @body\setFixedRotation false
     @body\setBullet true
 
     @fixture\setFilterData 1, 4, 0
@@ -12,14 +15,16 @@ class Bullet extends Entity
   calculateDirections: =>
     @dx = @goalX - @x
     @dy = @goalY - @y
-    @distance = math.sqrt math.pow(@goalX - @x, 2) + math.pow(@goalY - @y, 2)
+    @distance = sqrt pow(@goalX - @x, 2) + pow(@goalY - @y, 2)
     @directionX = (@dx) / @distance
     @directionY = (@dy) / @distance
 
     @body\setAngle math.atan2(@dy, @dx) + math.pi / 2
 
   fire: =>
-    @body\setLinearVelocity @directionX * @speed, @directionY * @speed
+    @calculateDirections!
+    @body\setAngle atan2(@dy, @dx) + pi / 2
+    @body\setLinearVelocity @directionX * @speed * 10, @directionY * @speed * 10
 
 
 return Bullet

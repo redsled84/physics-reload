@@ -2,14 +2,19 @@ local Entity
 do
   local _class_0
   local _base_0 = {
+    setNormal = function(self, normal)
+      self.normal = normal
+    end,
     draw = function(self, colors)
-      if colors then
-        love.graphics.setColor(unpack(colors))
-      end
-      if self.shapeType ~= "circle" then
-        return love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-      else
-        return love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
+      if not self.body:isDestroyed() then
+        if colors then
+          love.graphics.setColor(unpack(colors))
+        end
+        if self.shapeType ~= "circle" then
+          return love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+        else
+          return love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
+        end
       end
     end
   }
@@ -33,7 +38,8 @@ do
       end
       self.fixture = love.physics.newFixture(self.body, self.shape)
       self.fixture:setUserData(self)
-      return self.fixture:setFilterData(4, 3, 0)
+      self.fixture:setFilterData(4, 3, 0)
+      self.normal = { }
     end,
     __base = _base_0,
     __name = "Entity"

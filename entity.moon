@@ -13,12 +13,18 @@ class Entity
     @fixture\setUserData self
     @fixture\setFilterData 4, 3, 0
 
+    @normal = {}
+
+  setNormal: (normal) =>
+    @normal = normal
+
   draw: (colors) =>
-    if colors
-      love.graphics.setColor unpack colors
-    if @shapeType ~= "circle"
-      love.graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
-    else
-      love.graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
+    if not @body\isDestroyed!
+      if colors
+        love.graphics.setColor unpack colors
+      if @shapeType ~= "circle"
+        love.graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
+      else
+        love.graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
 
 return Entity
