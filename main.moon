@@ -5,12 +5,12 @@ Entity = require "entity"
 Floater = require "floater"
 Player = require "player"
 Weapon = require "weapon"
-player = Player 16, 32
+player = Player 64, 32
 -- floor = Entity 100, 500, {600, 32}
 weapon = Weapon 0, 0, 100
 floater = Floater 350, 100
 
-level = require "level"
+level = require "level1"
 levelEntities = {}
 
 for i = 1, #level

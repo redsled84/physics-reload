@@ -28,7 +28,7 @@ class Player extends Entity
       yv = @terminalVelocity
 
     -- if #@normal >= 2
-      -- if @normal[1] ~= 0 and math.abs(@normal[2]) ~= 1 and @onGround
+    --   if @normal[1] ~= 0 and math.abs(@normal[2]) ~= 1 and @onGround
         -- Code below makes ramps like super accelerators :D
         -- @xVelocity *= (1 / math.abs @normal[1])
     @body\setLinearVelocity @xVelocity, yv
