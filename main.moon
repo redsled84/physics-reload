@@ -10,7 +10,7 @@ player = Player 64, 32
 weapon = Weapon 0, 0, 100
 floater = Floater 350, 100
 
-level = require "level1"
+level = require "level9"
 levelEntities = {}
 
 for i = 1, #level
