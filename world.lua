@@ -21,7 +21,7 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local floater = getObject(obj1, obj2, "Floater")
 
   if player then
-    if math.abs(x) == 1 then
+    if math.abs(x) == 1 and not player.onGround then
       player.xVelocity = 0
     end
     if y > 0 and y <= 1 then

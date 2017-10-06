@@ -7,7 +7,7 @@ local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
 
 class Player extends Entity
-  new: (@x, @y, @width=50, @height=100) =>
+  new: (@x, @y, @width=32, @height=64) =>
     @onGround = false
     
     super @x, @y, {@width, @height}, "dynamic", "rectangle"

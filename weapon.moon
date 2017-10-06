@@ -16,7 +16,7 @@ class Weapon
 
   bullets: {}
   canShoot: true
-  rateOfFire: {time: 0, max: .15}
+  rateOfFire: {time: 0, max: .05}
 
   updateRateOfFire: (dt) =>
     if @rateOfFire.time < @rateOfFire.max and not @canShoot

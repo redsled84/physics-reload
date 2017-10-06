@@ -3,7 +3,7 @@ Entity = require "entity"
 
 class Bullet extends Entity
   new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage) =>
-    super @x, @y, {5, 18}, "dynamic", "rectangle"
+    super @x, @y, {3, 7}, "dynamic", "rectangle"
     @calculateDirections!
 
     -- @fixture\setFilterData 1, 0, 0

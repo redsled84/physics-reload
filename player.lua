@@ -58,10 +58,10 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y, width, height)
       if width == nil then
-        width = 50
+        width = 32
       end
       if height == nil then
-        height = 100
+        height = 64
       end
       self.x, self.y, self.width, self.height = x, y, width, height
       self.onGround = false

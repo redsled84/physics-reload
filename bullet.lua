@@ -29,8 +29,8 @@ do
     __init = function(self, x, y, goalX, goalY, speed, width, height, damage)
       self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage = x, y, goalX, goalY, speed, width, height, damage
       _class_0.__parent.__init(self, self.x, self.y, {
-        5,
-        18
+        3,
+        7
       }, "dynamic", "rectangle")
       self:calculateDirections()
       self.body:setFixedRotation(false)

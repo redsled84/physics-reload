@@ -12,7 +12,7 @@ do
     canShoot = true,
     rateOfFire = {
       time = 0,
-      max = .15
+      max = .05
     },
     updateRateOfFire = function(self, dt)
       if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
