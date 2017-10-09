@@ -1,0 +1,3 @@
+run:
+	moonc *.moon
+	love .
