@@ -38,9 +38,9 @@ do
     data = { },
     shapes = { },
     loadedFilename = "",
-    gridSize = 16,
-    gridWidth = graphics.getWidth() / 16,
-    gridHeight = graphics.getHeight() / 16,
+    gridSize = 32,
+    gridWidth = graphics.getWidth() / 32,
+    gridHeight = graphics.getHeight() / 32,
     viewControls = false,
     hovered = {
       230,

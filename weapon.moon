@@ -93,7 +93,7 @@ class Weapon
 
   drawAmmoCount: =>
     graphics.setFont ammoFont
-    graphics.setColor 255, 255, 255
+    graphics.setColor 0, 0, 0
     graphics.print @ammoCount, 35, graphics\getHeight! - 45
 
 
