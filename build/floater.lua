@@ -1,23 +1,28 @@
-local Entity = require("entity")
-local Weapon = require("weapon")
+local cos, pi, sin, sqrt
+do
+  local _obj_0 = math
+  cos, pi, sin, sqrt = _obj_0.cos, _obj_0.pi, _obj_0.sin, _obj_0.sqrt
+end
+local Entity = require("build.entity")
+local Weapon = require("build.weapon")
 local r
 r = function(theta)
-  return 100 - 30 * math.sin(theta)
+  return 100 - 30 * sin(theta)
 end
 local Floater
 do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    step = math.pi / 500,
+    step = pi / 500,
     theta = 0,
     damage = function(self, attack)
       self.health = self.health - attack
     end,
     update = function(self, dt)
       self.theta = self.theta + self.step
-      self.drawX = 100 * math.sqrt(2) * math.cos(2 * self.theta) / (math.sin(self.theta) ^ 2 + 1) + self.x
-      self.drawY = 100 * math.sqrt(2) * math.cos(self.theta) * math.sin(self.theta) / (math.sin(self.theta) ^ 2 + 1) + self.y
+      self.drawX = 100 * sqrt(2) * cos(2 * self.theta) / (sin(self.theta) ^ 2 + 1) + self.x
+      self.drawY = 100 * sqrt(2) * cos(self.theta) * sin(self.theta) / (sin(self.theta) ^ 2 + 1) + self.y
       if self.health <= 0 and not self.body:isDestroyed() then
         self.body:destroy()
       end
@@ -34,8 +39,8 @@ do
         radius = 15
       end
       self.x, self.y, self.radius = x, y, radius
-      self.drawX = r(0) * math.cos(0) + self.x
-      self.drawY = r(0) * math.sin(0) + self.y
+      self.drawX = r(0) * cos(0) + self.x
+      self.drawY = r(0) * sin(0) + self.y
       _class_0.__parent.__init(self, self.drawX, self.drawY, {
         self.radius
       }, "static", "circle")

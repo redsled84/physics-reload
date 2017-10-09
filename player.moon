@@ -1,8 +1,8 @@
 import abs from math
 
-collisionMasks = require "collisionMasks"
-inspect = require "inspect"
-Entity = require "entity"
+collisionMasks = require "build.collisionMasks"
+inspect = require "libs.inspect"
+Entity = require "build.entity"
 
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50

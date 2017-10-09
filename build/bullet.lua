@@ -3,8 +3,8 @@ do
   local _obj_0 = math
   atan2, sqrt, pow, pi = _obj_0.atan2, _obj_0.sqrt, _obj_0.pow, _obj_0.pi
 end
-local collisionMasks = require("collisionMasks")
-local Entity = require("entity")
+local collisionMasks = require("build.collisionMasks")
+local Entity = require("build.entity")
 local Bullet
 do
   local _class_0

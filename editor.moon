@@ -2,10 +2,10 @@ import insert, remove from table
 import len from string
 import abs, ceil, floor, sin from math
 
-inspect = require "inspect"
-Camera = require "camera"
-Entity = require "entity"
-require "utils"
+inspect = require "libs.inspect"
+Camera = require "libs.camera"
+Entity = require "build.entity"
+require "build.utils"
 
 {graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
 

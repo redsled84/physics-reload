@@ -1,15 +1,17 @@
-inspect = require "inspect"
-require "world"
-Camera = require "camera"
-Editor = require "editor"
-Entity = require "entity"
-Floater = require "floater"
-Player = require "player"
-Weapon = require "weapon"
+inspect = require "libs.inspect"
+require "build.world"
+Camera = require "libs.camera"
+Editor = require "build.editor"
+Entity = require "build.entity"
+Floater = require "build.floater"
+Player = require "build.player"
+Weapon = require "build.weapon"
 
 local cam, editor, player, spawn, toggleEditor, weapon
 initGame = ->
   editor = Editor!
+
+  -- Change this string to be the level you want to load!
   editor\loadSavedFile "levels/level3.lua"
 
   -- spawn position of the player
@@ -25,7 +27,7 @@ initGame = ->
 
   toggleEditor = false
 
-  love.graphics.setBackgroundColor(230, 237, 247)
+  love.graphics.setBackgroundColor 230, 237, 247
 
 initGame!
 

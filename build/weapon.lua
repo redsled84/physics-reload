@@ -5,7 +5,7 @@ do
 end
 local remove
 remove = table.remove
-local Bullet = require("bullet")
+local Bullet = require("build.bullet")
 local graphics, audio, mouse
 do
   local _obj_0 = love
@@ -86,7 +86,7 @@ do
     end,
     drawAmmoCount = function(self)
       graphics.setFont(ammoFont)
-      graphics.setColor(255, 255, 255)
+      graphics.setColor(0, 0, 0)
       return graphics.print(self.ammoCount, 35, graphics:getHeight() - 45)
     end
   }

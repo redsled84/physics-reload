@@ -1,4 +1,4 @@
-collisionMasks = require "collisionMasks"
+collisionMasks = require "build.collisionMasks"
 
 {physics: physics, graphics: graphics} = love
 

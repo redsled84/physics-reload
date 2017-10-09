@@ -10,10 +10,10 @@ do
   local _obj_0 = math
   abs, ceil, floor, sin = _obj_0.abs, _obj_0.ceil, _obj_0.floor, _obj_0.sin
 end
-local inspect = require("inspect")
-local Camera = require("camera")
-local Entity = require("entity")
-require("utils")
+local inspect = require("libs.inspect")
+local Camera = require("libs.camera")
+local Entity = require("build.entity")
+require("build.utils")
 local graphics, mouse, physics, filesystem, keyboard
 do
   local _obj_0 = love

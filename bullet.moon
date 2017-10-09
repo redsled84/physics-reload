@@ -1,7 +1,7 @@
 import atan2, sqrt, pow, pi from math
 
-collisionMasks = require "collisionMasks"
-Entity = require "entity"
+collisionMasks = require "build.collisionMasks"
+Entity = require "build.entity"
 
 class Bullet extends Entity
   new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage) =>

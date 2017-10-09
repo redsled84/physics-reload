@@ -1,4 +1,4 @@
-local collisionMasks = require("collisionMasks")
+local collisionMasks = require("build.collisionMasks")
 local physics, graphics
 do
   local _obj_0 = love

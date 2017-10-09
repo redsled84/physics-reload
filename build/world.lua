@@ -1,4 +1,4 @@
-inspect = require "inspect"
+inspect = require "libs.inspect"
 world = love.physics.newWorld(0, 1050, true)
 
 local function beginContact(a, b, coll)

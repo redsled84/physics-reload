@@ -1,8 +1,8 @@
 local abs
 abs = math.abs
-local collisionMasks = require("collisionMasks")
-local inspect = require("inspect")
-local Entity = require("entity")
+local collisionMasks = require("build.collisionMasks")
+local inspect = require("libs.inspect")
+local Entity = require("build.entity")
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50

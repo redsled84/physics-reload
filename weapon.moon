@@ -1,7 +1,7 @@
 import atan2, cos, pi, random, sin from math
 import remove from table
 
-Bullet = require "bullet"
+Bullet = require "build.bullet"
 
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
