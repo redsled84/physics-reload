@@ -68,12 +68,14 @@ do
     end,
     hotLoad = function(self)
       local target, entity
-      for i = 1, #self.data do
+      for i = #self.data, 1, -1 do
         target = self.data[i]
-        if target.shapeType == "polygon" and not target.added then
+        if target.removed then
+          table.remove(self.data, i)
+        elseif target.shapeType == "polygon" and not target.added then
           target.added = true
           entity = Entity(0, 0, target.vertices, "static", "polygon")
-          self.entities[#self.entities + 1] = entity
+          self.entities[i] = entity
         end
       end
     end,
@@ -226,7 +228,7 @@ do
         self.cameraSpeed = self.cameraSpeed + self.speedControlFactor * dt < self.maxCameraSpeed and self.cameraSpeed + self.speedControlFactor * dt or self.maxCameraSpeed
       end
       if love.keyboard.isDown("q") then
-        self.cameraScale = self.cameraScale - self.scaleControlFactor * dt > self.minScaleFactor and self.cameraScale - self.scaleControlFactor * dt or self.minScale
+        self.cameraScale = self.cameraScale - self.scaleControlFactor * dt > self.minScale and self.cameraScale - self.scaleControlFactor * dt or self.minScale
       elseif love.keyboard.isDown("e") then
         self.cameraScale = self.cameraScale + self.scaleControlFactor * dt < self.maxScale and self.cameraScale + self.scaleControlFactor * dt or self.maxScale
       end
@@ -273,6 +275,7 @@ do
         if self.selectedShape > 0 then
           table.remove(self.data, self.selectedShape)
           table.remove(self.shapes, self.selectedShape)
+          table.remove(self.entities, self.selectedShape)
           self.selectedShape = -1
         end
       end

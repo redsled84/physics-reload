@@ -59,12 +59,15 @@ class Editor
 
   hotLoad: =>
     local target, entity
-    for i = 1, #@data
+    for i = #@data, 1, -1
       target = @data[i]
-      if target.shapeType == "polygon" and not target.added
+      if target.removed
+
+        table.remove @data, i
+      elseif target.shapeType == "polygon" and not target.added
         target.added = true
         entity = Entity 0, 0, target.vertices, "static", "polygon"
-        @entities[#@entities+1] = entity
+        @entities[i] = entity
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -240,7 +243,7 @@ class Editor
 
     -- Camera scale control
     if love.keyboard.isDown "q"
-      @cameraScale = @cameraScale - @scaleControlFactor * dt > @minScaleFactor and
+      @cameraScale = @cameraScale - @scaleControlFactor * dt > @minScale and
         @cameraScale - @scaleControlFactor * dt or @minScale
     elseif love.keyboard.isDown "e"
       @cameraScale = @cameraScale + @scaleControlFactor * dt < @maxScale and
@@ -284,6 +287,8 @@ class Editor
       if @selectedShape > 0
         table.remove @data, @selectedShape
         table.remove @shapes, @selectedShape
+        table.remove @entities, @selectedShape
+
         @selectedShape = -1
 
     if key == "space"
@@ -293,8 +298,8 @@ class Editor
         @shapes[#@shapes+1] = love.physics.newPolygonShape @verticesList @activeVertices 
         print "new polygon: ", inspect @verticesList @activeVertices
         table.insert @data, {
-          vertices: @verticesList(@activeVertices),
-          shapeType: @activeShapeType,
+          vertices: @verticesList(@activeVertices)
+          shapeType: @activeShapeType
           added: false
         }
         for i = #@activeVertices, 1, -1
