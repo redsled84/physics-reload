@@ -1,10 +1,13 @@
+import abs from math
+
+collisionMasks = require "collisionMasks"
 inspect = require "inspect"
 Entity = require "entity"
 
-{keyboard: k} = love
-
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
+
+{keyboard: keyboard} = love
 
 class Player extends Entity
   new: (@x, @y, @width=32, @height=64) =>
@@ -13,7 +16,7 @@ class Player extends Entity
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
 
     @body\setFixedRotation true
-    @fixture\setFilterData 3, 4, 0
+    @fixture\setFilterData collisionMasks.player, collisionMasks.solid, 0
 
     @xVelocity = 0
     @terminalVelocity = 800
@@ -36,18 +39,18 @@ class Player extends Entity
     @onGround = false
 
   moveWithKeys: (dt) =>
-    if k.isDown 'a'
+    if keyboard.isDown 'a'
       if @xVelocity > 0
         @xVelocity -= dec * dt
       elseif @xVelocity > -top
         @xVelocity -= acc * dt
-    elseif k.isDown 'd'
+    elseif keyboard.isDown 'd'
       if @xVelocity < 0
         @xVelocity += dec * dt
       elseif @xVelocity < top
         @xVelocity += acc * dt
     else
-      if math.abs(@xVelocity) < low
+      if abs(@xVelocity) < low
         @xVelocity = 0
       elseif @xVelocity > 0
         @xVelocity -= frc * dt

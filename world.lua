@@ -24,8 +24,10 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
     if math.abs(x) == 1 and not player.onGround then
       player.xVelocity = 0
     end
-    if y > 0 and y <= 1 then
+    if y ~= 0 then
       player.onGround = true
+
+      -- player.xVelocity = player.xVelocity * math.abs(y)
     end
 
     player:setNormal({x, y})

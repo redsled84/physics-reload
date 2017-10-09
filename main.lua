@@ -6,17 +6,23 @@ local Entity = require("entity")
 local Floater = require("floater")
 local Player = require("player")
 local Weapon = require("weapon")
-local editor = Editor()
-local spawn = {
-  x = 64,
-  y = 32
-}
-local player = Player(spawn.x, spawn.y)
-local weapon = Weapon(0, 0, 100)
-setWorldCallbacks()
-local cam = Camera(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-local toggleEditor = false
-love.graphics.setBackgroundColor(230, 237, 247)
+local cam, editor, player, spawn, toggleEditor, weapon
+local initGame
+initGame = function()
+  editor = Editor()
+  editor:loadSavedFile("levels/level3.lua")
+  spawn = {
+    x = 64,
+    y = 32
+  }
+  player = Player(spawn.x, spawn.y)
+  weapon = Weapon(0, 0, 100)
+  setWorldCallbacks()
+  cam = Camera(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
+  toggleEditor = false
+  return love.graphics.setBackgroundColor(230, 237, 247)
+end
+initGame()
 love.load = function()
   love.update = function(dt)
     if toggleEditor then

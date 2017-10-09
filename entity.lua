@@ -1,3 +1,9 @@
+local collisionMasks = require("collisionMasks")
+local physics, graphics
+do
+  local _obj_0 = love
+  physics, graphics = _obj_0.physics, _obj_0.graphics
+end
 local Entity
 do
   local _class_0
@@ -8,14 +14,17 @@ do
     draw = function(self, colors)
       if not self.body:isDestroyed() then
         if colors then
-          love.graphics.setColor(unpack(colors))
+          graphics.setColor(unpack(colors))
         end
         if self.shapeType ~= "circle" then
-          return love.graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
+          return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else
-          return love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
+          return graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
         end
       end
+    end,
+    destroy = function(self)
+      return self.body:destroy()
     end
   }
   _base_0.__index = _base_0
@@ -28,17 +37,17 @@ do
         shapeType = "rectangle"
       end
       self.x, self.y, self.shapeArgs, self.bodyType, self.shapeType = x, y, shapeArgs, bodyType, shapeType
-      self.body = love.physics.newBody(world, self.x, self.y, self.bodyType)
+      self.body = physics.newBody(world, self.x, self.y, self.bodyType)
       if self.shapeType == "rectangle" then
-        self.shape = love.physics.newRectangleShape(self.shapeArgs[1], self.shapeArgs[2])
+        self.shape = physics.newRectangleShape(self.shapeArgs[1], self.shapeArgs[2])
       elseif self.shapeType == "circle" then
-        self.shape = love.physics.newCircleShape(self.shapeArgs[1])
+        self.shape = physics.newCircleShape(self.shapeArgs[1])
       elseif self.shapeType == "polygon" then
-        self.shape = love.physics.newPolygonShape(self.shapeArgs)
+        self.shape = physics.newPolygonShape(self.shapeArgs)
       end
-      self.fixture = love.physics.newFixture(self.body, self.shape)
+      self.fixture = physics.newFixture(self.body, self.shape)
       self.fixture:setUserData(self)
-      self.fixture:setFilterData(4, 3, 0)
+      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bullet, 0)
       self.normal = { }
     end,
     __base = _base_0,

@@ -1,4 +1,6 @@
 import atan2, sqrt, pow, pi from math
+
+collisionMasks = require "collisionMasks"
 Entity = require "entity"
 
 class Bullet extends Entity
@@ -10,7 +12,7 @@ class Bullet extends Entity
     @body\setFixedRotation false
     @body\setBullet true
 
-    @fixture\setFilterData 1, 4, 0
+    @fixture\setFilterData collisionMasks.bullet, collisionMasks.solid, 0
 
   calculateDirections: =>
     @dx = @goalX - @x
@@ -19,7 +21,7 @@ class Bullet extends Entity
     @directionX = (@dx) / @distance
     @directionY = (@dy) / @distance
 
-    @body\setAngle math.atan2(@dy, @dx) + math.pi / 2
+    @body\setAngle atan2(@dy, @dx) + math.pi / 2
 
   fire: =>
     @calculateDirections!

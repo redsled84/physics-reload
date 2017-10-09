@@ -1,9 +1,19 @@
+local atan2, cos, pi, random, sin
+do
+  local _obj_0 = math
+  atan2, cos, pi, random, sin = _obj_0.atan2, _obj_0.cos, _obj_0.pi, _obj_0.random, _obj_0.sin
+end
+local remove
+remove = table.remove
 local Bullet = require("bullet")
-local g
-g = love.graphics
-local gunShot = love.audio.newSource("audio/gunshot.wav", "static")
+local graphics, audio, mouse
+do
+  local _obj_0 = love
+  graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
+end
+local gunShot = audio.newSource("audio/gunshot.wav", "static")
 gunShot:setVolume(.5)
-local ammoFont = g.newFont("fonts/FFFFORWA.TTF", 20)
+local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
   local _class_0
@@ -24,9 +34,9 @@ do
     end,
     getVariableBulletVectors = function(self, bullet)
       local angle, goalX, goalY
-      angle = math.atan2(bullet.dy, bullet.dx) + math.pi
-      local randomAngle = math.random(1000 * (angle - self.sprayAngle), 1000 * (angle + self.sprayAngle)) / 1000
-      return -bullet.distance * math.cos(randomAngle) + self.x, -bullet.distance * math.sin(randomAngle) + self.y
+      angle = atan2(bullet.dy, bullet.dx) + pi
+      local randomAngle = random(1000 * (angle - self.sprayAngle), 1000 * (angle + self.sprayAngle)) / 1000
+      return -bullet.distance * cos(randomAngle) + self.x, -bullet.distance * sin(randomAngle) + self.y
     end,
     shootBullet = function(self, x, y)
       local bullet
@@ -48,7 +58,7 @@ do
       local targetX, targetY
       targetX = x
       targetY = y
-      if love.mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+      if mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
         return self:shootBullet(targetX, targetY)
       end
     end,
@@ -61,13 +71,13 @@ do
       for i = #self.bullets, 1, -1 do
         local b = self.bullets[i]
         if b.body:isDestroyed() then
-          table.remove(self.bullets, i)
+          remove(self.bullets, i)
         end
       end
     end,
     drawBullets = function(self)
       for i = 1, #self.bullets do
-        g.setColor(0, 0, 255)
+        graphics.setColor(0, 0, 255)
         local b = self.bullets[i]
         if not b.body:isDestroyed() then
           b:draw()
@@ -75,9 +85,9 @@ do
       end
     end,
     drawAmmoCount = function(self)
-      g.setFont(ammoFont)
-      g.setColor(255, 255, 255)
-      return g.print(self.ammoCount, 35, g:getHeight() - 45)
+      graphics.setFont(ammoFont)
+      graphics.setColor(255, 255, 255)
+      return graphics.print(self.ammoCount, 35, graphics:getHeight() - 45)
     end
   }
   _base_0.__index = _base_0

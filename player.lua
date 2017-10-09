@@ -1,10 +1,13 @@
+local abs
+abs = math.abs
+local collisionMasks = require("collisionMasks")
 local inspect = require("inspect")
 local Entity = require("entity")
-local k
-k = love.keyboard
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
+local keyboard
+keyboard = love.keyboard
 local Player
 do
   local _class_0
@@ -21,20 +24,20 @@ do
       self.onGround = false
     end,
     moveWithKeys = function(self, dt)
-      if k.isDown('a') then
+      if keyboard.isDown('a') then
         if self.xVelocity > 0 then
           self.xVelocity = self.xVelocity - (dec * dt)
         elseif self.xVelocity > -top then
           self.xVelocity = self.xVelocity - (acc * dt)
         end
-      elseif k.isDown('d') then
+      elseif keyboard.isDown('d') then
         if self.xVelocity < 0 then
           self.xVelocity = self.xVelocity + (dec * dt)
         elseif self.xVelocity < top then
           self.xVelocity = self.xVelocity + (acc * dt)
         end
       else
-        if math.abs(self.xVelocity) < low then
+        if abs(self.xVelocity) < low then
           self.xVelocity = 0
         elseif self.xVelocity > 0 then
           self.xVelocity = self.xVelocity - (frc * dt)
@@ -70,7 +73,7 @@ do
         self.height
       }, "dynamic", "rectangle")
       self.body:setFixedRotation(true)
-      self.fixture:setFilterData(3, 4, 0)
+      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid, 0)
       self.xVelocity = 0
       self.terminalVelocity = 800
       self.jumpVelocity = -700

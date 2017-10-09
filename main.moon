@@ -6,22 +6,28 @@ Entity = require "entity"
 Floater = require "floater"
 Player = require "player"
 Weapon = require "weapon"
-editor = Editor!
 
--- spawn position of the player
-spawn = {x: 64, y: 32}
-player = Player spawn.x, spawn.y
--- floor = Entity 100, 500, {600, 32}
-weapon = Weapon 0, 0, 100
--- floater = Floater 350, 100
+local cam, editor, player, spawn, toggleEditor, weapon
+initGame = ->
+  editor = Editor!
+  editor\loadSavedFile "levels/level3.lua"
 
-setWorldCallbacks!
+  -- spawn position of the player
+  spawn = {x: 64, y: 32}
+  player = Player spawn.x, spawn.y
+  -- floor = Entity 100, 500, {600, 32}
+  weapon = Weapon 0, 0, 100
+  -- floater = Floater 350, 100
 
-cam = Camera love.graphics.getWidth! / 2, love.graphics.getHeight! / 2
+  setWorldCallbacks!
 
-toggleEditor = false
+  cam = Camera love.graphics.getWidth! / 2, love.graphics.getHeight! / 2
 
-love.graphics.setBackgroundColor(230, 237, 247)
+  toggleEditor = false
+
+  love.graphics.setBackgroundColor(230, 237, 247)
+
+initGame!
 
 love.load = ->
   love.update = (dt) ->
@@ -40,6 +46,8 @@ love.load = ->
       weapon.x, weapon.y = player.body\getX!, player.body\getY!
 
       cam\lookAt player.body\getX!, player.body\getY!
+
+      -- print player.onGround
 
   love.draw = ->
     if toggleEditor
@@ -66,6 +74,7 @@ love.load = ->
   love.keypressed = (key) ->
     if key == "escape"
       love.event.quit!
+
     if toggleEditor
       editor\keypressed key
       editor\hotLoad!

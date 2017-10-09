@@ -3,6 +3,7 @@ do
   local _obj_0 = math
   atan2, sqrt, pow, pi = _obj_0.atan2, _obj_0.sqrt, _obj_0.pow, _obj_0.pi
 end
+local collisionMasks = require("collisionMasks")
 local Entity = require("entity")
 local Bullet
 do
@@ -15,7 +16,7 @@ do
       self.distance = sqrt(pow(self.goalX - self.x, 2) + pow(self.goalY - self.y, 2))
       self.directionX = (self.dx) / self.distance
       self.directionY = (self.dy) / self.distance
-      return self.body:setAngle(math.atan2(self.dy, self.dx) + math.pi / 2)
+      return self.body:setAngle(atan2(self.dy, self.dx) + math.pi / 2)
     end,
     fire = function(self)
       self:calculateDirections()
@@ -35,7 +36,7 @@ do
       self:calculateDirections()
       self.body:setFixedRotation(false)
       self.body:setBullet(true)
-      return self.fixture:setFilterData(1, 4, 0)
+      return self.fixture:setFilterData(collisionMasks.bullet, collisionMasks.solid, 0)
     end,
     __base = _base_0,
     __name = "Bullet",

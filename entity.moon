@@ -1,17 +1,21 @@
+collisionMasks = require "collisionMasks"
+
+{physics: physics, graphics: graphics} = love
+
 class Entity
   new: (@x, @y, @shapeArgs, @bodyType="static", @shapeType="rectangle") =>
-    @body = love.physics.newBody world, @x, @y, @bodyType
+    @body = physics.newBody world, @x, @y, @bodyType
 
     if @shapeType == "rectangle"
-      @shape = love.physics.newRectangleShape @shapeArgs[1], @shapeArgs[2]
+      @shape = physics.newRectangleShape @shapeArgs[1], @shapeArgs[2]
     elseif @shapeType == "circle"
-      @shape = love.physics.newCircleShape @shapeArgs[1]
+      @shape = physics.newCircleShape @shapeArgs[1]
     elseif @shapeType == "polygon"
-      @shape = love.physics.newPolygonShape @shapeArgs
+      @shape = physics.newPolygonShape @shapeArgs
 
-    @fixture = love.physics.newFixture @body, @shape
+    @fixture = physics.newFixture @body, @shape
     @fixture\setUserData self
-    @fixture\setFilterData 4, 3, 0
+    @fixture\setFilterData collisionMasks.solid, collisionMasks.player + collisionMasks.bullet, 0
 
     @normal = {}
 
@@ -21,10 +25,13 @@ class Entity
   draw: (colors) =>
     if not @body\isDestroyed!
       if colors
-        love.graphics.setColor unpack colors
+        graphics.setColor unpack colors
       if @shapeType ~= "circle"
-        love.graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
+        graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
       else
-        love.graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
+        graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
+
+  destroy: =>
+    @body\destroy!
 
 return Entity

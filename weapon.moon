@@ -1,10 +1,13 @@
+import atan2, cos, pi, random, sin from math
+import remove from table
+
 Bullet = require "bullet"
 
-{graphics: g} = love
+{graphics: graphics, audio: audio, mouse: mouse} = love
 
-gunShot = love.audio.newSource "audio/gunshot.wav", "static"
+gunShot = audio.newSource "audio/gunshot.wav", "static"
 gunShot\setVolume .5
-ammoFont = g.newFont "fonts/FFFFORWA.TTF", 20
+ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
   new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100) =>
@@ -28,8 +31,8 @@ class Weapon
   getVariableBulletVectors: (bullet) =>
     local angle, goalX, goalY
     -- calculate angle, note that the origin is position of weapon
-    angle = math.atan2(bullet.dy, bullet.dx) + math.pi
-    randomAngle = math.random(1000 * (angle - @sprayAngle),
+    angle = atan2(bullet.dy, bullet.dx) + pi
+    randomAngle = random(1000 * (angle - @sprayAngle),
       1000 * (angle + @sprayAngle)) / 1000
 
     -- negative bullet.distance because of how the trig functions return value
@@ -42,7 +45,7 @@ class Weapon
     -- Thus:
     --   x = r * cos(theta) + weapon.x
     --   y = r * sin(theta) + weapon.y
-    return -bullet.distance * math.cos(randomAngle) + @x, -bullet.distance * math.sin(randomAngle) + @y
+    return -bullet.distance * cos(randomAngle) + @x, -bullet.distance * sin(randomAngle) + @y
 
   shootBullet: (x, y) =>
     local bullet
@@ -68,7 +71,7 @@ class Weapon
     local targetX, targetY
     targetX = x
     targetY = y
-    if love.mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+    if mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
       @shootBullet targetX, targetY
 
   shootSemi: (x, y, button) =>
@@ -79,36 +82,36 @@ class Weapon
     for i = #@bullets, 1, -1
       b = @bullets[i]
       if b.body\isDestroyed!
-        table.remove @bullets, i
+        remove @bullets, i
 
   drawBullets: =>
     for i = 1, #@bullets
-      g.setColor 0, 0, 255
+      graphics.setColor 0, 0, 255
       b = @bullets[i]
       if not b.body\isDestroyed!
         b\draw!
 
   drawAmmoCount: =>
-    g.setFont ammoFont
-    g.setColor 255, 255, 255
-    g.print @ammoCount, 35, g\getHeight! - 45
+    graphics.setFont ammoFont
+    graphics.setColor 255, 255, 255
+    graphics.print @ammoCount, 35, graphics\getHeight! - 45
 
 
   -- draw: (x, y) =>
-    -- g.setColor 255, 255, 255
+    -- graphics.setColor 255, 255, 255
     -- local angle, scale
     -- scale = .65
     -- angle = math.atan2(@y - y, @x - x) + math.pi
   
-    -- g.setColor 0, 0, 0
+    -- graphics.setColor 0, 0, 0
     -- if angle < 3 * math.pi / 2 and angle > math.pi / 2
-    --   g.draw @sprite, @x, @y, angle, scale, -scale, @drawOffset.x, @drawOffset.y
+    --   graphics.draw @sprite, @x, @y, angle, scale, -scale, @drawOffset.x, @drawOffset.y
     -- else
-    --   g.draw @sprite, @x, @y, angle, scale, scale, @drawOffset.x, @drawOffset.y
+    --   graphics.draw @sprite, @x, @y, angle, scale, scale, @drawOffset.x, @drawOffset.y
     -- -- if angle < 3 * math.pi / 2 and angle > math.pi / 2
-    -- --   g.draw @sprite, @x, @y, angle, 1, -1, @drawOffset.x, @drawOffset.y
+    -- --   graphics.draw @sprite, @x, @y, angle, 1, -1, @drawOffset.x, @drawOffset.y
     -- -- else
-    -- --   g.draw @sprite, @x, @y, angle, 1, 1, @drawOffset.x, @drawOffset.y
-    -- g.print tostring @ammoCount
+    -- --   graphics.draw @sprite, @x, @y, angle, 1, 1, @drawOffset.x, @drawOffset.y
+    -- graphics.print tostring @ammoCount
 
 return Weapon
