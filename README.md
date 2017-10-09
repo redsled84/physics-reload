@@ -24,7 +24,7 @@ sudo luarocks install moonscript
 ```bash
 sudo add-apt-repository ppa:bartbes/love-stable
 sudo apt update
-sudo apt install love2d
+sudo apt install love
 ```
 Although, you could get the source code of all four, it's easier to use Ubuntu's ```apt```
 
