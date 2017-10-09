@@ -1,4 +1,6 @@
-run:
+BUILD_FILES := $(shell find *lua -maxdepth 1 -type f -not \( -name "main.lua" -o -name "conf.lua" \))
+
+all:
 	moonc *.moon
-	mv $(shell find *.lua -type f -not \( -name 'main.lua' -o -name 'conf.lua' \)) build/
+	mv $(BUILD_FILES) ./build
 	love .
