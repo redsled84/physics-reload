@@ -33,191 +33,197 @@ return {
    {31},
    {32},
    {33},
+   {34},
 },
 -- Table: {2}
-{
-   ["vertices"]={34},
-   ["shapeType"]="polygon",
-},
--- Table: {3}
 {
    ["vertices"]={35},
    ["shapeType"]="polygon",
 },
--- Table: {4}
+-- Table: {3}
 {
    ["vertices"]={36},
    ["shapeType"]="polygon",
 },
--- Table: {5}
+-- Table: {4}
 {
    ["vertices"]={37},
    ["shapeType"]="polygon",
 },
--- Table: {6}
+-- Table: {5}
 {
    ["vertices"]={38},
    ["shapeType"]="polygon",
 },
--- Table: {7}
+-- Table: {6}
 {
    ["vertices"]={39},
    ["shapeType"]="polygon",
 },
--- Table: {8}
+-- Table: {7}
 {
    ["vertices"]={40},
    ["shapeType"]="polygon",
 },
--- Table: {9}
+-- Table: {8}
 {
    ["vertices"]={41},
    ["shapeType"]="polygon",
 },
--- Table: {10}
+-- Table: {9}
 {
    ["vertices"]={42},
    ["shapeType"]="polygon",
 },
--- Table: {11}
+-- Table: {10}
 {
    ["vertices"]={43},
    ["shapeType"]="polygon",
 },
--- Table: {12}
+-- Table: {11}
 {
    ["vertices"]={44},
    ["shapeType"]="polygon",
 },
--- Table: {13}
+-- Table: {12}
 {
    ["vertices"]={45},
    ["shapeType"]="polygon",
 },
--- Table: {14}
+-- Table: {13}
 {
    ["vertices"]={46},
    ["shapeType"]="polygon",
 },
--- Table: {15}
+-- Table: {14}
 {
    ["vertices"]={47},
    ["shapeType"]="polygon",
 },
--- Table: {16}
+-- Table: {15}
 {
    ["vertices"]={48},
    ["shapeType"]="polygon",
 },
--- Table: {17}
+-- Table: {16}
 {
    ["vertices"]={49},
    ["shapeType"]="polygon",
 },
--- Table: {18}
+-- Table: {17}
 {
    ["vertices"]={50},
    ["shapeType"]="polygon",
 },
--- Table: {19}
+-- Table: {18}
 {
    ["vertices"]={51},
    ["shapeType"]="polygon",
 },
--- Table: {20}
+-- Table: {19}
 {
    ["vertices"]={52},
    ["shapeType"]="polygon",
 },
--- Table: {21}
+-- Table: {20}
 {
    ["vertices"]={53},
    ["shapeType"]="polygon",
 },
--- Table: {22}
+-- Table: {21}
 {
    ["vertices"]={54},
    ["shapeType"]="polygon",
 },
--- Table: {23}
+-- Table: {22}
 {
    ["vertices"]={55},
    ["shapeType"]="polygon",
 },
--- Table: {24}
+-- Table: {23}
 {
    ["vertices"]={56},
    ["shapeType"]="polygon",
 },
--- Table: {25}
+-- Table: {24}
 {
    ["vertices"]={57},
    ["shapeType"]="polygon",
 },
--- Table: {26}
+-- Table: {25}
 {
    ["vertices"]={58},
    ["shapeType"]="polygon",
 },
--- Table: {27}
+-- Table: {26}
 {
    ["vertices"]={59},
    ["shapeType"]="polygon",
 },
--- Table: {28}
+-- Table: {27}
 {
    ["vertices"]={60},
    ["shapeType"]="polygon",
 },
--- Table: {29}
+-- Table: {28}
 {
    ["vertices"]={61},
    ["shapeType"]="polygon",
 },
--- Table: {30}
+-- Table: {29}
 {
    ["vertices"]={62},
    ["shapeType"]="polygon",
 },
--- Table: {31}
+-- Table: {30}
 {
    ["vertices"]={63},
    ["shapeType"]="polygon",
 },
--- Table: {32}
+-- Table: {31}
 {
    ["vertices"]={64},
    ["shapeType"]="polygon",
 },
--- Table: {33}
+-- Table: {32}
 {
    ["vertices"]={65},
    ["shapeType"]="polygon",
 },
+-- Table: {33}
+{
+   ["vertices"]={66},
+   ["shapeType"]="polygon",
+},
 -- Table: {34}
 {
-   0,
-   224,
-   864,
-   224,
-   864,
-   192,
-   0,
-   192,
+   ["vertices"]={67},
+   ["shapeType"]="polygon",
 },
 -- Table: {35}
 {
-   1376,
-   608,
-   1376,
-   640,
-   -96,
-   640,
-   -96,
-   608,
+   0,
+   224,
+   864,
+   224,
+   864,
+   192,
+   0,
+   192,
 },
 -- Table: {36}
 {
+   1376,
+   608,
+   1376,
+   640,
+   -96,
+   640,
+   -96,
+   608,
+},
+-- Table: {37}
+{
    1600,
    192,
    1600,
@@ -227,7 +233,7 @@ return {
    1024,
    192,
 },
--- Table: {37}
+-- Table: {38}
 {
    1728,
    192,
@@ -238,7 +244,7 @@ return {
    1600,
    192,
 },
--- Table: {38}
+-- Table: {39}
 {
    1728,
    0,
@@ -251,19 +257,19 @@ return {
    1728,
    224,
 },
--- Table: {39}
-{
-   384,
-   416,
-   384,
-   448,
-   928,
-   448,
-   928,
-   416,
-},
 -- Table: {40}
 {
+   384,
+   416,
+   384,
+   448,
+   928,
+   448,
+   928,
+   416,
+},
+-- Table: {41}
+{
    736,
    448,
    736,
@@ -273,7 +279,7 @@ return {
    704,
    448,
 },
--- Table: {41}
+-- Table: {42}
 {
    736,
    448,
@@ -282,7 +288,7 @@ return {
    736,
    480,
 },
--- Table: {42}
+-- Table: {43}
 {
    608,
    224,
@@ -291,19 +297,19 @@ return {
    608,
    288,
 },
--- Table: {43}
-{
-   608,
-   224,
-   608,
-   416,
-   384,
-   416,
-   384,
-   224,
-},
 -- Table: {44}
 {
+   608,
+   224,
+   608,
+   416,
+   384,
+   416,
+   384,
+   224,
+},
+-- Table: {45}
+{
    1376,
    224,
    1504,
@@ -313,7 +319,7 @@ return {
    1376,
    640,
 },
--- Table: {45}
+-- Table: {46}
 {
    704,
    448,
@@ -322,7 +328,7 @@ return {
    704,
    480,
 },
--- Table: {46}
+-- Table: {47}
 {
    0,
    512,
@@ -335,7 +341,7 @@ return {
    320,
    512,
 },
--- Table: {47}
+-- Table: {48}
 {
    1824,
    -320,
@@ -346,7 +352,7 @@ return {
    1728,
    -320,
 },
--- Table: {48}
+-- Table: {49}
 {
    -480,
    -288,
@@ -357,7 +363,7 @@ return {
    128,
    -288,
 },
--- Table: {49}
+-- Table: {50}
 {
    768,
    -288,
@@ -372,19 +378,19 @@ return {
    384,
    -288,
 },
--- Table: {50}
-{
-   608,
-   128,
-   608,
-   192,
-   544,
-   192,
-   544,
-   128,
-},
 -- Table: {51}
 {
+   608,
+   128,
+   608,
+   192,
+   544,
+   192,
+   544,
+   128,
+},
+-- Table: {52}
+{
    224,
    192,
    0,
@@ -394,7 +400,7 @@ return {
    224,
    64,
 },
--- Table: {52}
+-- Table: {53}
 {
    960,
    -128,
@@ -405,19 +411,19 @@ return {
    960,
    -96,
 },
--- Table: {53}
-{
-   768,
-   -128,
-   768,
-   -288,
-   896,
-   -288,
-   896,
-   -128,
-},
 -- Table: {54}
 {
+   768,
+   -128,
+   768,
+   -288,
+   896,
+   -288,
+   896,
+   -128,
+},
+-- Table: {55}
+{
    1312,
    -288,
    1312,
@@ -427,7 +433,7 @@ return {
    1280,
    -288,
 },
--- Table: {55}
+-- Table: {56}
 {
    1280,
    -288,
@@ -436,7 +442,7 @@ return {
    1184,
    -288,
 },
--- Table: {56}
+-- Table: {57}
 {
    896,
    -288,
@@ -445,52 +451,52 @@ return {
    896,
    -192,
 },
--- Table: {57}
-{
-   -96,
-   640,
-   -480,
-   640,
-   -480,
-   608,
-   -96,
-   608,
-},
 -- Table: {58}
 {
-   0,
-   -192,
-   0,
-   -160,
+   -96,
+   640,
    -480,
-   -160,
+   640,
    -480,
-   -192,
+   608,
+   -96,
+   608,
 },
 -- Table: {59}
 {
-   1344,
-   384,
-   1376,
-   384,
-   1376,
-   608,
-   1344,
-   608,
+   0,
+   -192,
+   0,
+   -160,
+   -480,
+   -160,
+   -480,
+   -192,
 },
 -- Table: {60}
 {
-   1376,
-   352,
-   1216,
-   352,
-   1216,
+   1344,
    384,
    1376,
    384,
+   1376,
+   608,
+   1344,
+   608,
 },
 -- Table: {61}
 {
+   1376,
+   352,
+   1216,
+   352,
+   1216,
+   384,
+   1376,
+   384,
+},
+-- Table: {62}
+{
    1248,
    352,
    1248,
@@ -500,7 +506,7 @@ return {
    1216,
    352,
 },
--- Table: {62}
+-- Table: {63}
 {
    1600,
    -128,
@@ -511,7 +517,7 @@ return {
    1312,
    -128,
 },
--- Table: {63}
+-- Table: {64}
 {
    1312,
    -320,
@@ -522,7 +528,7 @@ return {
    1312,
    -288,
 },
--- Table: {64}
+-- Table: {65}
 {
    1728,
    -320,
@@ -533,7 +539,7 @@ return {
    1440,
    -320,
 },
--- Table: {65}
+-- Table: {66}
 {
    832,
    96,
@@ -543,5 +549,14 @@ return {
    64,
    832,
    64,
+},
+-- Table: {67}
+{
+   -480,
+   160,
+   -512,
+   -96,
+   -96,
+   -64,
 },
 }
