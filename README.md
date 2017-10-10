@@ -48,8 +48,7 @@ Now each .moon file has been translated to a corresponding Lua file
 #### Building Game
 You must be typing the commands in the game directory path
 ```bash
-moonc *.moon
-love .
+source build.sh
 ```
 
 \* Not required, but useful if you decide to play around with MoonScript
