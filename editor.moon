@@ -5,6 +5,7 @@ import abs, ceil, floor, sin from math
 inspect = require "libs.inspect"
 Camera = require "libs.camera"
 Entity = require "build.entity"
+Floater = require "build.floater"
 require "build.utils"
 
 {graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
@@ -23,10 +24,14 @@ class Editor
   activeX: mouse.getX!
   activeY: mouse.getY!
   selectedShape: -1
+  selectedObject: -1
+  selectedMenuItem: Floater
 
+  objects: {}
   data: {}
   shapes: {}
   loadedFilename: ""
+  tool: "polygon"
 
   gridSize: 32
   gridWidth: graphics.getWidth! / 32
@@ -43,15 +48,19 @@ class Editor
 
   loadSavedFile: (filename) =>
     @data = filesystem.exists(filename) and table.load(filename) or {}
-    local n
-    if #@data > 0 then
-      n = #@data[1]
+    if #@data > 0
       for i = 1, #@data
         @shapes[i] = physics.newPolygonShape @data[i].vertices
         print "new polygon: ", inspect @data[i].vertices
-      
+        if @data[i].object
+          @data[i].load!
       @loadedFilename = filename
       @hotLoad!
+
+      if #@objects > 0
+        for i = 1, #@objects
+          @objects[i].load!
+          print @objects[i]
 
   hotLoad: =>
     local target, entity
@@ -61,6 +70,7 @@ class Editor
         target.added = true
         entity = Entity 0, 0, target.vertices, "static", "polygon"
         @entities[i] = entity
+
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -110,12 +120,18 @@ class Editor
       else
         @drawOutlinedPolygon(@normal, nil, tf(@data[i].vertices))
 
+  drawObjects: =>
+    graphics.setColor 255, 255, 255
+    for i=#@objects, 1, -1
+      obj = @objects[i]
+      obj\draw!
+
   drawCursor: =>
     graphics.circle "line", @activeX, @activeY, @activeClickerRadius
 
   drawGrid: =>
     -- draw the grid dots
-    graphics.setColor(10, 10, 10, 85)
+    graphics.setColor 10, 10, 10, 85
     -- Possible optimization is to keep a grid only locked onto the camera
     -- local drawX, drawY
     -- drawX = @activeX - graphics.getWidth! / gridSize +
@@ -161,6 +177,12 @@ class Editor
       graphics.circle "line", @activeVertices[i].x, @activeVertices[i].y,
         @verticeRadius
 
+  drawMode: =>
+    graphics.setColor 0, 0, 0, 155
+    graphics.rectangle "fill", 0, graphics.getHeight! - 48, 350, 48
+    graphics.setColor 255, 255, 255
+    graphics.print "Selected mode: " .. @tool, 15, graphics.getHeight! - 32
+
   drawControls: =>
     if @viewControls
       graphics.setColor 0, 0, 0, 155
@@ -179,14 +201,22 @@ class Editor
       graphics.rectangle "fill", 0, 0, 475, 48
       graphics.setColor 255, 255, 255
       graphics.print "Press 'm' to open the controls list", 15, 15
+      @drawMode!
 
   draw: =>
     @cam\attach!   
    
     @drawGrid!
-    @drawShapes!
-    @drawActiveVertices!
+    if #@shapes > 0
+      @drawShapes!
+    if #@activeVertices > 0
+      @drawActiveVertices!
+    if #@objects > 0
+      @drawObjects!
     @drawCursor!
+
+    graphics.setColor 0, 0, 0
+    graphics.circle "fill", 0, 0, 10
 
     @cam\detach!
 
@@ -247,6 +277,10 @@ class Editor
         @cameraScale + @scaleControlFactor * dt or @maxScale
 
   update: (dt) =>
+
+    for i = #@objects, 1, -1 do
+      @objects[i]\update dt
+
     @cam\zoomTo @cameraScale
     -- Ensure camera coordinates are integars
     @cam\lookAt ceil(@cam.x), ceil(@cam.y)
@@ -293,40 +327,65 @@ class Editor
     else
       @recursivelySaveNewFile 0
 
+  flushActiveVertices: =>
+    for i = #@activeVertices, 1, -1
+      remove @activeVertices, i
+
   keypressed: (key) =>
     if key == "r"
-      if #@activeVertices > 0
-        remove @activeVertices, #@activeVertices
-      if @selectedShape > 0
-        remove @data, @selectedShape
-        remove @shapes, @selectedShape
-        @entities[@selectedShape]\destroy!
-        remove @entities, @selectedShape
+      if @tool == "polygon"
+        if #@activeVertices > 0
+          remove @activeVertices, #@activeVertices
+        if @selectedShape > 0
+          remove @data, @selectedShape
+          remove @shapes, @selectedShape
+          @entities[@selectedShape]\destroy!
+          remove @entities, @selectedShape
 
-        @selectedShape = -1
+          @selectedShape = -1
+      elseif @tool == "object"
+        if #@activeVertices > 0
+          remove @activeVertices, #@activeVertices
+        if @selectedObject > 0
+          remove @objects, @selectedObject
+          @objects[@objects]\destroy!
 
     if key == "space"
-      if #@activeVertices <= 2
-        print "error: not enough active vertices to create a polgon!"
-        return
+      if @tool == "polygon"
+        if #@activeVertices <= 2
+          print "error: not enough active vertices to create a polgon!"
+          return
 
-      local object, targetX, targetY
-      targetX, targetY = @cam\worldCoords @activeX, @activeY
-      if @activeShapeType == "polygon"
-        @shapes[#@shapes+1] = physics.newPolygonShape @verticesList @activeVertices 
-        print "new polygon: ", inspect @verticesList @activeVertices
-        insert @data, {
-          vertices: @verticesList(@activeVertices)
-          shapeType: @activeShapeType
-          added: false
-        }
-        for i = #@activeVertices, 1, -1
-          remove @activeVertices, i
+        if @activeShapeType == "polygon"
+          @shapes[#@shapes+1] = physics.newPolygonShape @verticesList @activeVertices 
+          print "new polygon: ", inspect @verticesList @activeVertices
+          insert @data, {
+            vertices: @verticesList(@activeVertices)
+            shapeType: @activeShapeType
+            added: false
+          }
+        @flushActiveVertices!
+      elseif @tool == "object"
+        if #@activeVertices == 0
+          print "error: not enough active vertices to create an object!"
+          return
+
+        local className
+        if @selectedMenuItem
+          className = @selectedMenuItem.__class.__name
+          if className == "Floater"
+            @objects[#@objects+1] = Floater @activeVertices[1].x, @activeVertices[1].y
+            @flushActiveVertices!
 
     if key == "m"
       @viewControls = not @viewControls
 
     if key == "p"
       @saveFile!
+
+    if key == "1"
+      @tool = "polygon"
+    elseif key == "2"
+      @tool = "object"
 
 return Editor

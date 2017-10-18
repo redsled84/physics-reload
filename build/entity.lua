@@ -16,6 +16,7 @@ do
         if colors then
           graphics.setColor(unpack(colors))
         end
+        graphics.setColor(10, 10, 10, 140)
         if self.shapeType ~= "circle" then
           return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else

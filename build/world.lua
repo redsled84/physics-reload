@@ -38,9 +38,13 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   end
 
   if floater and bullet and not floater.body:isDestroyed() then
-    floater:damage(10)
+    floater:damage(bullet.damage)
+    print (bullet.damage)
   end
 
+  if floater and player then
+    player:damage(x, y, floater.attackPower)
+  end
 end
 
 function getObject(a, b, name)

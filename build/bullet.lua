@@ -21,7 +21,7 @@ do
     fire = function(self)
       self:calculateDirections()
       self.body:setAngle(atan2(self.dy, self.dx) + pi / 2)
-      return self.body:setLinearVelocity(self.directionX * self.speed * 10, self.directionY * self.speed * 10)
+      return self.body:setLinearVelocity(self.directionX * self.speed, self.directionY * self.speed)
     end
   }
   _base_0.__index = _base_0
@@ -30,8 +30,8 @@ do
     __init = function(self, x, y, goalX, goalY, speed, width, height, damage)
       self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage = x, y, goalX, goalY, speed, width, height, damage
       _class_0.__parent.__init(self, self.x, self.y, {
-        3,
-        7
+        self.width,
+        self.height
       }, "dynamic", "rectangle")
       self:calculateDirections()
       self.body:setFixedRotation(false)

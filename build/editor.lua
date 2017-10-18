@@ -13,6 +13,7 @@ end
 local inspect = require("libs.inspect")
 local Camera = require("libs.camera")
 local Entity = require("build.entity")
+local Floater = require("build.floater")
 require("build.utils")
 local graphics, mouse, physics, filesystem, keyboard
 do
@@ -35,9 +36,13 @@ do
     activeX = mouse.getX(),
     activeY = mouse.getY(),
     selectedShape = -1,
+    selectedObject = -1,
+    selectedMenuItem = Floater,
+    objects = { },
     data = { },
     shapes = { },
     loadedFilename = "",
+    tool = "polygon",
     gridSize = 32,
     gridWidth = graphics.getWidth() / 32,
     gridHeight = graphics.getHeight() / 32,
@@ -61,15 +66,22 @@ do
     entities = { },
     loadSavedFile = function(self, filename)
       self.data = filesystem.exists(filename) and table.load(filename) or { }
-      local n
       if #self.data > 0 then
-        n = #self.data[1]
         for i = 1, #self.data do
           self.shapes[i] = physics.newPolygonShape(self.data[i].vertices)
           print("new polygon: ", inspect(self.data[i].vertices))
+          if self.data[i].object then
+            self.data[i].load()
+          end
         end
         self.loadedFilename = filename
-        return self:hotLoad()
+        self:hotLoad()
+        if #self.objects > 0 then
+          for i = 1, #self.objects do
+            self.objects[i].load()
+            print(self.objects[i])
+          end
+        end
       end
     end,
     hotLoad = function(self)
@@ -133,6 +145,13 @@ do
         end
       end
     end,
+    drawObjects = function(self)
+      graphics.setColor(255, 255, 255)
+      for i = #self.objects, 1, -1 do
+        local obj = self.objects[i]
+        obj:draw()
+      end
+    end,
     drawCursor = function(self)
       return graphics.circle("line", self.activeX, self.activeY, self.activeClickerRadius)
     end,
@@ -174,6 +193,12 @@ do
         graphics.circle("line", self.activeVertices[i].x, self.activeVertices[i].y, self.verticeRadius)
       end
     end,
+    drawMode = function(self)
+      graphics.setColor(0, 0, 0, 155)
+      graphics.rectangle("fill", 0, graphics.getHeight() - 48, 350, 48)
+      graphics.setColor(255, 255, 255)
+      return graphics.print("Selected mode: " .. self.tool, 15, graphics.getHeight() - 32)
+    end,
     drawControls = function(self)
       if self.viewControls then
         graphics.setColor(0, 0, 0, 155)
@@ -184,15 +209,25 @@ do
         graphics.setColor(0, 0, 0, 155)
         graphics.rectangle("fill", 0, 0, 475, 48)
         graphics.setColor(255, 255, 255)
-        return graphics.print("Press 'm' to open the controls list", 15, 15)
+        graphics.print("Press 'm' to open the controls list", 15, 15)
+        return self:drawMode()
       end
     end,
     draw = function(self)
       self.cam:attach()
       self:drawGrid()
-      self:drawShapes()
-      self:drawActiveVertices()
+      if #self.shapes > 0 then
+        self:drawShapes()
+      end
+      if #self.activeVertices > 0 then
+        self:drawActiveVertices()
+      end
+      if #self.objects > 0 then
+        self:drawObjects()
+      end
       self:drawCursor()
+      graphics.setColor(0, 0, 0)
+      graphics.circle("fill", 0, 0, 10)
       self.cam:detach()
       return self:drawControls()
     end,
@@ -241,6 +276,9 @@ do
       end
     end,
     update = function(self, dt)
+      for i = #self.objects, 1, -1 do
+        self.objects[i]:update(dt)
+      end
       self.cam:zoomTo(self.cameraScale)
       self.cam:lookAt(ceil(self.cam.x), ceil(self.cam.y))
       self:manipulateCursorRadius(dt)
@@ -292,36 +330,62 @@ do
         return self:recursivelySaveNewFile(0)
       end
     end,
+    flushActiveVertices = function(self)
+      for i = #self.activeVertices, 1, -1 do
+        remove(self.activeVertices, i)
+      end
+    end,
     keypressed = function(self, key)
       if key == "r" then
-        if #self.activeVertices > 0 then
-          remove(self.activeVertices, #self.activeVertices)
-        end
-        if self.selectedShape > 0 then
-          remove(self.data, self.selectedShape)
-          remove(self.shapes, self.selectedShape)
-          self.entities[self.selectedShape]:destroy()
-          remove(self.entities, self.selectedShape)
-          self.selectedShape = -1
+        if self.tool == "polygon" then
+          if #self.activeVertices > 0 then
+            remove(self.activeVertices, #self.activeVertices)
+          end
+          if self.selectedShape > 0 then
+            remove(self.data, self.selectedShape)
+            remove(self.shapes, self.selectedShape)
+            self.entities[self.selectedShape]:destroy()
+            remove(self.entities, self.selectedShape)
+            self.selectedShape = -1
+          end
+        elseif self.tool == "object" then
+          if #self.activeVertices > 0 then
+            remove(self.activeVertices, #self.activeVertices)
+          end
+          if self.selectedObject > 0 then
+            remove(self.objects, self.selectedObject)
+            self.objects[self.objects]:destroy()
+          end
         end
       end
       if key == "space" then
-        if #self.activeVertices <= 2 then
-          print("error: not enough active vertices to create a polgon!")
-          return 
-        end
-        local object, targetX, targetY
-        targetX, targetY = self.cam:worldCoords(self.activeX, self.activeY)
-        if self.activeShapeType == "polygon" then
-          self.shapes[#self.shapes + 1] = physics.newPolygonShape(self:verticesList(self.activeVertices))
-          print("new polygon: ", inspect(self:verticesList(self.activeVertices)))
-          insert(self.data, {
-            vertices = self:verticesList(self.activeVertices),
-            shapeType = self.activeShapeType,
-            added = false
-          })
-          for i = #self.activeVertices, 1, -1 do
-            remove(self.activeVertices, i)
+        if self.tool == "polygon" then
+          if #self.activeVertices <= 2 then
+            print("error: not enough active vertices to create a polgon!")
+            return 
+          end
+          if self.activeShapeType == "polygon" then
+            self.shapes[#self.shapes + 1] = physics.newPolygonShape(self:verticesList(self.activeVertices))
+            print("new polygon: ", inspect(self:verticesList(self.activeVertices)))
+            insert(self.data, {
+              vertices = self:verticesList(self.activeVertices),
+              shapeType = self.activeShapeType,
+              added = false
+            })
+          end
+          self:flushActiveVertices()
+        elseif self.tool == "object" then
+          if #self.activeVertices == 0 then
+            print("error: not enough active vertices to create an object!")
+            return 
+          end
+          local className
+          if self.selectedMenuItem then
+            className = self.selectedMenuItem.__class.__name
+            if className == "Floater" then
+              self.objects[#self.objects + 1] = Floater(self.activeVertices[1].x, self.activeVertices[1].y)
+              self:flushActiveVertices()
+            end
           end
         end
       end
@@ -329,7 +393,12 @@ do
         self.viewControls = not self.viewControls
       end
       if key == "p" then
-        return self:saveFile()
+        self:saveFile()
+      end
+      if key == "1" then
+        self.tool = "polygon"
+      elseif key == "2" then
+        self.tool = "object"
       end
     end
   }

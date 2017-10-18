@@ -26,6 +26,7 @@ class Entity
     if not @body\isDestroyed!
       if colors
         graphics.setColor unpack colors
+      graphics.setColor 10, 10, 10, 140
       if @shapeType ~= "circle"
         graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
       else

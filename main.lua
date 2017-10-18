@@ -10,7 +10,6 @@ local cam, editor, player, spawn, toggleEditor, weapon
 local initGame
 initGame = function()
   editor = Editor()
-  editor:loadSavedFile("levels/level3.lua")
   spawn = {
     x = 64,
     y = 32
@@ -30,6 +29,9 @@ love.load = function()
     else
       player:update(dt)
       world:update(dt)
+      for i = 1, #editor.objects do
+        editor.objects[i]:update(dt)
+      end
       weapon:updateRateOfFire(dt)
       weapon:autoRemoveDestroyedBullets()
       local mouseX, mouseY
@@ -44,10 +46,10 @@ love.load = function()
       return editor:draw()
     else
       cam:attach()
-      editor:drawGrid()
       for i = 1, #editor.entities do
         editor.entities[i]:draw()
       end
+      editor:drawObjects()
       weapon:drawBullets()
       player:draw({
         0,
@@ -64,8 +66,11 @@ love.load = function()
     end
   end
   love.keypressed = function(key)
-    if key == "escape" then
+    if key == "escape" and not toggleEditor then
       love.event.quit()
+    elseif key == "escape" and toggleEditor then
+      toggleEditor = not toggleEditor
+      cam:lookAt(0, 0)
     end
     if toggleEditor then
       editor:keypressed(key)

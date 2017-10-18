@@ -12,7 +12,7 @@ do
   graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
 end
 local gunShot = audio.newSource("audio/gunshot.wav", "static")
-gunShot:setVolume(.5)
+gunShot:setVolume(1)
 local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
@@ -22,8 +22,10 @@ do
     canShoot = true,
     rateOfFire = {
       time = 0,
-      max = .05
+      max = .15
     },
+    minAtkPower = 5,
+    maxAtkPower = 15,
     updateRateOfFire = function(self, dt)
       if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
         self.rateOfFire.time = self.rateOfFire.time + dt
@@ -42,7 +44,7 @@ do
       local bullet
       self.canShoot = false
       self.ammoCount = self.ammoCount - 1
-      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize)
+      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize, random(self.minAtkPower, self.maxAtkPower))
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()
       bullet:fire()

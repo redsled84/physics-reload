@@ -3,28 +3,35 @@ import cos, pi, sin, sqrt from math
 Entity = require "build.entity"
 Weapon = require "build.weapon"
 
+{graphics: graphics} = love
+
 r = (theta) ->
- return 100 - 30 * sin(theta)
+ return 30 - 30 * sin(theta)
 
 class Floater extends Entity
-  new: (@x, @y, @radius=15) =>
-    @drawX = r(0) * cos(0) + @x
-    @drawY = r(0) * sin(0) + @y
-    super @drawX, @drawY, {@radius}, "static", "circle"
-    @health = 30
-    
-  step: pi/500
-  theta: 0
+  new: (@originX, @originY, @radius=15, @health=100, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
+    @x = @originX
+    @y = @originY
+    super @x, @y, {@radius}, "static", "circle"
+  attackPower: 20
   damage: (attack) =>
     @health -= attack
   update: (dt) =>
-    @theta += @step
-    @drawX = 100 * sqrt(2) * cos(2 * @theta) / (sin(@theta)^2 + 1) + @x
-    @drawY = 100 * sqrt(2) * cos(@theta) * sin(@theta) / (sin(@theta)^2 + 1) + @y
-
-    if @health <= 0 and not @body\isDestroyed!
-      @body\destroy!
     if not @body\isDestroyed!
-      @body\setPosition @drawX, @drawY
+      @theta += @step * dt
+      @x = @amplitude * r(@theta) * cos(@theta) + @originX
+      @y = @amplitude * r(@theta) * sin(@theta) + @originY
+      @body\setPosition @x, @y
+
+      if @health <= 0
+        @body\destroy!
+  draw: =>
+    if not @body\isDestroyed!
+      graphics.setColor 255, 35, 8
+      graphics.circle "fill", @x, @y, @radius
+      graphics.setColor 245, 245, 245
+      graphics.circle "fill", @x, @y, @radius * (2 / 3)
+      graphics.setColor 255, 35, 8
+      graphics.circle "fill", @x, @y, @radius * (1 / 3)
 
 return Floater

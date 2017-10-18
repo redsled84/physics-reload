@@ -3,6 +3,7 @@ abs = math.abs
 local collisionMasks = require("build.collisionMasks")
 local inspect = require("libs.inspect")
 local Entity = require("build.entity")
+local Timer = require("build.timer")
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
@@ -13,7 +14,17 @@ do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
+    damage = function(self, x, y, attackPower)
+      self.activeHitStun = true
+      return self.body:applyLinearImpulse(-1000 * x, -1000 * y)
+    end,
     update = function(self, dt)
+      if self.activeHitStun then
+        self.hitStunTimer:update(dt, function()
+          self.activeHitStun = false
+        end)
+        return 
+      end
       local _, yv
       self:moveWithKeys(dt)
       _, yv = self.body:getLinearVelocity()
@@ -48,7 +59,7 @@ do
     end,
     jump = function(self, key)
       if #self.normal >= 2 then
-        if key == "space" and self.onGround then
+        if key == "space" and self.onGround and not self.activeHitStun then
           local xv, _
           xv, _ = self.body:getLinearVelocity()
           return self.body:setLinearVelocity(xv, self.jumpVelocity)
@@ -77,6 +88,8 @@ do
       self.xVelocity = 0
       self.terminalVelocity = 800
       self.jumpVelocity = -700
+      self.hitStunTimer = Timer(2)
+      self.activeHitStun = false
     end,
     __base = _base_0,
     __name = "Player",

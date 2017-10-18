@@ -6,7 +6,7 @@ Bullet = require "build.bullet"
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
 gunShot = audio.newSource "audio/gunshot.wav", "static"
-gunShot\setVolume .5
+gunShot\setVolume 1
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
@@ -19,7 +19,9 @@ class Weapon
 
   bullets: {}
   canShoot: true
-  rateOfFire: {time: 0, max: .05}
+  rateOfFire: {time: 0, max: .15}
+  minAtkPower: 5
+  maxAtkPower: 15
 
   updateRateOfFire: (dt) =>
     if @rateOfFire.time < @rateOfFire.max and not @canShoot
@@ -52,7 +54,7 @@ class Weapon
     @canShoot = false
     @ammoCount -= 1
 
-    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize
+    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize, random(@minAtkPower, @maxAtkPower)
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
     bullet\calculateDirections!

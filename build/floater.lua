@@ -5,46 +5,71 @@ do
 end
 local Entity = require("build.entity")
 local Weapon = require("build.weapon")
+local graphics
+graphics = love.graphics
 local r
 r = function(theta)
-  return 100 - 30 * sin(theta)
+  return 30 - 30 * sin(theta)
 end
 local Floater
 do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    step = pi / 500,
-    theta = 0,
+    attackPower = 20,
     damage = function(self, attack)
       self.health = self.health - attack
     end,
     update = function(self, dt)
-      self.theta = self.theta + self.step
-      self.drawX = 100 * sqrt(2) * cos(2 * self.theta) / (sin(self.theta) ^ 2 + 1) + self.x
-      self.drawY = 100 * sqrt(2) * cos(self.theta) * sin(self.theta) / (sin(self.theta) ^ 2 + 1) + self.y
-      if self.health <= 0 and not self.body:isDestroyed() then
-        self.body:destroy()
-      end
       if not self.body:isDestroyed() then
-        return self.body:setPosition(self.drawX, self.drawY)
+        self.theta = self.theta + (self.step * dt)
+        self.x = self.amplitude * r(self.theta) * cos(self.theta) + self.originX
+        self.y = self.amplitude * r(self.theta) * sin(self.theta) + self.originY
+        self.body:setPosition(self.x, self.y)
+        if self.health <= 0 then
+          return self.body:destroy()
+        end
+      end
+    end,
+    draw = function(self)
+      if not self.body:isDestroyed() then
+        graphics.setColor(255, 35, 8)
+        graphics.circle("fill", self.x, self.y, self.radius)
+        graphics.setColor(245, 245, 245)
+        graphics.circle("fill", self.x, self.y, self.radius * (2 / 3))
+        graphics.setColor(255, 35, 8)
+        return graphics.circle("fill", self.x, self.y, self.radius * (1 / 3))
       end
     end
   }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y, radius)
+    __init = function(self, originX, originY, radius, health, radiusFunction, step, theta, amplitude)
       if radius == nil then
         radius = 15
       end
-      self.x, self.y, self.radius = x, y, radius
-      self.drawX = r(0) * cos(0) + self.x
-      self.drawY = r(0) * sin(0) + self.y
-      _class_0.__parent.__init(self, self.drawX, self.drawY, {
+      if health == nil then
+        health = 100
+      end
+      if radiusFunction == nil then
+        radiusFunction = r
+      end
+      if step == nil then
+        step = math.pi / 2
+      end
+      if theta == nil then
+        theta = 0
+      end
+      if amplitude == nil then
+        amplitude = 1
+      end
+      self.originX, self.originY, self.radius, self.health, self.radiusFunction, self.step, self.theta, self.amplitude = originX, originY, radius, health, radiusFunction, step, theta, amplitude
+      self.x = self.originX
+      self.y = self.originY
+      return _class_0.__parent.__init(self, self.x, self.y, {
         self.radius
       }, "static", "circle")
-      self.health = 30
     end,
     __base = _base_0,
     __name = "Floater",

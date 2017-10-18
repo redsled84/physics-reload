@@ -5,7 +5,7 @@ Entity = require "build.entity"
 
 class Bullet extends Entity
   new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage) =>
-    super @x, @y, {3, 7}, "dynamic", "rectangle"
+    super @x, @y, {@width, @height}, "dynamic", "rectangle"
     @calculateDirections!
 
     -- @fixture\setFilterData 1, 0, 0
@@ -26,7 +26,7 @@ class Bullet extends Entity
   fire: =>
     @calculateDirections!
     @body\setAngle atan2(@dy, @dx) + pi / 2
-    @body\setLinearVelocity @directionX * @speed * 10, @directionY * @speed * 10
+    @body\setLinearVelocity @directionX * @speed, @directionY * @speed
 
 
 return Bullet

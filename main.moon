@@ -12,7 +12,7 @@ initGame = ->
   editor = Editor!
 
   -- Change this string to be the level you want to load!
-  editor\loadSavedFile "levels/level3.lua"
+  -- editor\loadSavedFile "levels/level3.lua"
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}
@@ -40,6 +40,9 @@ love.load = ->
       world\update dt
       -- floater\update dt
 
+      for i=1, #editor.objects
+        editor.objects[i]\update dt
+
       weapon\updateRateOfFire dt
       weapon\autoRemoveDestroyedBullets!
       local mouseX, mouseY
@@ -49,17 +52,16 @@ love.load = ->
 
       cam\lookAt player.body\getX!, player.body\getY!
 
-      -- print player.onGround
-
   love.draw = ->
     if toggleEditor
       editor\draw!
     else
       cam\attach!
 
-      editor\drawGrid!
+      -- editor\drawGrid!
       for i = 1, #editor.entities
         editor.entities[i]\draw!
+      editor\drawObjects!
       weapon\drawBullets!
       player\draw {0, 255, 255}
 
@@ -74,8 +76,11 @@ love.load = ->
       editor\mousepressed x, y, button
 
   love.keypressed = (key) ->
-    if key == "escape"
+    if key == "escape" and not toggleEditor
       love.event.quit!
+    elseif key == "escape" and toggleEditor
+      toggleEditor = not toggleEditor
+      cam\lookAt 0, 0
 
     if toggleEditor
       editor\keypressed key

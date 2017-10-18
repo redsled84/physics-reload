@@ -3,6 +3,7 @@ import abs from math
 collisionMasks = require "build.collisionMasks"
 inspect = require "libs.inspect"
 Entity = require "build.entity"
+Timer = require "build.timer"
 
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
@@ -22,7 +23,19 @@ class Player extends Entity
     @terminalVelocity = 800
     @jumpVelocity = -700
 
+    @hitStunTimer = Timer 2
+    @activeHitStun = false
+
+  damage: (x, y, attackPower) =>
+    @activeHitStun = true
+    @body\applyLinearImpulse -1000 * x, -1000 * y
+
   update: (dt) =>
+    if @activeHitStun
+      @hitStunTimer\update dt, () ->
+        @activeHitStun = false
+      return
+
     local _, yv
     @moveWithKeys dt
 
@@ -37,6 +50,7 @@ class Player extends Entity
     @body\setLinearVelocity @xVelocity, yv
 
     @onGround = false
+
 
   moveWithKeys: (dt) =>
     if keyboard.isDown 'a'
@@ -59,7 +73,7 @@ class Player extends Entity
 
   jump: (key) =>
     if #@normal >= 2 then
-      if key == "space" and @onGround
+      if key == "space" and @onGround and not @activeHitStun
         local xv, _
         xv, _ = @body\getLinearVelocity!
         @body\setLinearVelocity xv, @jumpVelocity
