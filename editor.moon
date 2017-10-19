@@ -314,18 +314,19 @@ class Editor
   recursivelySaveNewFile: (n) =>
     local str
     str = "level" .. n
-    if filesystem.exists str .. ".lua"
+    if filesystem.exists "levels/" .. str .. ".lua"
       @recursivelySaveNewFile n + 1
     else
-      table.save @data, "levels/" .. str .. ".lua"
-      print "safely saved level data to " .. str .. ".lua"
+      @loadedFilename = "levels/" .. str .. ".lua"
+      return
 
   saveFile: =>
     if 0 < len @loadedFilename
       table.save @data, @loadedFilename
       print "saved level data to " .. @loadedFilename
     else
-      @recursivelySaveNewFile 0
+      @recursivelySaveNewFile 1
+      @saveFile!
 
   flushActiveVertices: =>
     for i = #@activeVertices, 1, -1

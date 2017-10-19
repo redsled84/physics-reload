@@ -82,6 +82,7 @@ love.load = ->
 
   love.keypressed = (key) ->
     if key == "escape" and not toggleEditor
+      editor\saveFile!
       love.event.quit!
     elseif key == "escape" and toggleEditor
       toggleEditor = not toggleEditor

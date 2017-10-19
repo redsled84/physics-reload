@@ -71,6 +71,7 @@ love.load = function()
   end
   love.keypressed = function(key)
     if key == "escape" and not toggleEditor then
+      editor:saveFile()
       love.event.quit()
     elseif key == "escape" and toggleEditor then
       toggleEditor = not toggleEditor

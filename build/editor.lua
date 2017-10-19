@@ -315,11 +315,11 @@ do
     recursivelySaveNewFile = function(self, n)
       local str
       str = "level" .. n
-      if filesystem.exists(str .. ".lua") then
+      if filesystem.exists("levels/" .. str .. ".lua") then
         return self:recursivelySaveNewFile(n + 1)
       else
-        table.save(self.data, "levels/" .. str .. ".lua")
-        return print("safely saved level data to " .. str .. ".lua")
+        self.loadedFilename = "levels/" .. str .. ".lua"
+        return 
       end
     end,
     saveFile = function(self)
@@ -327,7 +327,8 @@ do
         table.save(self.data, self.loadedFilename)
         return print("saved level data to " .. self.loadedFilename)
       else
-        return self:recursivelySaveNewFile(0)
+        self:recursivelySaveNewFile(1)
+        return self:saveFile()
       end
     end,
     flushActiveVertices = function(self)
