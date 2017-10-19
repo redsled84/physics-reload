@@ -5,6 +5,7 @@ local Editor = require("build.editor")
 local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Player = require("build.player")
+local shake = require("build.shake")
 local Weapon = require("build.weapon")
 local cam, editor, player, spawn, toggleEditor, weapon
 local initGame
@@ -27,6 +28,7 @@ love.load = function()
     if toggleEditor then
       return editor:update(dt)
     else
+      shake:update(dt)
       player:update(dt)
       world:update(dt)
       for i = 1, #editor.objects do
@@ -46,6 +48,7 @@ love.load = function()
       return editor:draw()
     else
       cam:attach()
+      shake:preDraw()
       for i = 1, #editor.entities do
         editor.entities[i]:draw()
       end
@@ -56,6 +59,7 @@ love.load = function()
         255,
         255
       })
+      shake:postDraw()
       cam:detach()
       return weapon:drawAmmoCount()
     end

@@ -5,11 +5,13 @@ Editor = require "build.editor"
 Entity = require "build.entity"
 Floater = require "build.floater"
 Player = require "build.player"
+shake = require "build.shake"
 Weapon = require "build.weapon"
 
 local cam, editor, player, spawn, toggleEditor, weapon
 initGame = ->
   editor = Editor!
+  -- shake = Shake!
 
   -- Change this string to be the level you want to load!
   -- editor\loadSavedFile "levels/level3.lua"
@@ -36,6 +38,7 @@ love.load = ->
     if toggleEditor
       editor\update dt
     else
+      shake\update dt
       player\update dt
       world\update dt
       -- floater\update dt
@@ -57,6 +60,7 @@ love.load = ->
       editor\draw!
     else
       cam\attach!
+      shake\preDraw!
 
       -- editor\drawGrid!
       for i = 1, #editor.entities
@@ -67,6 +71,7 @@ love.load = ->
 
       -- floater\draw!
 
+      shake\postDraw!
       cam\detach!
     
       weapon\drawAmmoCount!

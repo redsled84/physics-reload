@@ -6,6 +6,7 @@ end
 local remove
 remove = table.remove
 local Bullet = require("build.bullet")
+local shake = require("build.shake")
 local graphics, audio, mouse
 do
   local _obj_0 = love
@@ -26,6 +27,7 @@ do
     },
     minAtkPower = 5,
     maxAtkPower = 15,
+    shakeConstant = 2.25,
     updateRateOfFire = function(self, dt)
       if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
         self.rateOfFire.time = self.rateOfFire.time + dt
@@ -44,6 +46,7 @@ do
       local bullet
       self.canShoot = false
       self.ammoCount = self.ammoCount - 1
+      shake:more(self.shakeConstant)
       bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize, random(self.minAtkPower, self.maxAtkPower))
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()

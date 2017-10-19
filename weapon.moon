@@ -2,6 +2,7 @@ import atan2, cos, pi, random, sin from math
 import remove from table
 
 Bullet = require "build.bullet"
+shake = require "build.shake"
 
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
@@ -22,6 +23,7 @@ class Weapon
   rateOfFire: {time: 0, max: .15}
   minAtkPower: 5
   maxAtkPower: 15
+  shakeConstant: 2.25
 
   updateRateOfFire: (dt) =>
     if @rateOfFire.time < @rateOfFire.max and not @canShoot
@@ -53,6 +55,8 @@ class Weapon
     local bullet
     @canShoot = false
     @ammoCount -= 1
+
+    shake\more @shakeConstant
 
     bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize, random(@minAtkPower, @maxAtkPower)
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
