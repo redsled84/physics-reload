@@ -19,9 +19,10 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local player = getObject(obj1, obj2, "Player")
   local bullet = getObject(obj1, obj2, "Bullet")
   local floater = getObject(obj1, obj2, "Floater")
+  local walker = getObject(obj1, obj2, "Walker")
 
   if player then
-    if math.abs(x) == 1 and not player.onGround then
+    if math.abs(x) == 1 and not player.onGround and not bullet then
       player.xVelocity = 0
     end
     if y ~= 0 then
@@ -31,6 +32,14 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
     end
 
     player:setNormal({x, y})
+
+    if bullet then
+      player:damage(10)
+    end
+
+    if walker then
+      player:damageByImpulse(x, y, 5)
+    end
   end
 
   if bullet then
@@ -43,7 +52,25 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   end
 
   if floater and player then
-    player:damage(x, y, floater.attackPower)
+    player:damageByImpulse(x, y, floater.attackPower)
+  end
+
+  if walker and not walker.body:isDestroyed() then
+    if x > 0 then
+      walker.dir = 1
+      walker.xVelocity = 0
+    elseif x < 0 then
+      walker.dir = -1
+      walker.xVelocity = 0
+    end
+
+    if bullet then
+      walker:damage(bullet.damage)
+    end
+  end
+
+  if bullet and player then
+    print (true)
   end
 end
 

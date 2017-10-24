@@ -4,7 +4,7 @@ collisionMasks = require "build.collisionMasks"
 Entity = require "build.entity"
 
 class Bullet extends Entity
-  new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage) =>
+  new: (@x, @y, @goalX, @goalY, @speed, @width, @height, @damage, @canHurtEnemies) =>
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
     @calculateDirections!
 
@@ -12,7 +12,10 @@ class Bullet extends Entity
     @body\setFixedRotation false
     @body\setBullet true
 
-    @fixture\setFilterData collisionMasks.bullet, collisionMasks.solid, 0
+    if @canHurtEnemies
+        @fixture\setFilterData collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0
+    else
+        @fixture\setFilterData collisionMasks.bulletHurtPlayer, collisionMasks.solid + collisionMasks.player, 0
 
   calculateDirections: =>
     @dx = @goalX - @x

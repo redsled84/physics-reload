@@ -6,17 +6,20 @@ local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Player = require("build.player")
 local shake = require("build.shake")
+local Walker = require("build.walker")
 local Weapon = require("build.weapon")
-local cam, editor, player, spawn, toggleEditor, weapon
+local cam, editor, player, spawn, toggleEditor, walker, weapon
 local initGame
 initGame = function()
   editor = Editor()
+  editor:loadSavedFile("levels/level3.lua")
   spawn = {
     x = 64,
     y = 32
   }
   player = Player(spawn.x, spawn.y)
-  weapon = Weapon(0, 0, 100)
+  walker = Walker(300, 32, 450, 32)
+  weapon = Weapon(0, 0, 100, nil, true)
   setWorldCallbacks()
   cam = Camera(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   toggleEditor = false
@@ -40,7 +43,8 @@ love.load = function()
       mouseX, mouseY = cam:worldCoords(love.mouse.getX(), love.mouse.getY())
       weapon:shootAuto(mouseX, mouseY)
       weapon.x, weapon.y = player.body:getX(), player.body:getY()
-      return cam:lookAt(player.body:getX(), player.body:getY())
+      cam:lookAt(player.body:getX(), player.body:getY())
+      return walker:update(dt, player.body:getX(), player.body:getY())
     end
   end
   love.draw = function()
@@ -59,6 +63,7 @@ love.load = function()
         255,
         255
       })
+      walker:draw()
       shake:postDraw()
       cam:detach()
       return weapon:drawAmmoCount()

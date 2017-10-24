@@ -15,8 +15,9 @@ do
       if not self.body:isDestroyed() then
         if colors then
           graphics.setColor(unpack(colors))
+        else
+          graphics.setColor(10, 10, 10, 140)
         end
-        graphics.setColor(10, 10, 10, 140)
         if self.shapeType ~= "circle" then
           return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else
@@ -48,7 +49,7 @@ do
       end
       self.fixture = physics.newFixture(self.body, self.shape)
       self.fixture:setUserData(self)
-      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bullet, 0)
+      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker, 0)
       self.normal = { }
     end,
     __base = _base_0,

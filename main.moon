@@ -6,21 +6,23 @@ Entity = require "build.entity"
 Floater = require "build.floater"
 Player = require "build.player"
 shake = require "build.shake"
+Walker = require "build.walker"
 Weapon = require "build.weapon"
 
-local cam, editor, player, spawn, toggleEditor, weapon
+local cam, editor, player, spawn, toggleEditor, walker, weapon
 initGame = ->
   editor = Editor!
   -- shake = Shake!
 
   -- Change this string to be the level you want to load!
-  -- editor\loadSavedFile "levels/level3.lua"
+  editor\loadSavedFile "levels/level3.lua"
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}
   player = Player spawn.x, spawn.y
   -- floor = Entity 100, 500, {600, 32}
-  weapon = Weapon 0, 0, 100
+  walker = Walker 300, 32, 450, 32
+  weapon = Weapon 0, 0, 100, nil, true
   -- floater = Floater 350, 100
 
   setWorldCallbacks!
@@ -53,7 +55,11 @@ love.load = ->
       weapon\shootAuto mouseX, mouseY
       weapon.x, weapon.y = player.body\getX!, player.body\getY!
 
+      -- print weapon.canShoot, weapon.rateOfFire.time
+
       cam\lookAt player.body\getX!, player.body\getY!
+
+      walker\update dt, player.body\getX!, player.body\getY!
 
   love.draw = ->
     if toggleEditor
@@ -70,6 +76,8 @@ love.load = ->
       player\draw {0, 255, 255}
 
       -- floater\draw!
+
+      walker\draw!
 
       shake\postDraw!
       cam\detach!

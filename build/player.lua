@@ -14,11 +14,27 @@ do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    damage = function(self, x, y, attackPower)
+    removeHealth = function(self, healthToRemove)
+      if self.health - healthToRemove > 0 then
+        self.health = self.health - healthToRemove
+      else
+        self.health = 0
+      end
+    end,
+    damageByImpulse = function(self, x, y, attackPower)
       self.activeHitStun = true
-      return self.body:applyLinearImpulse(-1000 * x, -1000 * y)
+      self.body:applyLinearImpulse(-1000 * x, -1000 * y)
+      return self:removeHealth(attackPower)
+    end,
+    damage = function(self, attackPower)
+      return self:removeHealth(attackPower)
     end,
     update = function(self, dt)
+      if self.health <= 0 then
+        self.health = 0
+        self.onGround = false
+        return 
+      end
       if self.activeHitStun then
         self.hitStunTimer:update(dt, function()
           self.activeHitStun = false
@@ -65,6 +81,13 @@ do
           return self.body:setLinearVelocity(xv, self.jumpVelocity)
         end
       end
+    end,
+    draw = function(self)
+      _class_0.__parent.__base.draw(self)
+      local healthRatio
+      healthRatio = self.health / self.maxHealth
+      love.graphics.setColor(255, 0, 0)
+      return love.graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
     end
   }
   _base_0.__index = _base_0
@@ -84,12 +107,14 @@ do
         self.height
       }, "dynamic", "rectangle")
       self.body:setFixedRotation(true)
-      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid, 0)
+      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker, 0)
       self.xVelocity = 0
       self.terminalVelocity = 800
       self.jumpVelocity = -700
-      self.hitStunTimer = Timer(2)
+      self.hitStunTimer = Timer(.5)
       self.activeHitStun = false
+      self.maxHealth = 200
+      self.health = self.maxHealth
     end,
     __base = _base_0,
     __name = "Player",

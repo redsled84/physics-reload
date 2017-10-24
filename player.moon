@@ -17,20 +17,38 @@ class Player extends Entity
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
 
     @body\setFixedRotation true
-    @fixture\setFilterData collisionMasks.player, collisionMasks.solid, 0
+    @fixture\setFilterData collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker, 0
 
     @xVelocity = 0
     @terminalVelocity = 800
     @jumpVelocity = -700
 
-    @hitStunTimer = Timer 2
+    @hitStunTimer = Timer .5
     @activeHitStun = false
 
-  damage: (x, y, attackPower) =>
+    @maxHealth = 200
+    @health = @maxHealth
+
+  removeHealth: (healthToRemove) =>
+    if @health - healthToRemove > 0
+      @health -= healthToRemove
+    else
+      @health = 0
+
+  damageByImpulse: (x, y, attackPower) =>
     @activeHitStun = true
     @body\applyLinearImpulse -1000 * x, -1000 * y
+    @removeHealth attackPower
+
+  damage: (attackPower) =>
+    @removeHealth attackPower
 
   update: (dt) =>
+    if @health <= 0
+      @health = 0
+      @onGround = false
+      return
+
     if @activeHitStun
       @hitStunTimer\update dt, () ->
         @activeHitStun = false
@@ -77,5 +95,12 @@ class Player extends Entity
         local xv, _
         xv, _ = @body\getLinearVelocity!
         @body\setLinearVelocity xv, @jumpVelocity
+
+  draw: =>
+    super!
+    local healthRatio
+    healthRatio = @health / @maxHealth
+    love.graphics.setColor 255, 0, 0
+    love.graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
 
 return Player

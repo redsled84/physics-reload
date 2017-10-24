@@ -13,7 +13,7 @@ do
   graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
 end
 local gunShot = audio.newSource("audio/gunshot.wav", "static")
-gunShot:setVolume(1)
+gunShot:setVolume(.2)
 local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
@@ -27,11 +27,11 @@ do
     },
     minAtkPower = 5,
     maxAtkPower = 15,
-    shakeConstant = 2.25,
+    shakeConstant = 4.25,
     updateRateOfFire = function(self, dt)
       if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
         self.rateOfFire.time = self.rateOfFire.time + dt
-      else
+      elseif self.rateOfFire.time > self.rateOfFire.max and not self.canShoot then
         self.rateOfFire.time = 0
         self.canShoot = true
       end
@@ -46,8 +46,10 @@ do
       local bullet
       self.canShoot = false
       self.ammoCount = self.ammoCount - 1
-      shake:more(self.shakeConstant)
-      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize, random(self.minAtkPower, self.maxAtkPower))
+      if self.isPlayerWeapon then
+        shake:more(self.shakeConstant)
+      end
+      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize, random(self.minAtkPower, self.maxAtkPower), self.isPlayerWeapon)
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()
       bullet:fire()
@@ -63,8 +65,14 @@ do
       local targetX, targetY
       targetX = x
       targetY = y
-      if mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
-        return self:shootBullet(targetX, targetY)
+      if self.isPlayerWeapon then
+        if mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+          return self:shootBullet(targetX, targetY)
+        end
+      else
+        if self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+          return self:shootBullet(targetX, targetY)
+        end
       end
     end,
     shootSemi = function(self, x, y, button)
@@ -97,11 +105,14 @@ do
   }
   _base_0.__index = _base_0
   _class_0 = setmetatable({
-    __init = function(self, x, y, magazineSize, sprayAngle)
+    __init = function(self, x, y, magazineSize, sprayAngle, isPlayerWeapon)
       if sprayAngle == nil then
         sprayAngle = math.pi / 100
       end
-      self.x, self.y, self.magazineSize, self.sprayAngle = x, y, magazineSize, sprayAngle
+      if isPlayerWeapon == nil then
+        isPlayerWeapon = false
+      end
+      self.x, self.y, self.magazineSize, self.sprayAngle, self.isPlayerWeapon = x, y, magazineSize, sprayAngle, isPlayerWeapon
       self.ammoCount = self.magazineSize
       self.fireControl = "auto"
       self.bulletSpeed = 2700

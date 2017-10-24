@@ -15,7 +15,7 @@ class Entity
 
     @fixture = physics.newFixture @body, @shape
     @fixture\setUserData self
-    @fixture\setFilterData collisionMasks.solid, collisionMasks.player + collisionMasks.bullet, 0
+    @fixture\setFilterData collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker, 0
 
     @normal = {}
 
@@ -26,7 +26,8 @@ class Entity
     if not @body\isDestroyed!
       if colors
         graphics.setColor unpack colors
-      graphics.setColor 10, 10, 10, 140
+      else
+        graphics.setColor 10, 10, 10, 140
       if @shapeType ~= "circle"
         graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
       else

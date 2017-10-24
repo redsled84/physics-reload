@@ -27,8 +27,8 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y, goalX, goalY, speed, width, height, damage)
-      self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage = x, y, goalX, goalY, speed, width, height, damage
+    __init = function(self, x, y, goalX, goalY, speed, width, height, damage, canHurtEnemies)
+      self.x, self.y, self.goalX, self.goalY, self.speed, self.width, self.height, self.damage, self.canHurtEnemies = x, y, goalX, goalY, speed, width, height, damage, canHurtEnemies
       _class_0.__parent.__init(self, self.x, self.y, {
         self.width,
         self.height
@@ -36,7 +36,11 @@ do
       self:calculateDirections()
       self.body:setFixedRotation(false)
       self.body:setBullet(true)
-      return self.fixture:setFilterData(collisionMasks.bullet, collisionMasks.solid, 0)
+      if self.canHurtEnemies then
+        return self.fixture:setFilterData(collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0)
+      else
+        return self.fixture:setFilterData(collisionMasks.bulletHurtPlayer, collisionMasks.solid + collisionMasks.player, 0)
+      end
     end,
     __base = _base_0,
     __name = "Bullet",

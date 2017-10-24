@@ -7,11 +7,11 @@ shake = require "build.shake"
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
 gunShot = audio.newSource "audio/gunshot.wav", "static"
-gunShot\setVolume 1
+gunShot\setVolume .2
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
-  new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100) =>
+  new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100, @isPlayerWeapon=false) =>
     @ammoCount = @magazineSize
     -- @drawOffset = {x: @sprite\getWidth! / 4, y: @sprite\getHeight! / 2}
     @fireControl = "auto"
@@ -23,12 +23,12 @@ class Weapon
   rateOfFire: {time: 0, max: .15}
   minAtkPower: 5
   maxAtkPower: 15
-  shakeConstant: 2.25
+  shakeConstant: 4.25
 
   updateRateOfFire: (dt) =>
     if @rateOfFire.time < @rateOfFire.max and not @canShoot
       @rateOfFire.time += dt
-    else
+    elseif @rateOfFire.time > @rateOfFire.max and not @canShoot
       @rateOfFire.time = 0
       @canShoot = true
 
@@ -56,9 +56,10 @@ class Weapon
     @canShoot = false
     @ammoCount -= 1
 
-    shake\more @shakeConstant
+    if @isPlayerWeapon
+      shake\more @shakeConstant
 
-    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize, random(@minAtkPower, @maxAtkPower)
+    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize, random(@minAtkPower, @maxAtkPower), @isPlayerWeapon
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
     bullet\calculateDirections!
@@ -77,8 +78,12 @@ class Weapon
     local targetX, targetY
     targetX = x
     targetY = y
-    if mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
-      @shootBullet targetX, targetY
+    if @isPlayerWeapon
+      if mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+        @shootBullet targetX, targetY
+    else
+      if @canShoot and @ammoCount > 0 and @fireControl == "auto"
+        @shootBullet targetX, targetY
 
   shootSemi: (x, y, button) =>
     if button == 1 and @canShoot and @ammoCount > 0 and @fireControl == "semi"

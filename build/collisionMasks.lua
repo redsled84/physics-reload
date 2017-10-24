@@ -1,5 +1,7 @@
 return {
-	bullet = 1,
+	bulletHurtPlayer = 1,
 	player = 2,
 	solid = 4,
+	walker = 8,
+	bulletHurtEnemy = 16,
 }
