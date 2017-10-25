@@ -6,6 +6,7 @@ end
 local remove
 remove = table.remove
 local Bullet = require("build.bullet")
+local Timer = require("build.timer")
 local shake = require("build.shake")
 local graphics, audio, mouse
 do
@@ -13,27 +14,23 @@ do
   graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
 end
 local gunShot = audio.newSource("audio/gunshot.wav", "static")
-gunShot:setVolume(.2)
+gunShot:setVolume(1)
 local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
   local _class_0
   local _base_0 = {
     bullets = { },
-    canShoot = true,
-    rateOfFire = {
-      time = 0,
-      max = .15
-    },
+    canShoot = false,
+    rateOfFireTimer = Timer(.15),
     minAtkPower = 5,
     maxAtkPower = 15,
     shakeConstant = 4.25,
     updateRateOfFire = function(self, dt)
-      if self.rateOfFire.time < self.rateOfFire.max and not self.canShoot then
-        self.rateOfFire.time = self.rateOfFire.time + dt
-      elseif self.rateOfFire.time > self.rateOfFire.max and not self.canShoot then
-        self.rateOfFire.time = 0
-        self.canShoot = true
+      if not self.canShoot then
+        return self.rateOfFireTimer:update(dt, function()
+          self.canShoot = true
+        end)
       end
     end,
     getVariableBulletVectors = function(self, bullet)
@@ -45,7 +42,9 @@ do
     shootBullet = function(self, x, y)
       local bullet
       self.canShoot = false
-      self.ammoCount = self.ammoCount - 1
+      if self.ammoCount > 0 then
+        self.ammoCount = self.ammoCount - 1
+      end
       if self.isPlayerWeapon then
         shake:more(self.shakeConstant)
       end
@@ -54,25 +53,23 @@ do
       bullet:calculateDirections()
       bullet:fire()
       self.bullets[#self.bullets + 1] = bullet
-      if gunShot:isPlaying() then
-        gunShot:stop()
-        return gunShot:play()
-      else
-        return gunShot:play()
+      if self.isPlayerWeapon then
+        if gunShot:isPlaying() then
+          gunShot:stop()
+          return gunShot:play()
+        else
+          return gunShot:play()
+        end
       end
     end,
     shootAuto = function(self, x, y)
       local targetX, targetY
       targetX = x
       targetY = y
-      if self.isPlayerWeapon then
-        if mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
-          return self:shootBullet(targetX, targetY)
-        end
-      else
-        if self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
-          return self:shootBullet(targetX, targetY)
-        end
+      if self.isPlayerWeapon and mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+        return self:shootBullet(targetX, targetY)
+      elseif not self.isPlayerWeapon and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+        return self:shootBullet(targetX, targetY)
       end
     end,
     shootSemi = function(self, x, y, button)

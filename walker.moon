@@ -19,15 +19,17 @@ class Walker extends Entity
     @health -= attack
 
   move: (dt) =>
+    if @body\getX! < @originX
+      @dir = 1
+      @xVelocity = 10
+    elseif @body\getX! > @endX
+      @xVelocity = -10
+      @dir = -1
+
     @xVelocity += @dir * @moveSpeed * dt
     local vy
     _, vy = @body\getLinearVelocity!
     @body\setLinearVelocity @xVelocity, vy
-
-    if @x < @originX
-      @dir = 1
-    elseif @x > @endX
-      @dir = -1
 
   update: (dt, targetX, targetY) =>
     if not @body\isDestroyed!

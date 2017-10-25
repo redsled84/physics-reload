@@ -10,16 +10,18 @@ do
       self.health = self.health - attack
     end,
     move = function(self, dt)
+      if self.body:getX() < self.originX then
+        self.dir = 1
+        self.xVelocity = 10
+      elseif self.body:getX() > self.endX then
+        self.xVelocity = -10
+        self.dir = -1
+      end
       self.xVelocity = self.xVelocity + (self.dir * self.moveSpeed * dt)
       local vy
       local _
       _, vy = self.body:getLinearVelocity()
-      self.body:setLinearVelocity(self.xVelocity, vy)
-      if self.x < self.originX then
-        self.dir = 1
-      elseif self.x > self.endX then
-        self.dir = -1
-      end
+      return self.body:setLinearVelocity(self.xVelocity, vy)
     end,
     update = function(self, dt, targetX, targetY)
       if not self.body:isDestroyed() then

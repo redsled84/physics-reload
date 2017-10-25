@@ -3,10 +3,11 @@ do
   local _class_0
   local _base_0 = {
     update = function(self, dt, callback)
-      self.time = self.time - dt
-      if self.time <= 0 then
-        callback()
-        self.time = self.max
+      if self.time >= self.max then
+        self.time = 0
+        return callback()
+      else
+        self.time = self.time + dt
       end
     end
   }
@@ -14,7 +15,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, max)
       self.max = max
-      self.time = self.max
+      self.time = 0
     end,
     __base = _base_0,
     __name = "Timer"

@@ -1,9 +1,11 @@
 class Timer
   new: (@max) =>
-    @time = @max
+    @time = 0
   update: (dt, callback) =>
-    @time -= dt
-    if @time <= 0
+    if @time >= @max
+      @time = 0
       callback()
-      @time = @max
+    else
+      @time += dt
+
 return Timer

@@ -4,6 +4,7 @@ local collisionMasks = require("build.collisionMasks")
 local inspect = require("libs.inspect")
 local Entity = require("build.entity")
 local Timer = require("build.timer")
+local Weapon = require("build.weapon")
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
@@ -28,6 +29,17 @@ do
     end,
     damage = function(self, attackPower)
       return self:removeHealth(attackPower)
+    end,
+    handleWeapon = function(self, dt, cam)
+      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY()
+      self.weapon:autoRemoveDestroyedBullets()
+      local mouseX, mouseY
+      mouseX, mouseY = cam:worldCoords(love.mouse.getX(), love.mouse.getY())
+      self.weapon:shootAuto(mouseX, mouseY)
+      self.weapon:updateRateOfFire(dt)
+      return self.printTimer:update(dt, function()
+        return print(self.weapon.canShoot)
+      end)
     end,
     update = function(self, dt)
       if self.health <= 0 then
@@ -87,7 +99,8 @@ do
       local healthRatio
       healthRatio = self.health / self.maxHealth
       love.graphics.setColor(255, 0, 0)
-      return love.graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
+      love.graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
+      return self.weapon:drawBullets()
     end
   }
   _base_0.__index = _base_0
@@ -112,9 +125,11 @@ do
       self.terminalVelocity = 800
       self.jumpVelocity = -700
       self.hitStunTimer = Timer(.5)
+      self.printTimer = Timer(.05)
       self.activeHitStun = false
       self.maxHealth = 200
       self.health = self.maxHealth
+      self.weapon = Weapon(0, 0, 1000, nil, true)
     end,
     __base = _base_0,
     __name = "Player",

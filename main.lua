@@ -6,9 +6,8 @@ local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Player = require("build.player")
 local shake = require("build.shake")
-local Walker = require("build.walker")
 local Weapon = require("build.weapon")
-local cam, editor, player, spawn, toggleEditor, walker, weapon
+local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon
 local initGame
 initGame = function()
   editor = Editor()
@@ -18,8 +17,6 @@ initGame = function()
     y = 32
   }
   player = Player(spawn.x, spawn.y)
-  walker = Walker(300, 32, 450, 32)
-  weapon = Weapon(0, 0, 100, nil, true)
   setWorldCallbacks()
   cam = Camera(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   toggleEditor = false
@@ -33,18 +30,12 @@ love.load = function()
     else
       shake:update(dt)
       player:update(dt)
+      player:handleWeapon(dt, cam)
       world:update(dt)
       for i = 1, #editor.objects do
         editor.objects[i]:update(dt)
       end
-      weapon:updateRateOfFire(dt)
-      weapon:autoRemoveDestroyedBullets()
-      local mouseX, mouseY
-      mouseX, mouseY = cam:worldCoords(love.mouse.getX(), love.mouse.getY())
-      weapon:shootAuto(mouseX, mouseY)
-      weapon.x, weapon.y = player.body:getX(), player.body:getY()
-      cam:lookAt(player.body:getX(), player.body:getY())
-      return walker:update(dt, player.body:getX(), player.body:getY())
+      return cam:lookAt(player.body:getX(), player.body:getY())
     end
   end
   love.draw = function()
@@ -57,16 +48,14 @@ love.load = function()
         editor.entities[i]:draw()
       end
       editor:drawObjects()
-      weapon:drawBullets()
       player:draw({
         0,
         255,
         255
       })
-      walker:draw()
       shake:postDraw()
       cam:detach()
-      return weapon:drawAmmoCount()
+      return player.weapon:drawAmmoCount()
     end
   end
   love.mousepressed = function(x, y, button)

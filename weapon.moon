@@ -2,12 +2,13 @@ import atan2, cos, pi, random, sin from math
 import remove from table
 
 Bullet = require "build.bullet"
+Timer = require "build.timer"
 shake = require "build.shake"
 
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
 gunShot = audio.newSource "audio/gunshot.wav", "static"
-gunShot\setVolume .2
+gunShot\setVolume 1
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
@@ -19,18 +20,17 @@ class Weapon
     @bulletSize = 6
 
   bullets: {}
-  canShoot: true
-  rateOfFire: {time: 0, max: .15}
+  canShoot: false
+  rateOfFireTimer: Timer .15
   minAtkPower: 5
   maxAtkPower: 15
   shakeConstant: 4.25
 
   updateRateOfFire: (dt) =>
-    if @rateOfFire.time < @rateOfFire.max and not @canShoot
-      @rateOfFire.time += dt
-    elseif @rateOfFire.time > @rateOfFire.max and not @canShoot
-      @rateOfFire.time = 0
-      @canShoot = true
+    if not @canShoot
+      @rateOfFireTimer\update dt, () ->
+        @canShoot = true
+
 
   getVariableBulletVectors: (bullet) =>
     local angle, goalX, goalY
@@ -54,7 +54,8 @@ class Weapon
   shootBullet: (x, y) =>
     local bullet
     @canShoot = false
-    @ammoCount -= 1
+    if @ammoCount > 0
+      @ammoCount -= 1
 
     if @isPlayerWeapon
       shake\more @shakeConstant
@@ -68,22 +69,21 @@ class Weapon
     -- Add bullet to world
     @bullets[#@bullets+1] = bullet
 
-    if gunShot\isPlaying!
-      gunShot\stop!
-      gunShot\play!
-    else
-      gunShot\play!
+    if @isPlayerWeapon
+      if gunShot\isPlaying!
+        gunShot\stop!
+        gunShot\play!
+      else
+        gunShot\play!
 
   shootAuto: (x, y) =>
     local targetX, targetY
     targetX = x
     targetY = y
-    if @isPlayerWeapon
-      if mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
-        @shootBullet targetX, targetY
-    else
-      if @canShoot and @ammoCount > 0 and @fireControl == "auto"
-        @shootBullet targetX, targetY
+    if @isPlayerWeapon and mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+      @shootBullet targetX, targetY
+    elseif not @isPlayerWeapon and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+      @shootBullet targetX, targetY
 
   shootSemi: (x, y, button) =>
     if button == 1 and @canShoot and @ammoCount > 0 and @fireControl == "semi"

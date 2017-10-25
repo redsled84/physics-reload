@@ -6,10 +6,10 @@ Entity = require "build.entity"
 Floater = require "build.floater"
 Player = require "build.player"
 shake = require "build.shake"
-Walker = require "build.walker"
+-- Walker = require "build.walker"
 Weapon = require "build.weapon"
 
-local cam, editor, player, spawn, toggleEditor, walker, weapon
+local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon
 initGame = ->
   editor = Editor!
   -- shake = Shake!
@@ -21,8 +21,9 @@ initGame = ->
   spawn = {x: 64, y: 32}
   player = Player spawn.x, spawn.y
   -- floor = Entity 100, 500, {600, 32}
-  walker = Walker 300, 32, 450, 32
-  weapon = Weapon 0, 0, 100, nil, true
+  -- walker = Walker 300, 32, 450, 32
+  -- walker2 = Walker -200, -198, -100, -198
+  
   -- floater = Floater 350, 100
 
   setWorldCallbacks!
@@ -42,24 +43,22 @@ love.load = ->
     else
       shake\update dt
       player\update dt
+      player\handleWeapon dt, cam
       world\update dt
       -- floater\update dt
 
       for i=1, #editor.objects
         editor.objects[i]\update dt
 
-      weapon\updateRateOfFire dt
-      weapon\autoRemoveDestroyedBullets!
-      local mouseX, mouseY
-      mouseX, mouseY = cam\worldCoords love.mouse.getX!, love.mouse.getY!
-      weapon\shootAuto mouseX, mouseY
-      weapon.x, weapon.y = player.body\getX!, player.body\getY!
 
       -- print weapon.canShoot, weapon.rateOfFire.time
 
       cam\lookAt player.body\getX!, player.body\getY!
 
-      walker\update dt, player.body\getX!, player.body\getY!
+      -- walker\update dt, player.body\getX!, player.body\getY!
+      -- walker2\update dt, player.body\getX!, player.body\getY!
+
+      -- print walker2.dir
 
   love.draw = ->
     if toggleEditor
@@ -72,17 +71,18 @@ love.load = ->
       for i = 1, #editor.entities
         editor.entities[i]\draw!
       editor\drawObjects!
-      weapon\drawBullets!
+      
       player\draw {0, 255, 255}
 
       -- floater\draw!
 
-      walker\draw!
+      -- walker\draw!
+      -- walker2\draw!
 
       shake\postDraw!
       cam\detach!
     
-      weapon\drawAmmoCount!
+      player.weapon\drawAmmoCount!
 
   love.mousepressed = (x, y, button) ->
     if toggleEditor

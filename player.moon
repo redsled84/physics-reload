@@ -4,6 +4,7 @@ collisionMasks = require "build.collisionMasks"
 inspect = require "libs.inspect"
 Entity = require "build.entity"
 Timer = require "build.timer"
+Weapon = require "build.weapon"
 
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
@@ -24,10 +25,13 @@ class Player extends Entity
     @jumpVelocity = -700
 
     @hitStunTimer = Timer .5
+    @printTimer = Timer .05
     @activeHitStun = false
 
     @maxHealth = 200
     @health = @maxHealth
+
+    @weapon = Weapon 0, 0, 1000, nil, true
 
   removeHealth: (healthToRemove) =>
     if @health - healthToRemove > 0
@@ -42,6 +46,17 @@ class Player extends Entity
 
   damage: (attackPower) =>
     @removeHealth attackPower
+
+  handleWeapon: (dt, cam) =>
+    @weapon.x, @weapon.y = @body\getX!, @body\getY!
+    @weapon\autoRemoveDestroyedBullets!
+    local mouseX, mouseY
+    mouseX, mouseY = cam\worldCoords love.mouse.getX!, love.mouse.getY!
+    @weapon\shootAuto mouseX, mouseY
+    @weapon\updateRateOfFire dt
+
+    @printTimer\update dt, () ->
+      print @weapon.canShoot
 
   update: (dt) =>
     if @health <= 0
@@ -102,5 +117,7 @@ class Player extends Entity
     healthRatio = @health / @maxHealth
     love.graphics.setColor 255, 0, 0
     love.graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
+
+    @weapon\drawBullets!
 
 return Player
