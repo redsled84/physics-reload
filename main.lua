@@ -32,9 +32,7 @@ love.load = function()
       player:update(dt)
       player:handleWeapon(dt, cam)
       world:update(dt)
-      for i = 1, #editor.objects do
-        editor.objects[i]:update(dt)
-      end
+      editor:updateObjects(dt)
       return cam:lookAt(player.body:getX(), player.body:getY())
     end
   end
@@ -74,8 +72,10 @@ love.load = function()
     if toggleEditor then
       editor:keypressed(key)
       editor:hotLoad()
+      editor:hotLoadObjects()
       player.body:setPosition(spawn.x, spawn.y)
       player.xVelocity = 50
+      player.health = player.maxHealth
     else
       player:jump(key)
     end

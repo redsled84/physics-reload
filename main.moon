@@ -47,8 +47,7 @@ love.load = ->
       world\update dt
       -- floater\update dt
 
-      for i=1, #editor.objects
-        editor.objects[i]\update dt
+      editor\updateObjects dt
 
 
       -- print weapon.canShoot, weapon.rateOfFire.time
@@ -99,10 +98,13 @@ love.load = ->
     if toggleEditor
       editor\keypressed key
       editor\hotLoad!
+      editor\hotLoadObjects!
       player.body\setPosition spawn.x, spawn.y
       player.xVelocity = 50
-
+      player.health = player.maxHealth
     else
+      -- print inspect editor.objectData
+      -- print #editor.objectData, #editor.objects
       player\jump key
 
     if key == "f3"

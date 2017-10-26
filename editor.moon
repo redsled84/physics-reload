@@ -19,6 +19,7 @@ class Editor
   activeDeleteIndex: -1
   activeRadius: 0
   activeShape: false
+  activeObject: false
   activeShapeType: "polygon"
   activeVertices: {}
   activeX: mouse.getX!
@@ -27,6 +28,7 @@ class Editor
   selectedObject: -1
   selectedMenuItem: Floater
 
+  objectData: {}
   objects: {}
   data: {}
   shapes: {}
@@ -47,20 +49,21 @@ class Editor
   entities: {}
 
   loadSavedFile: (filename) =>
-    @data = filesystem.exists(filename) and table.load(filename) or {}
+    local fileData
+    fileData = filesystem.exists(filename) and table.load(filename) or {}
+    @data = fileData.polygonData
     if #@data > 0
       for i = 1, #@data
         @shapes[i] = physics.newPolygonShape @data[i].vertices
         print "new polygon: ", inspect @data[i].vertices
         if @data[i].object
           @data[i].load!
-      @loadedFilename = filename
       @hotLoad!
-
-      if #@objects > 0
-        for i = 1, #@objects
-          @objects[i].load!
-          print @objects[i]
+    @objectData = fileData.objectData
+    if #@objectData > 0
+      @hotLoadObjects!
+    @loadedFilename = filename
+    
 
   hotLoad: =>
     local target, entity
@@ -71,6 +74,17 @@ class Editor
         entity = Entity 0, 0, target.vertices, "static", "polygon"
         @entities[i] = entity
 
+    -- @hotLoadObjects!
+
+  hotLoadObjects: =>
+    local object
+    for i = #@objectData, 1, -1
+      object = @objectData[i]
+      if object.added == nil
+        object.added = false
+      if object.objectType == "Floater" and not object.added
+        object.added = true
+        @objects[i] = Floater object.x, object.y
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -111,22 +125,28 @@ class Editor
     x, y = @activeX, @activeY
     for i=#@shapes, 1, -1
       shape = @shapes[i]
-      if shape\testPoint(0, 0, 0, x, y) and @selectedShape ~= i then
+      if shape\testPoint(0, 0, 0, x, y) and @selectedShape ~= i
         @activeDeleteIndex = i
         @activeShape = true
         @drawOutlinedPolygon(@hovered, nil, tf(@data[i].vertices))
-      elseif @selectedShape == i then
+      elseif @selectedShape == i
         @drawOutlinedPolygon(@selected, nil, tf(@data[@selectedShape].vertices))
       else
         @drawOutlinedPolygon(@normal, nil, tf(@data[i].vertices))
 
   drawObjects: =>
+    @activeObject = false
+
     graphics.setColor 255, 255, 255
     for i=#@objects, 1, -1
       obj = @objects[i]
+      if @objectData[i].x == @activeX and @objectData[i].y == @activeY and @selectedObject ~= i
+        @activeDeleteIndex = i
+        @activeObject = true
       obj\draw!
 
   drawCursor: =>
+    graphics.setColor 10, 10, 10, 255
     graphics.circle "line", @activeX, @activeY, @activeClickerRadius
 
   drawGrid: =>
@@ -203,6 +223,26 @@ class Editor
       graphics.print "Press 'm' to open the controls list", 15, 15
       @drawMode!
 
+  drawObjectOrigin: =>
+    local originRadius
+    originRadius = 12
+    for i = 1, #@objectData
+      if @activeObject and @activeDeleteIndex == i
+        graphics.setColor @hovered[1], @hovered[2], @hovered[3], 120
+        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.setColor @hovered[1], @hovered[2], @hovered[3], 255
+        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
+      elseif @selectedObject == i
+        graphics.setColor @selected[1], @selected[2], @selected[3], 120
+        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.setColor @selected[1], @selected[2], @selected[3], 255
+        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
+      else
+        graphics.setColor @normal[1], @normal[2], @normal[3], 120
+        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.setColor @normal[1], @normal[2], @normal[3], 255
+        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
+
   draw: =>
     @cam\attach!   
    
@@ -213,6 +253,7 @@ class Editor
       @drawActiveVertices!
     if #@objects > 0
       @drawObjects!
+      @drawObjectOrigin!
     @drawCursor!
 
     graphics.setColor 0, 0, 0
@@ -276,11 +317,15 @@ class Editor
       @cameraScale = @cameraScale + @scaleControlFactor * dt < @maxScale and
         @cameraScale + @scaleControlFactor * dt or @maxScale
 
-  update: (dt) =>
-
+  updateObjects: (dt) =>
     for i = #@objects, 1, -1 do
-      @objects[i]\update dt
+      if @objects[i].body\isDestroyed!
+        @objectData[i].added = false
+        -- remove @objects, i
+      else
+        @objects[i]\update dt
 
+  update: (dt) =>
     @cam\zoomTo @cameraScale
     -- Ensure camera coordinates are integars
     @cam\lookAt ceil(@cam.x), ceil(@cam.y)
@@ -289,27 +334,39 @@ class Editor
     @gridLockCursor!
     @moveCamera dt
     @controlCameraAttributes dt
+    @updateObjects dt
 
   mousepressed: (x, y, button) =>
     local found
     if button == 1
       -- Add a vertice to the active vertices table
-      if @activeShapeType == "polygon"
-        found = false
-        for i = 1, #@activeVertices
-          if @activeVertices[i].x == @activeX and @activeVertices[i].y == @activeY
-            found = true
+      found = false
+      for i = 1, #@activeVertices
+        if @activeVertices[i].x == @activeX and @activeVertices[i].y == @activeY
+          found = true
 
-        if not found
+      if not found
+        if @tool == "polygon"
           insert @activeVertices, @vec2(@activeX, @activeY)
-        else
-          print "there is already a vertice at that coordinate"
+        elseif @tool == "object"
+          if @selectedMenuItem == Floater and #@activeVertices < 1
+            insert @activeVertices, @vec2(@activeX, @activeY)
+          elseif @selectedMenuItem == "Walker" and #@activeVertices < 2
+            insert @activeVertices, @vec2(@activeX, @activeY)
+      else
+        print "there is already a vertice at that coordinate"
+
+      print #@activeVertices
     if button == 2
       -- Select a shape      
-      if @activeShapeType == "polygon"
+      if @tool == "polygon"
         @selectedShape = -1
         if @activeShape
           @selectedShape = @activeDeleteIndex
+      elseif @tool == "object"
+        @selectedObject = -1
+        if @activeObject
+          @selectedObject = @activeDeleteIndex
 
   recursivelySaveNewFile: (n) =>
     local str
@@ -322,7 +379,7 @@ class Editor
 
   saveFile: =>
     if 0 < len @loadedFilename
-      table.save @data, @loadedFilename
+      table.save {polygonData: @data, objectData: @objectData}, @loadedFilename
       print "saved level data to " .. @loadedFilename
     else
       @recursivelySaveNewFile 1
@@ -348,8 +405,10 @@ class Editor
         if #@activeVertices > 0
           remove @activeVertices, #@activeVertices
         if @selectedObject > 0
+          remove @objectData, @selectedObject
           remove @objects, @selectedObject
-          @objects[@objects]\destroy!
+
+          @selectedObject = -1
 
     if key == "space"
       if @tool == "polygon"
@@ -374,9 +433,13 @@ class Editor
         local className
         if @selectedMenuItem
           className = @selectedMenuItem.__class.__name
-          if className == "Floater"
-            @objects[#@objects+1] = Floater @activeVertices[1].x, @activeVertices[1].y
-            @flushActiveVertices!
+          insert @objectData, {
+            x: @activeVertices[1].x,
+            y: @activeVertices[1].y,
+            objectType: className,
+            added: false,
+          }
+          @flushActiveVertices!
 
     if key == "m"
       @viewControls = not @viewControls
@@ -386,7 +449,9 @@ class Editor
 
     if key == "1"
       @tool = "polygon"
+      @selectedShape = -1
     elseif key == "2"
       @tool = "object"
+      @selectedObject = -1
 
 return Editor

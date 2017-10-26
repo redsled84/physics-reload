@@ -48,7 +48,6 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
 
   if floater and bullet and not floater.body:isDestroyed() then
     floater:damage(bullet.damage)
-    print (bullet.damage)
   end
 
   if floater and player then

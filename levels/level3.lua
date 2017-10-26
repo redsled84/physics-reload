@@ -1,8 +1,11 @@
 return {
 -- Table: {1}
 {
-   {2},
-   {3},
+   ["polygonData"]={2},
+   ["objectData"]={3},
+},
+-- Table: {2}
+{
    {4},
    {5},
    {6},
@@ -34,196 +37,249 @@ return {
    {32},
    {33},
    {34},
-},
--- Table: {2}
-{
-   ["vertices"]={35},
-   ["shapeType"]="polygon",
+   {35},
+   {36},
+   {37},
 },
 -- Table: {3}
 {
-   ["vertices"]={36},
-   ["shapeType"]="polygon",
+   {38},
+   {39},
+   {40},
+   {41},
+   {42},
+   {43},
 },
 -- Table: {4}
-{
-   ["vertices"]={37},
-   ["shapeType"]="polygon",
-},
--- Table: {5}
-{
-   ["vertices"]={38},
-   ["shapeType"]="polygon",
-},
--- Table: {6}
-{
-   ["vertices"]={39},
-   ["shapeType"]="polygon",
-},
--- Table: {7}
-{
-   ["vertices"]={40},
-   ["shapeType"]="polygon",
-},
--- Table: {8}
-{
-   ["vertices"]={41},
-   ["shapeType"]="polygon",
-},
--- Table: {9}
-{
-   ["vertices"]={42},
-   ["shapeType"]="polygon",
-},
--- Table: {10}
-{
-   ["vertices"]={43},
-   ["shapeType"]="polygon",
-},
--- Table: {11}
 {
    ["vertices"]={44},
    ["shapeType"]="polygon",
 },
--- Table: {12}
+-- Table: {5}
 {
    ["vertices"]={45},
    ["shapeType"]="polygon",
 },
--- Table: {13}
+-- Table: {6}
 {
    ["vertices"]={46},
    ["shapeType"]="polygon",
 },
--- Table: {14}
+-- Table: {7}
 {
    ["vertices"]={47},
    ["shapeType"]="polygon",
 },
--- Table: {15}
+-- Table: {8}
 {
    ["vertices"]={48},
    ["shapeType"]="polygon",
 },
--- Table: {16}
+-- Table: {9}
 {
    ["vertices"]={49},
    ["shapeType"]="polygon",
 },
--- Table: {17}
+-- Table: {10}
 {
    ["vertices"]={50},
    ["shapeType"]="polygon",
 },
--- Table: {18}
+-- Table: {11}
 {
    ["vertices"]={51},
    ["shapeType"]="polygon",
 },
--- Table: {19}
+-- Table: {12}
 {
    ["vertices"]={52},
    ["shapeType"]="polygon",
 },
--- Table: {20}
+-- Table: {13}
 {
    ["vertices"]={53},
    ["shapeType"]="polygon",
 },
--- Table: {21}
+-- Table: {14}
 {
    ["vertices"]={54},
    ["shapeType"]="polygon",
 },
--- Table: {22}
+-- Table: {15}
 {
    ["vertices"]={55},
    ["shapeType"]="polygon",
 },
--- Table: {23}
+-- Table: {16}
 {
    ["vertices"]={56},
    ["shapeType"]="polygon",
 },
--- Table: {24}
+-- Table: {17}
 {
    ["vertices"]={57},
    ["shapeType"]="polygon",
 },
--- Table: {25}
+-- Table: {18}
 {
    ["vertices"]={58},
    ["shapeType"]="polygon",
 },
--- Table: {26}
+-- Table: {19}
 {
    ["vertices"]={59},
    ["shapeType"]="polygon",
 },
--- Table: {27}
+-- Table: {20}
 {
    ["vertices"]={60},
    ["shapeType"]="polygon",
 },
--- Table: {28}
+-- Table: {21}
 {
    ["vertices"]={61},
    ["shapeType"]="polygon",
 },
--- Table: {29}
+-- Table: {22}
 {
    ["vertices"]={62},
    ["shapeType"]="polygon",
 },
--- Table: {30}
+-- Table: {23}
 {
    ["vertices"]={63},
    ["shapeType"]="polygon",
 },
--- Table: {31}
+-- Table: {24}
 {
    ["vertices"]={64},
    ["shapeType"]="polygon",
 },
--- Table: {32}
+-- Table: {25}
 {
    ["vertices"]={65},
    ["shapeType"]="polygon",
 },
--- Table: {33}
+-- Table: {26}
 {
    ["vertices"]={66},
    ["shapeType"]="polygon",
 },
--- Table: {34}
+-- Table: {27}
 {
    ["vertices"]={67},
    ["shapeType"]="polygon",
 },
+-- Table: {28}
+{
+   ["vertices"]={68},
+   ["shapeType"]="polygon",
+},
+-- Table: {29}
+{
+   ["vertices"]={69},
+   ["shapeType"]="polygon",
+},
+-- Table: {30}
+{
+   ["vertices"]={70},
+   ["shapeType"]="polygon",
+},
+-- Table: {31}
+{
+   ["vertices"]={71},
+   ["shapeType"]="polygon",
+},
+-- Table: {32}
+{
+   ["vertices"]={72},
+   ["shapeType"]="polygon",
+},
+-- Table: {33}
+{
+   ["vertices"]={73},
+   ["shapeType"]="polygon",
+},
+-- Table: {34}
+{
+   ["vertices"]={74},
+   ["shapeType"]="polygon",
+},
 -- Table: {35}
 {
-   0,
-   224,
-   864,
-   224,
-   864,
-   192,
-   0,
-   192,
+   ["vertices"]={75},
+   ["shapeType"]="polygon",
 },
 -- Table: {36}
 {
-   1376,
-   608,
-   1376,
-   640,
-   -96,
-   640,
-   -96,
-   608,
+   ["vertices"]={76},
+   ["shapeType"]="polygon",
 },
 -- Table: {37}
 {
+   ["vertices"]={77},
+   ["shapeType"]="polygon",
+},
+-- Table: {38}
+{
+   ["y"]=-32,
+   ["x"]=224,
+   ["objectType"]="Floater",
+},
+-- Table: {39}
+{
+   ["y"]=320,
+   ["x"]=-480,
+   ["objectType"]="Floater",
+},
+-- Table: {40}
+{
+   ["y"]=448,
+   ["x"]=-352,
+   ["objectType"]="Floater",
+},
+-- Table: {41}
+{
+   ["y"]=32,
+   ["x"]=-320,
+   ["objectType"]="Floater",
+},
+-- Table: {42}
+{
+   ["y"]=64,
+   ["x"]=-480,
+   ["objectType"]="Floater",
+},
+-- Table: {43}
+{
+   ["y"]=-64,
+   ["x"]=-128,
+   ["objectType"]="Floater",
+},
+-- Table: {44}
+{
+   0,
+   224,
+   864,
+   224,
+   864,
+   192,
+   0,
+   192,
+},
+-- Table: {45}
+{
+   1376,
+   608,
+   1376,
+   640,
+   -96,
+   640,
+   -96,
+   608,
+},
+-- Table: {46}
+{
    1600,
    192,
    1600,
@@ -233,7 +289,7 @@ return {
    1024,
    192,
 },
--- Table: {38}
+-- Table: {47}
 {
    1728,
    192,
@@ -244,7 +300,7 @@ return {
    1600,
    192,
 },
--- Table: {39}
+-- Table: {48}
 {
    1728,
    0,
@@ -257,7 +313,7 @@ return {
    1728,
    224,
 },
--- Table: {40}
+-- Table: {49}
 {
    384,
    416,
@@ -268,7 +324,7 @@ return {
    928,
    416,
 },
--- Table: {41}
+-- Table: {50}
 {
    736,
    448,
@@ -279,7 +335,7 @@ return {
    704,
    448,
 },
--- Table: {42}
+-- Table: {51}
 {
    736,
    448,
@@ -288,7 +344,7 @@ return {
    736,
    480,
 },
--- Table: {43}
+-- Table: {52}
 {
    608,
    224,
@@ -297,7 +353,7 @@ return {
    608,
    288,
 },
--- Table: {44}
+-- Table: {53}
 {
    608,
    224,
@@ -308,7 +364,7 @@ return {
    384,
    224,
 },
--- Table: {45}
+-- Table: {54}
 {
    1376,
    224,
@@ -319,7 +375,7 @@ return {
    1376,
    640,
 },
--- Table: {46}
+-- Table: {55}
 {
    704,
    448,
@@ -328,7 +384,7 @@ return {
    704,
    480,
 },
--- Table: {47}
+-- Table: {56}
 {
    0,
    512,
@@ -341,7 +397,7 @@ return {
    320,
    512,
 },
--- Table: {48}
+-- Table: {57}
 {
    1824,
    -320,
@@ -352,7 +408,7 @@ return {
    1728,
    -320,
 },
--- Table: {49}
+-- Table: {58}
 {
    -480,
    -288,
@@ -363,7 +419,7 @@ return {
    128,
    -288,
 },
--- Table: {50}
+-- Table: {59}
 {
    768,
    -288,
@@ -378,7 +434,7 @@ return {
    384,
    -288,
 },
--- Table: {51}
+-- Table: {60}
 {
    608,
    128,
@@ -389,7 +445,7 @@ return {
    544,
    128,
 },
--- Table: {52}
+-- Table: {61}
 {
    224,
    192,
@@ -400,7 +456,7 @@ return {
    224,
    64,
 },
--- Table: {53}
+-- Table: {62}
 {
    960,
    -128,
@@ -411,7 +467,7 @@ return {
    960,
    -96,
 },
--- Table: {54}
+-- Table: {63}
 {
    768,
    -128,
@@ -422,7 +478,7 @@ return {
    896,
    -128,
 },
--- Table: {55}
+-- Table: {64}
 {
    1312,
    -288,
@@ -433,7 +489,7 @@ return {
    1280,
    -288,
 },
--- Table: {56}
+-- Table: {65}
 {
    1280,
    -288,
@@ -442,7 +498,7 @@ return {
    1184,
    -288,
 },
--- Table: {57}
+-- Table: {66}
 {
    896,
    -288,
@@ -451,7 +507,7 @@ return {
    896,
    -192,
 },
--- Table: {58}
+-- Table: {67}
 {
    -96,
    640,
@@ -462,7 +518,7 @@ return {
    -96,
    608,
 },
--- Table: {59}
+-- Table: {68}
 {
    0,
    -192,
@@ -473,7 +529,7 @@ return {
    -480,
    -192,
 },
--- Table: {60}
+-- Table: {69}
 {
    1344,
    384,
@@ -484,7 +540,7 @@ return {
    1344,
    608,
 },
--- Table: {61}
+-- Table: {70}
 {
    1376,
    352,
@@ -495,7 +551,7 @@ return {
    1376,
    384,
 },
--- Table: {62}
+-- Table: {71}
 {
    1248,
    352,
@@ -506,7 +562,7 @@ return {
    1216,
    352,
 },
--- Table: {63}
+-- Table: {72}
 {
    1600,
    -128,
@@ -517,7 +573,7 @@ return {
    1312,
    -128,
 },
--- Table: {64}
+-- Table: {73}
 {
    1312,
    -320,
@@ -528,7 +584,7 @@ return {
    1312,
    -288,
 },
--- Table: {65}
+-- Table: {74}
 {
    1728,
    -320,
@@ -539,7 +595,7 @@ return {
    1440,
    -320,
 },
--- Table: {66}
+-- Table: {75}
 {
    832,
    96,
@@ -550,13 +606,26 @@ return {
    832,
    64,
 },
--- Table: {67}
+-- Table: {76}
 {
-   -480,
-   160,
-   -512,
-   -96,
-   -96,
+   -192,
+   480,
+   -192,
+   448,
    -64,
+   448,
+   -64,
+   480,
+},
+-- Table: {77}
+{
+   -384,
+   320,
+   -384,
+   288,
+   -288,
+   288,
+   -288,
+   320,
 },
 }

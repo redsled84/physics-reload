@@ -50,7 +50,7 @@ do
         radius = 15
       end
       if health == nil then
-        health = 100
+        health = 50
       end
       if radiusFunction == nil then
         radiusFunction = r

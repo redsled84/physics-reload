@@ -31,6 +31,7 @@ do
     activeDeleteIndex = -1,
     activeRadius = 0,
     activeShape = false,
+    activeObject = false,
     activeShapeType = "polygon",
     activeVertices = { },
     activeX = mouse.getX(),
@@ -38,6 +39,7 @@ do
     selectedShape = -1,
     selectedObject = -1,
     selectedMenuItem = Floater,
+    objectData = { },
     objects = { },
     data = { },
     shapes = { },
@@ -65,7 +67,9 @@ do
     verticeRadius = 9,
     entities = { },
     loadSavedFile = function(self, filename)
-      self.data = filesystem.exists(filename) and table.load(filename) or { }
+      local fileData
+      fileData = filesystem.exists(filename) and table.load(filename) or { }
+      self.data = fileData.polygonData
       if #self.data > 0 then
         for i = 1, #self.data do
           self.shapes[i] = physics.newPolygonShape(self.data[i].vertices)
@@ -74,15 +78,13 @@ do
             self.data[i].load()
           end
         end
-        self.loadedFilename = filename
         self:hotLoad()
-        if #self.objects > 0 then
-          for i = 1, #self.objects do
-            self.objects[i].load()
-            print(self.objects[i])
-          end
-        end
       end
+      self.objectData = fileData.objectData
+      if #self.objectData > 0 then
+        self:hotLoadObjects()
+      end
+      self.loadedFilename = filename
     end,
     hotLoad = function(self)
       local target, entity
@@ -92,6 +94,19 @@ do
           target.added = true
           entity = Entity(0, 0, target.vertices, "static", "polygon")
           self.entities[i] = entity
+        end
+      end
+    end,
+    hotLoadObjects = function(self)
+      local object
+      for i = #self.objectData, 1, -1 do
+        object = self.objectData[i]
+        if object.added == nil then
+          object.added = false
+        end
+        if object.objectType == "Floater" and not object.added then
+          object.added = true
+          self.objects[i] = Floater(object.x, object.y)
         end
       end
     end,
@@ -146,13 +161,19 @@ do
       end
     end,
     drawObjects = function(self)
+      self.activeObject = false
       graphics.setColor(255, 255, 255)
       for i = #self.objects, 1, -1 do
         local obj = self.objects[i]
+        if self.objectData[i].x == self.activeX and self.objectData[i].y == self.activeY and self.selectedObject ~= i then
+          self.activeDeleteIndex = i
+          self.activeObject = true
+        end
         obj:draw()
       end
     end,
     drawCursor = function(self)
+      graphics.setColor(10, 10, 10, 255)
       return graphics.circle("line", self.activeX, self.activeY, self.activeClickerRadius)
     end,
     drawGrid = function(self)
@@ -213,6 +234,28 @@ do
         return self:drawMode()
       end
     end,
+    drawObjectOrigin = function(self)
+      local originRadius
+      originRadius = 12
+      for i = 1, #self.objectData do
+        if self.activeObject and self.activeDeleteIndex == i then
+          graphics.setColor(self.hovered[1], self.hovered[2], self.hovered[3], 120)
+          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.setColor(self.hovered[1], self.hovered[2], self.hovered[3], 255)
+          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
+        elseif self.selectedObject == i then
+          graphics.setColor(self.selected[1], self.selected[2], self.selected[3], 120)
+          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.setColor(self.selected[1], self.selected[2], self.selected[3], 255)
+          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
+        else
+          graphics.setColor(self.normal[1], self.normal[2], self.normal[3], 120)
+          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.setColor(self.normal[1], self.normal[2], self.normal[3], 255)
+          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
+        end
+      end
+    end,
     draw = function(self)
       self.cam:attach()
       self:drawGrid()
@@ -224,6 +267,7 @@ do
       end
       if #self.objects > 0 then
         self:drawObjects()
+        self:drawObjectOrigin()
       end
       self:drawCursor()
       graphics.setColor(0, 0, 0)
@@ -275,39 +319,58 @@ do
         self.cameraScale = self.cameraScale + self.scaleControlFactor * dt < self.maxScale and self.cameraScale + self.scaleControlFactor * dt or self.maxScale
       end
     end,
-    update = function(self, dt)
+    updateObjects = function(self, dt)
       for i = #self.objects, 1, -1 do
-        self.objects[i]:update(dt)
+        if self.objects[i].body:isDestroyed() then
+          self.objectData[i].added = false
+        else
+          self.objects[i]:update(dt)
+        end
       end
+    end,
+    update = function(self, dt)
       self.cam:zoomTo(self.cameraScale)
       self.cam:lookAt(ceil(self.cam.x), ceil(self.cam.y))
       self:manipulateCursorRadius(dt)
       self:gridLockCursor()
       self:moveCamera(dt)
-      return self:controlCameraAttributes(dt)
+      self:controlCameraAttributes(dt)
+      return self:updateObjects(dt)
     end,
     mousepressed = function(self, x, y, button)
       local found
       if button == 1 then
-        if self.activeShapeType == "polygon" then
-          found = false
-          for i = 1, #self.activeVertices do
-            if self.activeVertices[i].x == self.activeX and self.activeVertices[i].y == self.activeY then
-              found = true
-            end
-          end
-          if not found then
-            insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
-          else
-            print("there is already a vertice at that coordinate")
+        found = false
+        for i = 1, #self.activeVertices do
+          if self.activeVertices[i].x == self.activeX and self.activeVertices[i].y == self.activeY then
+            found = true
           end
         end
+        if not found then
+          if self.tool == "polygon" then
+            insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
+          elseif self.tool == "object" then
+            if self.selectedMenuItem == Floater and #self.activeVertices < 1 then
+              insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
+            elseif self.selectedMenuItem == "Walker" and #self.activeVertices < 2 then
+              insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
+            end
+          end
+        else
+          print("there is already a vertice at that coordinate")
+        end
+        print(#self.activeVertices)
       end
       if button == 2 then
-        if self.activeShapeType == "polygon" then
+        if self.tool == "polygon" then
           self.selectedShape = -1
           if self.activeShape then
             self.selectedShape = self.activeDeleteIndex
+          end
+        elseif self.tool == "object" then
+          self.selectedObject = -1
+          if self.activeObject then
+            self.selectedObject = self.activeDeleteIndex
           end
         end
       end
@@ -324,7 +387,10 @@ do
     end,
     saveFile = function(self)
       if 0 < len(self.loadedFilename) then
-        table.save(self.data, self.loadedFilename)
+        table.save({
+          polygonData = self.data,
+          objectData = self.objectData
+        }, self.loadedFilename)
         return print("saved level data to " .. self.loadedFilename)
       else
         self:recursivelySaveNewFile(1)
@@ -354,8 +420,9 @@ do
             remove(self.activeVertices, #self.activeVertices)
           end
           if self.selectedObject > 0 then
+            remove(self.objectData, self.selectedObject)
             remove(self.objects, self.selectedObject)
-            self.objects[self.objects]:destroy()
+            self.selectedObject = -1
           end
         end
       end
@@ -383,10 +450,13 @@ do
           local className
           if self.selectedMenuItem then
             className = self.selectedMenuItem.__class.__name
-            if className == "Floater" then
-              self.objects[#self.objects + 1] = Floater(self.activeVertices[1].x, self.activeVertices[1].y)
-              self:flushActiveVertices()
-            end
+            insert(self.objectData, {
+              x = self.activeVertices[1].x,
+              y = self.activeVertices[1].y,
+              objectType = className,
+              added = false
+            })
+            self:flushActiveVertices()
           end
         end
       end
@@ -398,8 +468,10 @@ do
       end
       if key == "1" then
         self.tool = "polygon"
+        self.selectedShape = -1
       elseif key == "2" then
         self.tool = "object"
+        self.selectedObject = -1
       end
     end
   }

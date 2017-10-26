@@ -56,7 +56,7 @@ class Player extends Entity
     @weapon\updateRateOfFire dt
 
     @printTimer\update dt, () ->
-      print @weapon.canShoot
+      -- print @weapon.canShoot
 
   update: (dt) =>
     if @health <= 0

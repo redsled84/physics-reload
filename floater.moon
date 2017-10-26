@@ -9,7 +9,7 @@ r = (theta) ->
  return 30 - 30 * sin(theta)
 
 class Floater extends Entity
-  new: (@originX, @originY, @radius=15, @health=100, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
+  new: (@originX, @originY, @radius=15, @health=50, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
     @x = @originX
     @y = @originY
     super @x, @y, {@radius}, "static", "circle"

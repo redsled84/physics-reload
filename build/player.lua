@@ -37,9 +37,7 @@ do
       mouseX, mouseY = cam:worldCoords(love.mouse.getX(), love.mouse.getY())
       self.weapon:shootAuto(mouseX, mouseY)
       self.weapon:updateRateOfFire(dt)
-      return self.printTimer:update(dt, function()
-        return print(self.weapon.canShoot)
-      end)
+      return self.printTimer:update(dt, function() end)
     end,
     update = function(self, dt)
       if self.health <= 0 then
