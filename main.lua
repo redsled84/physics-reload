@@ -33,6 +33,7 @@ love.load = function()
       player:handleWeapon(dt, cam)
       world:update(dt)
       editor:updateObjects(dt)
+      editor:updateWalkers(dt, player.body:getX(), player.body:getY())
       return cam:lookAt(player.body:getX(), player.body:getY())
     end
   end

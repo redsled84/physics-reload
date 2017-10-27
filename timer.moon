@@ -1,5 +1,5 @@
 class Timer
-  new: (@max) =>
+  new: (@max=.5) =>
     @time = 0
   update: (dt, callback) =>
     if @time >= @max

@@ -31,14 +31,18 @@ do
         end
       end
     end,
-    draw = function(self)
+    draw = function(self, x, y)
       if not self.body:isDestroyed() then
+        if not x and not y then
+          x = self.body:getX()
+          y = self.body:getY()
+        end
         graphics.setColor(255, 35, 8)
-        graphics.circle("fill", self.x, self.y, self.radius)
+        graphics.circle("fill", x, y, self.radius)
         graphics.setColor(245, 245, 245)
-        graphics.circle("fill", self.x, self.y, self.radius * (2 / 3))
+        graphics.circle("fill", x, y, self.radius * (2 / 3))
         graphics.setColor(255, 35, 8)
-        return graphics.circle("fill", self.x, self.y, self.radius * (1 / 3))
+        return graphics.circle("fill", x, y, self.radius * (1 / 3))
       end
     end
   }

@@ -14,6 +14,8 @@ local inspect = require("libs.inspect")
 local Camera = require("libs.camera")
 local Entity = require("build.entity")
 local Floater = require("build.floater")
+local Walker = require("build.walker")
+local Health = require("build.health")
 require("build.utils")
 local graphics, mouse, physics, filesystem, keyboard
 do
@@ -39,6 +41,11 @@ do
     selectedShape = -1,
     selectedObject = -1,
     selectedMenuItem = Floater,
+    menuItems = {
+      Floater,
+      Walker,
+      Health
+    },
     objectData = { },
     objects = { },
     data = { },
@@ -49,6 +56,7 @@ do
     gridWidth = graphics.getWidth() / 32,
     gridHeight = graphics.getHeight() / 32,
     viewControls = false,
+    viewObjectMenu = false,
     hovered = {
       230,
       140,
@@ -108,6 +116,14 @@ do
           object.added = true
           self.objects[i] = Floater(object.x, object.y)
         end
+        if object.objectType == "Walker" and not object.added then
+          object.added = true
+          self.objects[i] = Walker(object.x, object.y, object.endX, object.endY)
+        end
+        if object.objectType == "Health" and not object.added then
+          object.added = true
+          self.objects[i] = Health(object.x, object.y)
+        end
       end
     end,
     vec2 = function(self, x, y)
@@ -165,9 +181,15 @@ do
       graphics.setColor(255, 255, 255)
       for i = #self.objects, 1, -1 do
         local obj = self.objects[i]
-        if self.objectData[i].x == self.activeX and self.objectData[i].y == self.activeY and self.selectedObject ~= i then
+        if self.objectData[i].x == self.activeX and self.objectData[i].y == self.activeY and self.selectedObject ~= i and not self.viewObjectMenu then
           self.activeDeleteIndex = i
           self.activeObject = true
+        end
+        if obj.__class.__name == "Walker" then
+          graphics.setColor(0, 0, 0)
+          graphics.line(obj.originX, obj.originY, obj.endX, obj.endY)
+          self:drawCircle(obj.originX, obj.originY, 8)
+          self:drawCircle(obj.endX, obj.endY, 8)
         end
         obj:draw()
       end
@@ -221,17 +243,64 @@ do
       return graphics.print("Selected mode: " .. self.tool, 15, graphics.getHeight() - 32)
     end,
     drawControls = function(self)
-      if self.viewControls then
+      if self.viewControls and not self.viewObjectMenu then
         graphics.setColor(0, 0, 0, 155)
         graphics.rectangle("fill", 0, 0, 930, 250)
         graphics.setColor(255, 255, 255)
-        return graphics.print("Press 'W A S D' to move the camera around \n" .. "Press 'q' to zoom out and 'e' to zoom in \n" .. "Press 'c' to increase camera speed and 'z' to decrease camera speed \n" .. "Press LEFT CLICK to add polygon point \n" .. "Press 'space' to add a polygon to the level \n" .. "Press RIGHT CLICK to select a polygon \n" .. "Press 'r' remove the last placed point, or a selected polygon \n" .. "Press 'm' to minimize this box", 15, 15)
+        return graphics.print("Press 'W A S D' to move the camera around \n" .. "Press 'q' to zoom out and 'e' to zoom in \n" .. "Press 'c' to increase camera speed and 'z' to decrease camera speed \n" .. "Press LEFT CLICK to add polygon point \n" .. "Press 'space' to add a polygon to the level \n" .. "Press RIGHT CLICK to select a polygon \n" .. "Press 'r' remove the last placed point, or a selected polygon \n" .. "Press 'm' to minimize this box\n" .. "Press '1' to create and destroy polygon shapes\n" .. "Press '2' to create and destroy objects\n" .. "Press 'j' to access the object menu", 15, 15)
       else
         graphics.setColor(0, 0, 0, 155)
         graphics.rectangle("fill", 0, 0, 475, 48)
         graphics.setColor(255, 255, 255)
         graphics.print("Press 'm' to open the controls list", 15, 15)
         return self:drawMode()
+      end
+    end,
+    testPoint = function(self, x1, y1, w1, h1, x2, y2)
+      return x2 > x1 and x2 < x1 + w1 and y2 > y1 and y2 < y1 + h1
+    end,
+    getWidthRatio = function(self, num, den)
+      return graphics.getWidth() * num / den
+    end,
+    getHeightRatio = function(self, num, den)
+      return graphics.getHeight() * num / den
+    end,
+    drawObjectMenu = function(self)
+      local x, y, w, h, xoffset, yoffset, itemCounter, nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
+      x, y, w, h = self:getWidthRatio(1, 8), self:getHeightRatio(1, 8), self:getWidthRatio(3, 4), self:getHeightRatio(3, 4)
+      xoffset, yoffset = 10, 10
+      nItemsWide, nItemsTall = w / 6, h / 6
+      itemWidth, itemHeight = nItemsWide - xoffset, nItemsTall - yoffset
+      actualWidth, actualHeight = itemWidth - xoffset * 2, itemHeight - yoffset * 2
+      if self.viewObjectMenu and not self.viewControls then
+        graphics.setColor(0, 0, 0, 155)
+        graphics.rectangle("fill", x - 10, y - 10, w + 10, h + 10)
+        graphics.setColor(100, 100, 100, 200)
+        itemCounter = 1
+        local temp, className
+        for ox = x + xoffset, x + w - itemWidth, itemWidth + xoffset do
+          for oy = y + yoffset, y + h - itemHeight, itemHeight + yoffset do
+            if itemCounter <= #self.menuItems then
+              graphics.setColor(0, 0, 0, 200)
+              if self:testPoint(ox, oy, actualWidth, actualHeight, mouse.getX(), mouse.getY()) then
+                graphics.setColor(unpack(self.hovered))
+                if mouse.isDown(1) then
+                  self.selectedMenuItem = self.menuItems[itemCounter]
+                  graphics.setColor(unpack(self.selected))
+                end
+              end
+              graphics.rectangle("fill", ox, oy, actualWidth, actualHeight)
+              className = self.menuItems[itemCounter].__class.__name
+              if className == "Floater" or className == "Health" then
+                temp = self.menuItems[itemCounter](ox, oy)
+              elseif className == "Walker" then
+                temp = self.menuItems[itemCounter](ox, oy, ox, oy)
+              end
+              temp:draw(ox + actualWidth / 2, oy + actualHeight / 2)
+            end
+            itemCounter = itemCounter + 1
+          end
+        end
       end
     end,
     drawObjectOrigin = function(self)
@@ -271,9 +340,10 @@ do
       end
       self:drawCursor()
       graphics.setColor(0, 0, 0)
-      graphics.circle("fill", 0, 0, 10)
+      graphics.circle("fill", 0, 0, 6)
       self.cam:detach()
-      return self:drawControls()
+      self:drawControls()
+      return self:drawObjectMenu()
     end,
     clickerTheta = 0,
     clickerThetaStep = math.pi / 2,
@@ -324,7 +394,16 @@ do
         if self.objects[i].body:isDestroyed() then
           self.objectData[i].added = false
         else
-          self.objects[i]:update(dt)
+          if self.objects[i].__class.__name == "Floater" then
+            self.objects[i]:update(dt)
+          end
+        end
+      end
+    end,
+    updateWalkers = function(self, dt, targetX, targetY)
+      for i = #self.objects, 1, -1 do
+        if self.objects[i].__class.__name == "Walker" then
+          self.objects[i]:update(dt, targetX, targetY)
         end
       end
     end,
@@ -339,7 +418,7 @@ do
     end,
     mousepressed = function(self, x, y, button)
       local found
-      if button == 1 then
+      if button == 1 and not self.viewObjectMenu then
         found = false
         for i = 1, #self.activeVertices do
           if self.activeVertices[i].x == self.activeX and self.activeVertices[i].y == self.activeY then
@@ -350,18 +429,17 @@ do
           if self.tool == "polygon" then
             insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
           elseif self.tool == "object" then
-            if self.selectedMenuItem == Floater and #self.activeVertices < 1 then
+            if (self.selectedMenuItem == Floater or self.selectedMenuItem == Health) and #self.activeVertices < 1 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
-            elseif self.selectedMenuItem == "Walker" and #self.activeVertices < 2 then
+            elseif self.selectedMenuItem == Walker and #self.activeVertices < 2 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
             end
           end
         else
           print("there is already a vertice at that coordinate")
         end
-        print(#self.activeVertices)
       end
-      if button == 2 then
+      if button == 2 and not self.viewObjectMenu then
         if self.tool == "polygon" then
           self.selectedShape = -1
           if self.activeShape then
@@ -421,6 +499,7 @@ do
           end
           if self.selectedObject > 0 then
             remove(self.objectData, self.selectedObject)
+            self.objects[self.selectedObject].body:destroy()
             remove(self.objects, self.selectedObject)
             self.selectedObject = -1
           end
@@ -447,21 +526,47 @@ do
             print("error: not enough active vertices to create an object!")
             return 
           end
-          local className
+          local className, obj
           if self.selectedMenuItem then
             className = self.selectedMenuItem.__class.__name
-            insert(self.objectData, {
-              x = self.activeVertices[1].x,
-              y = self.activeVertices[1].y,
-              objectType = className,
-              added = false
-            })
+            if className == "Floater" or className == "Health" then
+              obj = {
+                x = self.activeVertices[1].x,
+                y = self.activeVertices[1].y,
+                objectType = className,
+                added = false
+              }
+              insert(self.objectData, obj)
+              print("new object [" .. className .. "]: " .. inspect({
+                obj.x,
+                obj.y
+              }))
+            elseif className == "Walker" then
+              obj = {
+                x = self.activeVertices[1].x,
+                y = self.activeVertices[1].y,
+                endX = self.activeVertices[2].x,
+                endY = self.activeVertices[2].y,
+                objectType = className,
+                added = false
+              }
+              insert(self.objectData, obj)
+              print("new object [" .. className .. "]: " .. inspect({
+                obj.x,
+                obj.y
+              }))
+            end
             self:flushActiveVertices()
           end
         end
       end
       if key == "m" then
         self.viewControls = not self.viewControls
+        self.viewObjectMenu = false
+      end
+      if key == "j" then
+        self.viewObjectMenu = not self.viewObjectMenu
+        self.viewControls = false
       end
       if key == "p" then
         self:saveFile()

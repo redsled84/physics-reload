@@ -14,6 +14,9 @@ do
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function(self, max)
+      if max == nil then
+        max = .5
+      end
       self.max = max
       self.time = 0
     end,

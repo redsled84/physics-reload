@@ -12,25 +12,21 @@ gunShot\setVolume 1
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
-  new: (@x, @y, @magazineSize, @sprayAngle=math.pi/100, @isPlayerWeapon=false) =>
-    @ammoCount = @magazineSize
+  new: (@x, @y, @totalAmmo, @sprayAngle=math.pi/100, @isPlayerWeapon=false, @rateOfFire=.25, @bulletSpeed=2700, @bulletSize=10,
+  @minAtkPower=5,@maxAtkPower=15) =>
+    @ammoCount = @totalAmmo
     -- @drawOffset = {x: @sprite\getWidth! / 4, y: @sprite\getHeight! / 2}
     @fireControl = "auto"
-    @bulletSpeed = 2700
-    @bulletSize = 6
+    @rateOfFireTimer = Timer @rateOfFire
 
   bullets: {}
-  canShoot: false
-  rateOfFireTimer: Timer .15
-  minAtkPower: 5
-  maxAtkPower: 15
+  canShoot: true
   shakeConstant: 4.25
 
   updateRateOfFire: (dt) =>
     if not @canShoot
       @rateOfFireTimer\update dt, () ->
         @canShoot = true
-
 
   getVariableBulletVectors: (bullet) =>
     local angle, goalX, goalY
@@ -60,7 +56,7 @@ class Weapon
     if @isPlayerWeapon
       shake\more @shakeConstant
 
-    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize, random(@minAtkPower, @maxAtkPower), @isPlayerWeapon
+    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize*2, random(@minAtkPower, @maxAtkPower), @isPlayerWeapon
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
     bullet\calculateDirections!
@@ -70,11 +66,14 @@ class Weapon
     @bullets[#@bullets+1] = bullet
 
     if @isPlayerWeapon
-      if gunShot\isPlaying!
-        gunShot\stop!
-        gunShot\play!
-      else
-        gunShot\play!
+      gunShot\setVolume .5
+    else
+      gunShot\setVolume .05
+    if gunShot\isPlaying!
+      gunShot\stop!
+      gunShot\play!
+    else
+      gunShot\play!
 
   shootAuto: (x, y) =>
     local targetX, targetY

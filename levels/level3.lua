@@ -40,246 +40,521 @@ return {
    {35},
    {36},
    {37},
-},
--- Table: {3}
-{
    {38},
    {39},
    {40},
    {41},
    {42},
+},
+-- Table: {3}
+{
    {43},
+   {44},
+   {45},
+   {46},
+   {47},
+   {48},
+   {49},
+   {50},
+   {51},
+   {52},
+   {53},
+   {54},
+   {55},
+   {56},
+   {57},
+   {58},
+   {59},
+   {60},
+   {61},
+   {62},
+   {63},
+   {64},
+   {65},
+   {66},
+   {67},
+   {68},
+   {69},
+   {70},
+   {71},
+   {72},
+   {73},
+   {74},
+   {75},
+   {76},
+   {77},
+   {78},
+   {79},
 },
 -- Table: {4}
 {
-   ["vertices"]={44},
+   ["vertices"]={80},
    ["shapeType"]="polygon",
 },
 -- Table: {5}
 {
-   ["vertices"]={45},
+   ["vertices"]={81},
    ["shapeType"]="polygon",
 },
 -- Table: {6}
 {
-   ["vertices"]={46},
+   ["vertices"]={82},
    ["shapeType"]="polygon",
 },
 -- Table: {7}
 {
-   ["vertices"]={47},
+   ["vertices"]={83},
    ["shapeType"]="polygon",
 },
 -- Table: {8}
 {
-   ["vertices"]={48},
+   ["vertices"]={84},
    ["shapeType"]="polygon",
 },
 -- Table: {9}
 {
-   ["vertices"]={49},
+   ["vertices"]={85},
    ["shapeType"]="polygon",
 },
 -- Table: {10}
 {
-   ["vertices"]={50},
+   ["vertices"]={86},
    ["shapeType"]="polygon",
 },
 -- Table: {11}
 {
-   ["vertices"]={51},
+   ["vertices"]={87},
    ["shapeType"]="polygon",
 },
 -- Table: {12}
 {
-   ["vertices"]={52},
+   ["vertices"]={88},
    ["shapeType"]="polygon",
 },
 -- Table: {13}
 {
-   ["vertices"]={53},
+   ["vertices"]={89},
    ["shapeType"]="polygon",
 },
 -- Table: {14}
 {
-   ["vertices"]={54},
+   ["vertices"]={90},
    ["shapeType"]="polygon",
 },
 -- Table: {15}
 {
-   ["vertices"]={55},
+   ["vertices"]={91},
    ["shapeType"]="polygon",
 },
 -- Table: {16}
 {
-   ["vertices"]={56},
+   ["vertices"]={92},
    ["shapeType"]="polygon",
 },
 -- Table: {17}
 {
-   ["vertices"]={57},
+   ["vertices"]={93},
    ["shapeType"]="polygon",
 },
 -- Table: {18}
 {
-   ["vertices"]={58},
+   ["vertices"]={94},
    ["shapeType"]="polygon",
 },
 -- Table: {19}
 {
-   ["vertices"]={59},
+   ["vertices"]={95},
    ["shapeType"]="polygon",
 },
 -- Table: {20}
 {
-   ["vertices"]={60},
+   ["vertices"]={96},
    ["shapeType"]="polygon",
 },
 -- Table: {21}
 {
-   ["vertices"]={61},
+   ["vertices"]={97},
    ["shapeType"]="polygon",
 },
 -- Table: {22}
 {
-   ["vertices"]={62},
+   ["vertices"]={98},
    ["shapeType"]="polygon",
 },
 -- Table: {23}
 {
-   ["vertices"]={63},
+   ["vertices"]={99},
    ["shapeType"]="polygon",
 },
 -- Table: {24}
 {
-   ["vertices"]={64},
+   ["vertices"]={100},
    ["shapeType"]="polygon",
 },
 -- Table: {25}
 {
-   ["vertices"]={65},
+   ["vertices"]={101},
    ["shapeType"]="polygon",
 },
 -- Table: {26}
 {
-   ["vertices"]={66},
+   ["vertices"]={102},
    ["shapeType"]="polygon",
 },
 -- Table: {27}
 {
-   ["vertices"]={67},
+   ["vertices"]={103},
    ["shapeType"]="polygon",
 },
 -- Table: {28}
 {
-   ["vertices"]={68},
+   ["vertices"]={104},
    ["shapeType"]="polygon",
 },
 -- Table: {29}
 {
-   ["vertices"]={69},
+   ["vertices"]={105},
    ["shapeType"]="polygon",
 },
 -- Table: {30}
 {
-   ["vertices"]={70},
+   ["vertices"]={106},
    ["shapeType"]="polygon",
 },
 -- Table: {31}
 {
-   ["vertices"]={71},
+   ["vertices"]={107},
    ["shapeType"]="polygon",
 },
 -- Table: {32}
 {
-   ["vertices"]={72},
+   ["vertices"]={108},
    ["shapeType"]="polygon",
 },
 -- Table: {33}
 {
-   ["vertices"]={73},
+   ["vertices"]={109},
    ["shapeType"]="polygon",
 },
 -- Table: {34}
 {
-   ["vertices"]={74},
+   ["vertices"]={110},
    ["shapeType"]="polygon",
 },
 -- Table: {35}
 {
-   ["vertices"]={75},
+   ["vertices"]={111},
    ["shapeType"]="polygon",
 },
 -- Table: {36}
 {
-   ["vertices"]={76},
+   ["vertices"]={112},
    ["shapeType"]="polygon",
 },
 -- Table: {37}
 {
-   ["vertices"]={77},
+   ["vertices"]={113},
    ["shapeType"]="polygon",
 },
 -- Table: {38}
 {
-   ["y"]=-32,
-   ["x"]=224,
-   ["objectType"]="Floater",
+   ["vertices"]={114},
+   ["shapeType"]="polygon",
 },
 -- Table: {39}
 {
-   ["y"]=320,
-   ["x"]=-480,
-   ["objectType"]="Floater",
+   ["vertices"]={115},
+   ["shapeType"]="polygon",
 },
 -- Table: {40}
+{
+   ["vertices"]={116},
+   ["shapeType"]="polygon",
+},
+-- Table: {41}
+{
+   ["vertices"]={117},
+   ["shapeType"]="polygon",
+},
+-- Table: {42}
+{
+   ["vertices"]={118},
+   ["shapeType"]="polygon",
+},
+-- Table: {43}
 {
    ["y"]=448,
    ["x"]=-352,
    ["objectType"]="Floater",
 },
--- Table: {41}
+-- Table: {44}
 {
    ["y"]=32,
    ["x"]=-320,
    ["objectType"]="Floater",
 },
--- Table: {42}
-{
-   ["y"]=64,
-   ["x"]=-480,
-   ["objectType"]="Floater",
-},
--- Table: {43}
-{
-   ["y"]=-64,
-   ["x"]=-128,
-   ["objectType"]="Floater",
-},
--- Table: {44}
-{
-   0,
-   224,
-   864,
-   224,
-   864,
-   192,
-   0,
-   192,
-},
 -- Table: {45}
 {
-   1376,
-   608,
-   1376,
-   640,
-   -96,
-   640,
-   -96,
-   608,
+   ["y"]=-64,
+   ["x"]=-544,
+   ["objectType"]="Floater",
 },
 -- Table: {46}
 {
+   ["x"]=1248,
+   ["y"]=320,
+   ["endY"]=320,
+   ["objectType"]="Walker",
+   ["endX"]=1376,
+},
+-- Table: {47}
+{
+   ["x"]=-672,
+   ["y"]=32,
+   ["endY"]=32,
+   ["objectType"]="Walker",
+   ["endX"]=-544,
+},
+-- Table: {48}
+{
+   ["x"]=-480,
+   ["y"]=-224,
+   ["endY"]=-224,
+   ["objectType"]="Walker",
+   ["endX"]=0,
+},
+-- Table: {49}
+{
+   ["x"]=-64,
+   ["y"]=416,
+   ["endY"]=416,
+   ["objectType"]="Walker",
+   ["endX"]=-192,
+},
+-- Table: {50}
+{
+   ["x"]=384,
+   ["y"]=576,
+   ["endY"]=576,
+   ["objectType"]="Walker",
+   ["endX"]=-128,
+},
+-- Table: {51}
+{
+   ["x"]=864,
+   ["y"]=384,
+   ["endY"]=384,
+   ["objectType"]="Walker",
+   ["endX"]=672,
+},
+-- Table: {52}
+{
+   ["x"]=1280,
+   ["y"]=576,
+   ["endY"]=576,
+   ["objectType"]="Walker",
+   ["endX"]=1088,
+},
+-- Table: {53}
+{
+   ["x"]=992,
+   ["y"]=576,
+   ["endY"]=576,
+   ["objectType"]="Walker",
+   ["endX"]=800,
+},
+-- Table: {54}
+{
+   ["x"]=512,
+   ["y"]=576,
+   ["endY"]=576,
+   ["objectType"]="Walker",
+   ["endX"]=736,
+},
+-- Table: {55}
+{
+   ["x"]=1056,
+   ["y"]=160,
+   ["endY"]=160,
+   ["objectType"]="Walker",
+   ["endX"]=1472,
+},
+-- Table: {56}
+{
+   ["x"]=1696,
+   ["y"]=32,
+   ["endY"]=32,
+   ["objectType"]="Walker",
+   ["endX"]=1568,
+},
+-- Table: {57}
+{
+   ["x"]=1600,
+   ["y"]=-160,
+   ["endY"]=-160,
+   ["objectType"]="Walker",
+   ["endX"]=1312,
+},
+-- Table: {58}
+{
+   ["x"]=864,
+   ["y"]=32,
+   ["endY"]=32,
+   ["objectType"]="Walker",
+   ["endX"]=960,
+},
+-- Table: {59}
+{
+   ["x"]=448,
+   ["y"]=-96,
+   ["endY"]=-96,
+   ["objectType"]="Walker",
+   ["endX"]=352,
+},
+-- Table: {60}
+{
+   ["y"]=96,
+   ["x"]=416,
+   ["objectType"]="Floater",
+},
+-- Table: {61}
+{
+   ["y"]=-32,
+   ["x"]=704,
+   ["objectType"]="Floater",
+},
+-- Table: {62}
+{
+   ["y"]=64,
+   ["x"]=1216,
+   ["objectType"]="Floater",
+},
+-- Table: {63}
+{
+   ["y"]=-160,
+   ["x"]=1184,
+   ["objectType"]="Floater",
+},
+-- Table: {64}
+{
+   ["y"]=-288,
+   ["x"]=1376,
+   ["objectType"]="Floater",
+},
+-- Table: {65}
+{
+   ["y"]=448,
+   ["x"]=1088,
+   ["objectType"]="Floater",
+},
+-- Table: {66}
+{
+   ["y"]=288,
+   ["x"]=960,
+   ["objectType"]="Floater",
+},
+-- Table: {67}
+{
+   ["y"]=576,
+   ["x"]=0,
+   ["objectType"]="Floater",
+},
+-- Table: {68}
+{
+   ["y"]=-160,
+   ["x"]=-704,
+   ["objectType"]="Health",
+},
+-- Table: {69}
+{
+   ["y"]=-224,
+   ["x"]=-320,
+   ["objectType"]="Health",
+},
+-- Table: {70}
+{
+   ["y"]=-224,
+   ["x"]=256,
+   ["objectType"]="Health",
+},
+-- Table: {71}
+{
+   ["y"]=-224,
+   ["x"]=448,
+   ["objectType"]="Health",
+},
+-- Table: {72}
+{
+   ["y"]=160,
+   ["x"]=384,
+   ["objectType"]="Health",
+},
+-- Table: {73}
+{
+   ["y"]=576,
+   ["x"]=-224,
+   ["objectType"]="Health",
+},
+-- Table: {74}
+{
+   ["y"]=576,
+   ["x"]=448,
+   ["objectType"]="Health",
+},
+-- Table: {75}
+{
+   ["y"]=576,
+   ["x"]=1056,
+   ["objectType"]="Health",
+},
+-- Table: {76}
+{
+   ["y"]=320,
+   ["x"]=736,
+   ["objectType"]="Health",
+},
+-- Table: {77}
+{
+   ["y"]=288,
+   ["x"]=1312,
+   ["objectType"]="Health",
+},
+-- Table: {78}
+{
+   ["y"]=160,
+   ["x"]=736,
+   ["objectType"]="Health",
+},
+-- Table: {79}
+{
+   ["y"]=160,
+   ["x"]=1504,
+   ["objectType"]="Health",
+},
+-- Table: {80}
+{
+   0,
+   224,
+   864,
+   224,
+   864,
+   192,
+   0,
+   192,
+},
+-- Table: {81}
+{
+   1376,
+   608,
+   1376,
+   640,
+   -96,
+   640,
+   -96,
+   608,
+},
+-- Table: {82}
+{
    1600,
    192,
    1600,
@@ -289,7 +564,7 @@ return {
    1024,
    192,
 },
--- Table: {47}
+-- Table: {83}
 {
    1728,
    192,
@@ -300,7 +575,7 @@ return {
    1600,
    192,
 },
--- Table: {48}
+-- Table: {84}
 {
    1728,
    0,
@@ -313,7 +588,7 @@ return {
    1728,
    224,
 },
--- Table: {49}
+-- Table: {85}
 {
    384,
    416,
@@ -324,7 +599,7 @@ return {
    928,
    416,
 },
--- Table: {50}
+-- Table: {86}
 {
    736,
    448,
@@ -335,7 +610,7 @@ return {
    704,
    448,
 },
--- Table: {51}
+-- Table: {87}
 {
    736,
    448,
@@ -344,7 +619,7 @@ return {
    736,
    480,
 },
--- Table: {52}
+-- Table: {88}
 {
    608,
    224,
@@ -353,7 +628,7 @@ return {
    608,
    288,
 },
--- Table: {53}
+-- Table: {89}
 {
    608,
    224,
@@ -364,7 +639,7 @@ return {
    384,
    224,
 },
--- Table: {54}
+-- Table: {90}
 {
    1376,
    224,
@@ -375,7 +650,7 @@ return {
    1376,
    640,
 },
--- Table: {55}
+-- Table: {91}
 {
    704,
    448,
@@ -384,7 +659,7 @@ return {
    704,
    480,
 },
--- Table: {56}
+-- Table: {92}
 {
    0,
    512,
@@ -397,7 +672,7 @@ return {
    320,
    512,
 },
--- Table: {57}
+-- Table: {93}
 {
    1824,
    -320,
@@ -408,33 +683,7 @@ return {
    1728,
    -320,
 },
--- Table: {58}
-{
-   -480,
-   -288,
-   -480,
-   -320,
-   160,
-   -320,
-   128,
-   -288,
-},
--- Table: {59}
-{
-   768,
-   -288,
-   768,
-   -128,
-   672,
-   -32,
-   480,
-   -32,
-   384,
-   -128,
-   384,
-   -288,
-},
--- Table: {60}
+-- Table: {94}
 {
    608,
    128,
@@ -445,7 +694,7 @@ return {
    544,
    128,
 },
--- Table: {61}
+-- Table: {95}
 {
    224,
    192,
@@ -456,58 +705,7 @@ return {
    224,
    64,
 },
--- Table: {62}
-{
-   960,
-   -128,
-   768,
-   -128,
-   736,
-   -96,
-   960,
-   -96,
-},
--- Table: {63}
-{
-   768,
-   -128,
-   768,
-   -288,
-   896,
-   -288,
-   896,
-   -128,
-},
--- Table: {64}
-{
-   1312,
-   -288,
-   1312,
-   64,
-   1280,
-   64,
-   1280,
-   -288,
-},
--- Table: {65}
-{
-   1280,
-   -288,
-   1280,
-   -192,
-   1184,
-   -288,
-},
--- Table: {66}
-{
-   896,
-   -288,
-   992,
-   -288,
-   896,
-   -192,
-},
--- Table: {67}
+-- Table: {96}
 {
    -96,
    640,
@@ -518,7 +716,7 @@ return {
    -96,
    608,
 },
--- Table: {68}
+-- Table: {97}
 {
    0,
    -192,
@@ -529,7 +727,7 @@ return {
    -480,
    -192,
 },
--- Table: {69}
+-- Table: {98}
 {
    1344,
    384,
@@ -540,7 +738,7 @@ return {
    1344,
    608,
 },
--- Table: {70}
+-- Table: {99}
 {
    1376,
    352,
@@ -551,7 +749,7 @@ return {
    1376,
    384,
 },
--- Table: {71}
+-- Table: {100}
 {
    1248,
    352,
@@ -562,7 +760,7 @@ return {
    1216,
    352,
 },
--- Table: {72}
+-- Table: {101}
 {
    1600,
    -128,
@@ -573,18 +771,7 @@ return {
    1312,
    -128,
 },
--- Table: {73}
-{
-   1312,
-   -320,
-   160,
-   -320,
-   128,
-   -288,
-   1312,
-   -288,
-},
--- Table: {74}
+-- Table: {102}
 {
    1728,
    -320,
@@ -595,7 +782,7 @@ return {
    1440,
    -320,
 },
--- Table: {75}
+-- Table: {103}
 {
    832,
    96,
@@ -606,7 +793,7 @@ return {
    832,
    64,
 },
--- Table: {76}
+-- Table: {104}
 {
    -192,
    480,
@@ -617,7 +804,7 @@ return {
    -64,
    480,
 },
--- Table: {77}
+-- Table: {105}
 {
    -384,
    320,
@@ -627,5 +814,148 @@ return {
    288,
    -288,
    320,
+},
+-- Table: {106}
+{
+   -736,
+   608,
+   -736,
+   352,
+   -480,
+   608,
+},
+-- Table: {107}
+{
+   -480,
+   608,
+   -480,
+   640,
+   -736,
+   640,
+   -736,
+   608,
+},
+-- Table: {108}
+{
+   -736,
+   -512,
+   -1632,
+   -512,
+   -1632,
+   640,
+   -736,
+   640,
+},
+-- Table: {109}
+{
+   -736,
+   -864,
+   1312,
+   -864,
+   1312,
+   -320,
+   -736,
+   -320,
+   -736,
+   -512,
+},
+-- Table: {110}
+{
+   -672,
+   64,
+   -544,
+   64,
+   -544,
+   96,
+   -672,
+   96,
+},
+-- Table: {111}
+{
+   1728,
+   192,
+   1536,
+   192,
+   1536,
+   64,
+   1728,
+   64,
+},
+-- Table: {112}
+{
+   -736,
+   -96,
+   -736,
+   -128,
+   -672,
+   -128,
+   -672,
+   -96,
+},
+-- Table: {113}
+{
+   1536,
+   640,
+   1536,
+   1152,
+   -1632,
+   1152,
+   -1632,
+   640,
+},
+-- Table: {114}
+{
+   224,
+   64,
+   224,
+   -320,
+   64,
+   -320,
+   64,
+   64,
+},
+-- Table: {115}
+{
+   320,
+   -32,
+   320,
+   -64,
+   480,
+   -64,
+   480,
+   -32,
+},
+-- Table: {116}
+{
+   320,
+   -192,
+   224,
+   -192,
+   224,
+   -160,
+   320,
+   -160,
+},
+-- Table: {117}
+{
+   512,
+   -192,
+   512,
+   -160,
+   448,
+   -160,
+   448,
+   -192,
+},
+-- Table: {118}
+{
+   512,
+   -192,
+   512,
+   -320,
+   480,
+   -320,
+   480,
+   -192,
 },
 }

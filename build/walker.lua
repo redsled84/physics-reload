@@ -1,6 +1,10 @@
+local sqrt
+sqrt = math.sqrt
 local collisionMasks = require("build.collisionMasks")
 local Entity = require("build.entity")
 local Weapon = require("build.weapon")
+local graphics
+graphics = love.graphics
 local Walker
 do
   local _class_0
@@ -10,18 +14,39 @@ do
       self.health = self.health - attack
     end,
     move = function(self, dt)
-      if self.body:getX() < self.originX then
-        self.dir = 1
-        self.xVelocity = 10
-      elseif self.body:getX() > self.endX then
-        self.xVelocity = -10
-        self.dir = -1
+      local buffer
+      buffer = 3
+      if self.originalDir == 1 then
+        if self.body:getX() - self.width / 2 - buffer <= self.originX then
+          self.dir = 1
+          self.xVelocity = 10
+        elseif self.body:getX() + self.width / 2 + buffer >= self.endX then
+          self.dir = -1
+          self.xVelocity = -10
+        end
+      else
+        if self.body:getX() + self.width / 2 + buffer >= self.originX then
+          self.dir = -1
+          self.xVelocity = -10
+        elseif self.body:getX() - self.width / 2 - buffer <= self.endX then
+          self.dir = 1
+          self.xVelocity = 10
+        end
       end
       self.xVelocity = self.xVelocity + (self.dir * self.moveSpeed * dt)
       local vy
       local _
       _, vy = self.body:getLinearVelocity()
-      return self.body:setLinearVelocity(self.xVelocity, vy)
+      self.body:setLinearVelocity(self.xVelocity, vy)
+      self.touchingWall = false
+    end,
+    shootWeapon = function(self, dt, targetX, targetY)
+      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY()
+      if self.awarenessDistance >= sqrt((targetX - self.weapon.x) ^ 2 + (targetY - self.weapon.y) ^ 2) then
+        self.weapon:autoRemoveDestroyedBullets()
+        self.weapon:shootAuto(targetX, targetY)
+        return self.weapon:updateRateOfFire(dt)
+      end
     end,
     update = function(self, dt, targetX, targetY)
       if not self.body:isDestroyed() then
@@ -30,19 +55,24 @@ do
           self.body:destroy()
           return 
         end
-        self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY()
-        self.weapon:autoRemoveDestroyedBullets()
-        self.weapon:shootAuto(targetX, targetY)
-        return self.weapon:updateRateOfFire(dt)
+        return self:shootWeapon(dt, targetX, targetY)
       end
     end,
-    draw = function(self)
+    draw = function(self, x, y)
       if not self.body:isDestroyed() then
-        _class_0.__parent.__base.draw(self, {
-          255,
-          0,
-          0
-        })
+        if not x and not y then
+          x = self.body:getX()
+          y = self.body:getY()
+        end
+        local drawX, drawY
+        drawX = x - self.width / 2
+        drawY = y - self.height / 2
+        graphics.setColor(45, 25, 20, 225)
+        graphics.rectangle("fill", drawX, drawY, self.width, self.height)
+        graphics.setColor(190, 85, 35, 250)
+        local offset
+        offset = 7
+        graphics.rectangle("fill", drawX + offset, drawY + offset, self.width - offset * 2, self.height - offset * 2)
       end
       return self.weapon:drawBullets()
     end
@@ -50,19 +80,29 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, originX, originY, endX, endY)
-      self.originX, self.originY, self.endX, self.endY = originX, originY, endX, endY
+    __init = function(self, originX, originY, endX, endY, awarenessDistance, width, height)
+      if awarenessDistance == nil then
+        awarenessDistance = 650
+      end
+      if width == nil then
+        width = 32
+      end
+      if height == nil then
+        height = 32
+      end
+      self.originX, self.originY, self.endX, self.endY, self.awarenessDistance, self.width, self.height = originX, originY, endX, endY, awarenessDistance, width, height
       _class_0.__parent.__init(self, self.originX, self.originY, {
-        32,
-        32
+        self.width,
+        self.height
       }, "dynamic")
-      self.dir = self.originX > self.endX and -1 or 1
+      self.originalDir = self.originX > self.endX and -1 or 1
+      self.dir = self.originalDir
       self.body:setFixedRotation(true)
       self.fixture:setFilterData(collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0)
       self.xVelocity = 0
       self.moveSpeed = 200
       self.health = 50
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 10, false)
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 18, false, .4, 3000, 4)
     end,
     __base = _base_0,
     __name = "Walker",

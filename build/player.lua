@@ -8,8 +8,11 @@ local Weapon = require("build.weapon")
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
-local keyboard
-keyboard = love.keyboard
+local keyboard, graphics, mouse
+do
+  local _obj_0 = love
+  keyboard, graphics, mouse = _obj_0.keyboard, _obj_0.graphics, _obj_0.mouse
+end
 local Player
 do
   local _class_0
@@ -22,6 +25,13 @@ do
         self.health = 0
       end
     end,
+    addHealth = function(self, healthToAdd)
+      if self.health + healthToAdd < self.maxHealth then
+        self.health = self.health + healthToAdd
+      else
+        self.health = self.maxHealth
+      end
+    end,
     damageByImpulse = function(self, x, y, attackPower)
       self.activeHitStun = true
       self.body:applyLinearImpulse(-1000 * x, -1000 * y)
@@ -31,12 +41,14 @@ do
       return self:removeHealth(attackPower)
     end,
     handleWeapon = function(self, dt, cam)
-      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY()
+      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY() - self.height * (1 / 4)
       self.weapon:autoRemoveDestroyedBullets()
       local mouseX, mouseY
-      mouseX, mouseY = cam:worldCoords(love.mouse.getX(), love.mouse.getY())
+      mouseX, mouseY = cam:worldCoords(mouse.getX(), mouse.getY())
       self.weapon:shootAuto(mouseX, mouseY)
-      self.weapon:updateRateOfFire(dt)
+      if not self.weapon.canShoot then
+        self.weapon:updateRateOfFire(dt)
+      end
       return self.printTimer:update(dt, function() end)
     end,
     update = function(self, dt)
@@ -93,11 +105,15 @@ do
       end
     end,
     draw = function(self)
-      _class_0.__parent.__base.draw(self)
+      _class_0.__parent.__base.draw(self, {
+        200,
+        0,
+        195
+      })
       local healthRatio
       healthRatio = self.health / self.maxHealth
-      love.graphics.setColor(255, 0, 0)
-      love.graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
+      graphics.setColor(255, 0, 0)
+      graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
       return self.weapon:drawBullets()
     end
   }
@@ -118,7 +134,7 @@ do
         self.height
       }, "dynamic", "rectangle")
       self.body:setFixedRotation(true)
-      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker, 0)
+      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker + collisionMasks.items, 0)
       self.xVelocity = 0
       self.terminalVelocity = 800
       self.jumpVelocity = -700
@@ -127,7 +143,7 @@ do
       self.activeHitStun = false
       self.maxHealth = 200
       self.health = self.maxHealth
-      self.weapon = Weapon(0, 0, 1000, nil, true)
+      self.weapon = Weapon(0, 0, 1000, nil, true, .15, 3500, 7, 15, 25)
     end,
     __base = _base_0,
     __name = "Player",

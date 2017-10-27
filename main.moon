@@ -48,6 +48,7 @@ love.load = ->
       -- floater\update dt
 
       editor\updateObjects dt
+      editor\updateWalkers dt, player.body\getX!, player.body\getY!
 
 
       -- print weapon.canShoot, weapon.rateOfFire.time
@@ -58,6 +59,8 @@ love.load = ->
       -- walker2\update dt, player.body\getX!, player.body\getY!
 
       -- print walker2.dir
+
+      -- print editor.objects[#editor.objects].dir
 
   love.draw = ->
     if toggleEditor

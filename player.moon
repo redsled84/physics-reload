@@ -9,7 +9,7 @@ Weapon = require "build.weapon"
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
 
-{keyboard: keyboard} = love
+{keyboard: keyboard, graphics: graphics, mouse: mouse} = love
 
 class Player extends Entity
   new: (@x, @y, @width=32, @height=64) =>
@@ -18,7 +18,11 @@ class Player extends Entity
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
 
     @body\setFixedRotation true
-    @fixture\setFilterData collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker, 0
+    @fixture\setFilterData collisionMasks.player,
+      collisionMasks.solid +
+      collisionMasks.bulletHurtPlayer +
+      collisionMasks.walker +
+      collisionMasks.items, 0
 
     @xVelocity = 0
     @terminalVelocity = 800
@@ -31,13 +35,19 @@ class Player extends Entity
     @maxHealth = 200
     @health = @maxHealth
 
-    @weapon = Weapon 0, 0, 1000, nil, true
+    @weapon = Weapon 0, 0, 1000, nil, true, .15, 3500, 7, 15, 25
 
   removeHealth: (healthToRemove) =>
     if @health - healthToRemove > 0
       @health -= healthToRemove
     else
       @health = 0
+
+  addHealth: (healthToAdd) =>
+    if @health + healthToAdd < @maxHealth
+      @health += healthToAdd
+    else
+      @health = @maxHealth    
 
   damageByImpulse: (x, y, attackPower) =>
     @activeHitStun = true
@@ -48,12 +58,13 @@ class Player extends Entity
     @removeHealth attackPower
 
   handleWeapon: (dt, cam) =>
-    @weapon.x, @weapon.y = @body\getX!, @body\getY!
+    @weapon.x, @weapon.y = @body\getX!, @body\getY! - @height * (1 / 4)
     @weapon\autoRemoveDestroyedBullets!
     local mouseX, mouseY
-    mouseX, mouseY = cam\worldCoords love.mouse.getX!, love.mouse.getY!
+    mouseX, mouseY = cam\worldCoords mouse.getX!, mouse.getY!
     @weapon\shootAuto mouseX, mouseY
-    @weapon\updateRateOfFire dt
+    if not @weapon.canShoot
+      @weapon\updateRateOfFire dt
 
     @printTimer\update dt, () ->
       -- print @weapon.canShoot
@@ -112,11 +123,11 @@ class Player extends Entity
         @body\setLinearVelocity xv, @jumpVelocity
 
   draw: =>
-    super!
+    super {200, 0, 195}
     local healthRatio
     healthRatio = @health / @maxHealth
-    love.graphics.setColor 255, 0, 0
-    love.graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
+    graphics.setColor 255, 0, 0
+    graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
 
     @weapon\drawBullets!
 

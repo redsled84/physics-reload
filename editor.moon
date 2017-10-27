@@ -6,6 +6,8 @@ inspect = require "libs.inspect"
 Camera = require "libs.camera"
 Entity = require "build.entity"
 Floater = require "build.floater"
+Walker = require "build.walker"
+Health = require "build.health"
 require "build.utils"
 
 {graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
@@ -28,6 +30,11 @@ class Editor
   selectedObject: -1
   selectedMenuItem: Floater
 
+  menuItems: {
+    Floater
+    Walker
+    Health
+  }
   objectData: {}
   objects: {}
   data: {}
@@ -39,6 +46,7 @@ class Editor
   gridWidth: graphics.getWidth! / 32
   gridHeight: graphics.getHeight! / 32
   viewControls: false
+  viewObjectMenu: false
 
   -- colors
   hovered: {230, 140, 0}
@@ -85,6 +93,12 @@ class Editor
       if object.objectType == "Floater" and not object.added
         object.added = true
         @objects[i] = Floater object.x, object.y
+      if object.objectType == "Walker" and not object.added
+        object.added = true
+        @objects[i] = Walker object.x, object.y, object.endX, object.endY
+      if object.objectType == "Health" and not object.added
+        object.added = true
+        @objects[i] = Health object.x, object.y
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -140,9 +154,15 @@ class Editor
     graphics.setColor 255, 255, 255
     for i=#@objects, 1, -1
       obj = @objects[i]
-      if @objectData[i].x == @activeX and @objectData[i].y == @activeY and @selectedObject ~= i
+      if @objectData[i].x == @activeX and @objectData[i].y == @activeY and @selectedObject ~= i and not @viewObjectMenu
         @activeDeleteIndex = i
         @activeObject = true
+
+      if obj.__class.__name == "Walker"
+        graphics.setColor 0, 0, 0
+        graphics.line obj.originX, obj.originY, obj.endX, obj.endY
+        @drawCircle obj.originX, obj.originY, 8
+        @drawCircle obj.endX, obj.endY, 8
       obj\draw!
 
   drawCursor: =>
@@ -204,7 +224,7 @@ class Editor
     graphics.print "Selected mode: " .. @tool, 15, graphics.getHeight! - 32
 
   drawControls: =>
-    if @viewControls
+    if @viewControls and not @viewObjectMenu
       graphics.setColor 0, 0, 0, 155
       graphics.rectangle "fill", 0, 0, 930, 250
       graphics.setColor 255, 255, 255
@@ -215,13 +235,70 @@ class Editor
       "Press 'space' to add a polygon to the level \n" ..
       "Press RIGHT CLICK to select a polygon \n" ..
       "Press 'r' remove the last placed point, or a selected polygon \n" ..
-      "Press 'm' to minimize this box", 15, 15
+      "Press 'm' to minimize this box\n" ..
+      "Press '1' to create and destroy polygon shapes\n" ..
+      "Press '2' to create and destroy objects\n" .. 
+      "Press 'j' to access the object menu", 15, 15
     else
       graphics.setColor 0, 0, 0, 155
       graphics.rectangle "fill", 0, 0, 475, 48
       graphics.setColor 255, 255, 255
       graphics.print "Press 'm' to open the controls list", 15, 15
       @drawMode!
+
+  testPoint: (x1,y1,w1,h1,x2,y2) =>
+    return x2 > x1 and x2 < x1 + w1 and y2 > y1 and y2 < y1 + h1
+
+  getWidthRatio: (num, den) =>
+    return graphics.getWidth! * num / den
+
+  getHeightRatio: (num, den) =>
+    return graphics.getHeight! * num / den
+
+  drawObjectMenu: =>
+    -- constants for menu window
+    local x, y, w, h, xoffset, yoffset, itemCounter, nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
+    x, y, w, h = @getWidthRatio(1,8), @getHeightRatio(1,8), @getWidthRatio(3,4), @getHeightRatio(3,4)
+    xoffset, yoffset = 10, 10
+    nItemsWide, nItemsTall = w/6, h/6
+    itemWidth, itemHeight = nItemsWide-xoffset, nItemsTall-yoffset
+    actualWidth, actualHeight = itemWidth-xoffset*2, itemHeight-yoffset*2
+
+    if @viewObjectMenu and not @viewControls
+      -- draw main window
+      graphics.setColor 0, 0, 0, 155
+      graphics.rectangle "fill", x-10, y-10, w+10, h+10
+      -- draw each placable object
+      graphics.setColor 100, 100, 100, 200
+      itemCounter = 1
+    
+
+      -- nested for loop to get x,y coordinates for menu grid
+      -- each loop step considers the width and height of the GUI block 
+      local temp, className
+      for ox = x+xoffset, x+w-itemWidth, itemWidth+xoffset
+        for oy = y+yoffset, y+h-itemHeight, itemHeight+yoffset
+          if itemCounter <= #@menuItems
+            graphics.setColor 0, 0, 0, 200
+            -- check if the mouse is inside this particular menu item
+            if @testPoint ox, oy, actualWidth, actualHeight, mouse.getX!, mouse.getY!
+              graphics.setColor unpack @hovered
+              if mouse.isDown 1
+                @selectedMenuItem = @menuItems[itemCounter]
+                graphics.setColor unpack @selected
+                
+            graphics.rectangle "fill", ox, oy, actualWidth, actualHeight
+
+            className = @menuItems[itemCounter].__class.__name
+            if className == "Floater" or className == "Health"
+              temp = @menuItems[itemCounter] ox, oy
+            elseif className == "Walker"
+              temp = @menuItems[itemCounter] ox, oy, ox, oy
+
+            temp\draw ox + actualWidth / 2, oy + actualHeight / 2
+              -- elseif .__class.__name == "Walker"
+              --   .draw ox+4, oy+4, itemWidth, itemHeight
+          itemCounter += 1
 
   drawObjectOrigin: =>
     local originRadius
@@ -257,11 +334,12 @@ class Editor
     @drawCursor!
 
     graphics.setColor 0, 0, 0
-    graphics.circle "fill", 0, 0, 10
+    graphics.circle "fill", 0, 0, 6
 
     @cam\detach!
 
     @drawControls!
+    @drawObjectMenu!
 
   clickerTheta: 0
   clickerThetaStep: math.pi / 2
@@ -323,7 +401,13 @@ class Editor
         @objectData[i].added = false
         -- remove @objects, i
       else
-        @objects[i]\update dt
+        if @objects[i].__class.__name == "Floater"
+          @objects[i]\update dt
+
+  updateWalkers: (dt, targetX, targetY) =>
+    for i = #@objects, 1, -1 do
+      if @objects[i].__class.__name == "Walker"
+        @objects[i]\update dt, targetX, targetY
 
   update: (dt) =>
     @cam\zoomTo @cameraScale
@@ -338,7 +422,7 @@ class Editor
 
   mousepressed: (x, y, button) =>
     local found
-    if button == 1
+    if button == 1 and not @viewObjectMenu
       -- Add a vertice to the active vertices table
       found = false
       for i = 1, #@activeVertices
@@ -349,15 +433,14 @@ class Editor
         if @tool == "polygon"
           insert @activeVertices, @vec2(@activeX, @activeY)
         elseif @tool == "object"
-          if @selectedMenuItem == Floater and #@activeVertices < 1
+          if (@selectedMenuItem == Floater or @selectedMenuItem == Health) and #@activeVertices < 1
             insert @activeVertices, @vec2(@activeX, @activeY)
-          elseif @selectedMenuItem == "Walker" and #@activeVertices < 2
+          elseif @selectedMenuItem == Walker and #@activeVertices < 2
             insert @activeVertices, @vec2(@activeX, @activeY)
       else
         print "there is already a vertice at that coordinate"
 
-      print #@activeVertices
-    if button == 2
+    if button == 2 and not @viewObjectMenu
       -- Select a shape      
       if @tool == "polygon"
         @selectedShape = -1
@@ -406,6 +489,7 @@ class Editor
           remove @activeVertices, #@activeVertices
         if @selectedObject > 0
           remove @objectData, @selectedObject
+          @objects[@selectedObject].body\destroy!
           remove @objects, @selectedObject
 
           @selectedObject = -1
@@ -430,19 +514,39 @@ class Editor
           print "error: not enough active vertices to create an object!"
           return
 
-        local className
+        local className, obj
         if @selectedMenuItem
           className = @selectedMenuItem.__class.__name
-          insert @objectData, {
-            x: @activeVertices[1].x,
-            y: @activeVertices[1].y,
-            objectType: className,
-            added: false,
-          }
+          -- adding the object data
+          if className == "Floater" or className == "Health"
+            obj = {
+              x: @activeVertices[1].x,
+              y: @activeVertices[1].y,
+              objectType: className,
+              added: false,
+            }
+            insert @objectData, obj
+            print "new object [" .. className .. "]: " .. inspect {obj.x, obj.y} 
+          elseif className == "Walker"
+            obj = {
+              x: @activeVertices[1].x,
+              y: @activeVertices[1].y,
+              endX: @activeVertices[2].x,
+              endY: @activeVertices[2].y,
+              objectType: className,
+              added: false,
+            }
+            insert @objectData, obj
+            print "new object [" .. className .. "]: " .. inspect {obj.x, obj.y} 
           @flushActiveVertices!
 
     if key == "m"
       @viewControls = not @viewControls
+      @viewObjectMenu = false
+
+    if key == "j"
+      @viewObjectMenu = not @viewObjectMenu
+      @viewControls = false
 
     if key == "p"
       @saveFile!

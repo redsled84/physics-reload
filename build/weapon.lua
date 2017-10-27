@@ -21,10 +21,7 @@ do
   local _class_0
   local _base_0 = {
     bullets = { },
-    canShoot = false,
-    rateOfFireTimer = Timer(.15),
-    minAtkPower = 5,
-    maxAtkPower = 15,
+    canShoot = true,
     shakeConstant = 4.25,
     updateRateOfFire = function(self, dt)
       if not self.canShoot then
@@ -48,18 +45,21 @@ do
       if self.isPlayerWeapon then
         shake:more(self.shakeConstant)
       end
-      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize, random(self.minAtkPower, self.maxAtkPower), self.isPlayerWeapon)
+      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize * 2, random(self.minAtkPower, self.maxAtkPower), self.isPlayerWeapon)
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()
       bullet:fire()
       self.bullets[#self.bullets + 1] = bullet
       if self.isPlayerWeapon then
-        if gunShot:isPlaying() then
-          gunShot:stop()
-          return gunShot:play()
-        else
-          return gunShot:play()
-        end
+        gunShot:setVolume(.5)
+      else
+        gunShot:setVolume(.05)
+      end
+      if gunShot:isPlaying() then
+        gunShot:stop()
+        return gunShot:play()
+      else
+        return gunShot:play()
       end
     end,
     shootAuto = function(self, x, y)
@@ -102,18 +102,32 @@ do
   }
   _base_0.__index = _base_0
   _class_0 = setmetatable({
-    __init = function(self, x, y, magazineSize, sprayAngle, isPlayerWeapon)
+    __init = function(self, x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower)
       if sprayAngle == nil then
         sprayAngle = math.pi / 100
       end
       if isPlayerWeapon == nil then
         isPlayerWeapon = false
       end
-      self.x, self.y, self.magazineSize, self.sprayAngle, self.isPlayerWeapon = x, y, magazineSize, sprayAngle, isPlayerWeapon
-      self.ammoCount = self.magazineSize
+      if rateOfFire == nil then
+        rateOfFire = .25
+      end
+      if bulletSpeed == nil then
+        bulletSpeed = 2700
+      end
+      if bulletSize == nil then
+        bulletSize = 10
+      end
+      if minAtkPower == nil then
+        minAtkPower = 5
+      end
+      if maxAtkPower == nil then
+        maxAtkPower = 15
+      end
+      self.x, self.y, self.totalAmmo, self.sprayAngle, self.isPlayerWeapon, self.rateOfFire, self.bulletSpeed, self.bulletSize, self.minAtkPower, self.maxAtkPower = x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower
+      self.ammoCount = self.totalAmmo
       self.fireControl = "auto"
-      self.bulletSpeed = 2700
-      self.bulletSize = 6
+      self.rateOfFireTimer = Timer(self.rateOfFire)
     end,
     __base = _base_0,
     __name = "Weapon"

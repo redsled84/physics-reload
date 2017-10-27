@@ -25,13 +25,16 @@ class Floater extends Entity
 
       if @health <= 0
         @body\destroy!
-  draw: =>
+  draw: (x, y) =>
     if not @body\isDestroyed!
+      if not x and not y
+        x = @body\getX!
+        y = @body\getY!
       graphics.setColor 255, 35, 8
-      graphics.circle "fill", @x, @y, @radius
+      graphics.circle "fill", x, y, @radius
       graphics.setColor 245, 245, 245
-      graphics.circle "fill", @x, @y, @radius * (2 / 3)
+      graphics.circle "fill", x, y, @radius * (2 / 3)
       graphics.setColor 255, 35, 8
-      graphics.circle "fill", @x, @y, @radius * (1 / 3)
+      graphics.circle "fill", x, y, @radius * (1 / 3)
 
 return Floater
