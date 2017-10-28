@@ -13,8 +13,6 @@ do
   local _obj_0 = love
   graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
 end
-local gunShot = audio.newSource("audio/gunshot.wav", "static")
-gunShot:setVolume(1)
 local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
 local Weapon
 do
@@ -50,17 +48,7 @@ do
       bullet:calculateDirections()
       bullet:fire()
       self.bullets[#self.bullets + 1] = bullet
-      if self.isPlayerWeapon then
-        gunShot:setVolume(.5)
-      else
-        gunShot:setVolume(.05)
-      end
-      if gunShot:isPlaying() then
-        gunShot:stop()
-        return gunShot:play()
-      else
-        return gunShot:play()
-      end
+      return playSound(self.gunShotSound)
     end,
     shootAuto = function(self, x, y)
       local targetX, targetY
@@ -128,6 +116,12 @@ do
       self.ammoCount = self.totalAmmo
       self.fireControl = "auto"
       self.rateOfFireTimer = Timer(self.rateOfFire)
+      self.gunShotSound = audio.newSource("audio/gunshot.wav", "static")
+      if self.isPlayerWeapon then
+        return self.gunShotSound:setVolume(.5)
+      else
+        return self.gunShotSound:setVolume(.05)
+      end
     end,
     __base = _base_0,
     __name = "Weapon"

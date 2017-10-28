@@ -122,3 +122,12 @@ end
 function table.clone(org)
   return {unpack(org)}
 end
+
+function playSound(source)
+  if source:isPlaying() then
+    source:stop()
+    source:play()
+  else
+    source:play()
+  end
+end

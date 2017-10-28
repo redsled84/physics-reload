@@ -7,8 +7,6 @@ shake = require "build.shake"
 
 {graphics: graphics, audio: audio, mouse: mouse} = love
 
-gunShot = audio.newSource "audio/gunshot.wav", "static"
-gunShot\setVolume 1
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
 class Weapon
@@ -18,6 +16,12 @@ class Weapon
     -- @drawOffset = {x: @sprite\getWidth! / 4, y: @sprite\getHeight! / 2}
     @fireControl = "auto"
     @rateOfFireTimer = Timer @rateOfFire
+
+    @gunShotSound = audio.newSource "audio/gunshot.wav", "static"
+    if @isPlayerWeapon
+      @gunShotSound\setVolume .5
+    else
+      @gunShotSound\setVolume .05
 
   bullets: {}
   canShoot: true
@@ -65,15 +69,7 @@ class Weapon
     -- Add bullet to world
     @bullets[#@bullets+1] = bullet
 
-    if @isPlayerWeapon
-      gunShot\setVolume .5
-    else
-      gunShot\setVolume .05
-    if gunShot\isPlaying!
-      gunShot\stop!
-      gunShot\play!
-    else
-      gunShot\play!
+    playSound @gunShotSound
 
   shootAuto: (x, y) =>
     local targetX, targetY
@@ -105,7 +101,6 @@ class Weapon
     graphics.setFont ammoFont
     graphics.setColor 0, 0, 0
     graphics.print @ammoCount, 35, graphics\getHeight! - 45
-
 
   -- draw: (x, y) =>
     -- graphics.setColor 255, 255, 255

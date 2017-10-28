@@ -1,4 +1,5 @@
 inspect = require "libs.inspect"
+-- love.physics.setMeter(1)
 world = love.physics.newWorld(0, 1050, true)
 
 local function beginContact(a, b, coll)
@@ -12,6 +13,9 @@ end
 local function preSolve(a, b, coll)
 end
 
+local hitMarkerSound = love.audio.newSource("audio/hit_marker_cut.mp3", "static")
+local goldPickupSound = love.audio.newSource("audio/gold_pickup.wav", "static")
+goldPickupSound:setVolume(.25)
 local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local obj1, obj2 = a:getUserData(), b:getUserData()
   local x, y = coll:getNormal()
@@ -21,12 +25,13 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local floater = getObject(obj1, obj2, "Floater")
   local walker = getObject(obj1, obj2, "Walker")
   local health = getObject(obj1, obj2, "Health")
+  local gold = getObject(obj1, obj2, "Gold")
 
   if player then
-    if math.abs(x) == 1 and not player.onGround and not bullet then
+    if math.abs(x) == 1 and not player.onGround and not bullet and not health and not gold then
       player.xVelocity = 0
     end
-    if y ~= 0 then
+    if y ~= 0 and not health and not bullet and not gold then
       player.onGround = true
 
       -- player.xVelocity = player.xVelocity * math.abs(y)
@@ -35,16 +40,22 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
     player:setNormal({x, y})
 
     if bullet then
-      player:damage(10)
+      player:damage(bullet.damage)
     end
 
     if walker then
-      player:damageByImpulse(-x, y, 5)
+      player:damageByImpulse(x, y, walker.hitAttackPower)
     end
 
     if health then
       player:addHealth(health:getHealth())
       health:destroy()
+    end
+
+    if gold then
+      player:addGold(gold:getValue())
+      gold:destroy()
+      playSound(goldPickupSound)
     end
   end
 
@@ -57,7 +68,7 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   end
 
   if floater and player then
-    player:damageByImpulse(x, y, floater.attackPower)
+    player:damageByImpulse(-x, -y, floater.attackPower)
   end
 
   if walker and not walker.body:isDestroyed() then
@@ -70,6 +81,7 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
     end
     if bullet then
       walker:damage(bullet.damage)
+      playSound(hitMarkerSound)
     end
   end
 end

@@ -11,6 +11,7 @@ class Bullet extends Entity
     -- @fixture\setFilterData 1, 0, 0
     @body\setFixedRotation false
     @body\setBullet true
+    @body\setMass .01
 
     if @canHurtEnemies
         @fixture\setFilterData collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0

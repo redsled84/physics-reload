@@ -3,19 +3,30 @@ import cos, pi, sin, sqrt from math
 Entity = require "build.entity"
 Weapon = require "build.weapon"
 
-{graphics: graphics} = love
+{audio: audio, graphics: graphics} = love
 
 r = (theta) ->
- return 30 - 30 * sin(theta)
+ return 30 - 40 * cos(theta)
 
 class Floater extends Entity
-  new: (@originX, @originY, @radius=15, @health=50, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
+  new: (@originX, @originY, @radius=15, @health=10, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
+    @popSound = audio.newSource "audio/balloon_pop.mp3", "static"
+    @popSound\setVolume .5
     @x = @originX
     @y = @originY
+    @attackPower = 20
     super @x, @y, {@radius}, "static", "circle"
   attackPower: 20
   damage: (attack) =>
     @health -= attack
+
+  updateGold: =>
+    if #@gold > 0
+      for i = @nGold, 1, -1
+        if @gold[i].body\isDestroyed!
+          table.remove @gold, i
+          @nGold -= 1
+
   update: (dt) =>
     if not @body\isDestroyed!
       @theta += @step * dt
@@ -24,7 +35,16 @@ class Floater extends Entity
       @body\setPosition @x, @y
 
       if @health <= 0
-        @body\destroy!
+        playSound @popSound
+
+        @destroy!
+    @updateGold!
+
+  drawGold: =>
+    if #@gold > 0
+      for i = 1, #@gold
+        @gold[i]\draw!
+
   draw: (x, y) =>
     if not @body\isDestroyed!
       if not x and not y
@@ -36,5 +56,6 @@ class Floater extends Entity
       graphics.circle "fill", x, y, @radius * (2 / 3)
       graphics.setColor 255, 35, 8
       graphics.circle "fill", x, y, @radius * (1 / 3)
+    @drawGold!
 
 return Floater

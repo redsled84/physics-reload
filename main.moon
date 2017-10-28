@@ -1,21 +1,25 @@
+math.randomseed os.time!
+
 inspect = require "libs.inspect"
+require "build.utils"
 require "build.world"
 Camera = require "libs.camera"
 Editor = require "build.editor"
 Entity = require "build.entity"
 Floater = require "build.floater"
+Gold = require "build.gold"
 Player = require "build.player"
 shake = require "build.shake"
 -- Walker = require "build.walker"
 Weapon = require "build.weapon"
 
-local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon
+local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon, gold
 initGame = ->
   editor = Editor!
   -- shake = Shake!
 
   -- Change this string to be the level you want to load!
-  editor\loadSavedFile "levels/level3.lua"
+  editor\loadSavedFile "levels/level10.lua"
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}
@@ -23,18 +27,34 @@ initGame = ->
   -- floor = Entity 100, 500, {600, 32}
   -- walker = Walker 300, 32, 450, 32
   -- walker2 = Walker -200, -198, -100, -198
-  
-  -- floater = Floater 350, 100
+    -- floater = Floater 350, 100
+  -- gold = Gold 32, 32
 
   setWorldCallbacks!
 
   cam = Camera love.graphics.getWidth! / 2, love.graphics.getHeight! / 2
+  cam\zoomTo .8
 
   toggleEditor = false
 
   love.graphics.setBackgroundColor 230, 237, 247
+  cursor = love.mouse.newCursor "sprites/cursor.png", 0, 0
+  love.mouse.setCursor cursor
 
 initGame!
+
+local viewPort, xoffset, yoffset
+xoffset = 200
+yoffset = 175
+viewPort = {
+  min: {xoffset, yoffset},
+  max: {love.graphics.getWidth! - xoffset, love.graphics.getHeight! - yoffset}
+}
+
+updateCamera = ->
+  local px, py
+  px, py = cam\cameraCoords player.x, player.y
+
 
 love.load = ->
   love.update = (dt) ->
@@ -47,12 +67,13 @@ love.load = ->
       world\update dt
       -- floater\update dt
 
-      editor\updateObjects dt
+      editor\updateObjects dt, player
       editor\updateWalkers dt, player.body\getX!, player.body\getY!
 
 
       -- print weapon.canShoot, weapon.rateOfFire.time
 
+      -- cam\lookAt 300, 200
       cam\lookAt player.body\getX!, player.body\getY!
 
       -- walker\update dt, player.body\getX!, player.body\getY!
@@ -73,18 +94,23 @@ love.load = ->
       for i = 1, #editor.entities
         editor.entities[i]\draw!
       editor\drawObjects!
+      editor\drawObjectGold!
       
       player\draw {0, 255, 255}
+      -- player\drawTrajectory!
 
       -- floater\draw!
 
       -- walker\draw!
       -- walker2\draw!
 
+      -- gold\draw!
       shake\postDraw!
       cam\detach!
     
       player.weapon\drawAmmoCount!
+      love.graphics.setColor 15, 15, 15
+      love.graphics.print "Gold: " .. tostring(player.amountOfGold), 15, love.graphics.getHeight! - 100
 
   love.mousepressed = (x, y, button) ->
     if toggleEditor

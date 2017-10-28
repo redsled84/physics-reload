@@ -36,6 +36,7 @@ do
       self:calculateDirections()
       self.body:setFixedRotation(false)
       self.body:setBullet(true)
+      self.body:setMass(.01)
       if self.canHurtEnemies then
         return self.fixture:setFilterData(collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0)
       else

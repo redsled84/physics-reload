@@ -12,7 +12,8 @@ frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
 {keyboard: keyboard, graphics: graphics, mouse: mouse} = love
 
 class Player extends Entity
-  new: (@x, @y, @width=32, @height=64) =>
+  new: (@x, @y, @width=26, @height=48) =>
+  -- new: (@x, @y, @width=32) =>
     @onGround = false
     
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
@@ -35,7 +36,8 @@ class Player extends Entity
     @maxHealth = 200
     @health = @maxHealth
 
-    @weapon = Weapon 0, 0, 1000, nil, true, .15, 3500, 7, 15, 25
+    @weapon = Weapon 0, 0, 1000, math.pi/75, true, .15, 3500, 7, 15, 25
+    @amountOfGold = 0
 
   removeHealth: (healthToRemove) =>
     if @health - healthToRemove > 0
@@ -49,9 +51,12 @@ class Player extends Entity
     else
       @health = @maxHealth    
 
+  addGold: (goldToAdd) =>
+    @amountOfGold += goldToAdd
+
   damageByImpulse: (x, y, attackPower) =>
     @activeHitStun = true
-    @body\applyLinearImpulse -1000 * x, -1000 * y
+    @body\applyLinearImpulse 800 * x, 800 * y
     @removeHealth attackPower
 
   damage: (attackPower) =>
@@ -95,7 +100,6 @@ class Player extends Entity
 
     @onGround = false
 
-
   moveWithKeys: (dt) =>
     if keyboard.isDown 'a'
       if @xVelocity > 0
@@ -117,18 +121,37 @@ class Player extends Entity
 
   jump: (key) =>
     if #@normal >= 2 then
-      if key == "space" and @onGround and not @activeHitStun
+      if (key == "w" or key == "space") and @onGround and not @activeHitStun
         local xv, _
         xv, _ = @body\getLinearVelocity!
         @body\setLinearVelocity xv, @jumpVelocity
 
+  getTrajectoryPoint: (t) =>
+    local stepVelocity, stepGravity
+    stepVelocity = love.timer.getDelta! * 1000
+
+    return @body\getX! + stepVelocity, @body\getY! + stepVelocity * t - (1/2) * world\getGravity! * t^2
+
+  drawTrajectory: =>
+    local tpX, tpY
+    graphics.setColor 255, 0, 0
+    for i = 0, 3, love.timer.getDelta!
+       tpX, tpY = @getTrajectoryPoint(i)
+       graphics.points tpX, tpY
+
   draw: =>
-    super {200, 0, 195}
+    super {25, 145, 245}
+    -- graphics.setColor 25, 145, 245
+    -- graphics.circle "fill", @body\getX!, @body\getY!, @radius
+    
     local healthRatio
     healthRatio = @health / @maxHealth
     graphics.setColor 255, 0, 0
     graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
+    -- graphics.circle "fill", @body\getX!
 
     @weapon\drawBullets!
+    -- @drawTrajectory!
+
 
 return Player

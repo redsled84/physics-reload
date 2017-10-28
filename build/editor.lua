@@ -14,9 +14,9 @@ local inspect = require("libs.inspect")
 local Camera = require("libs.camera")
 local Entity = require("build.entity")
 local Floater = require("build.floater")
+local Laser = require("build.laser")
 local Walker = require("build.walker")
 local Health = require("build.health")
-require("build.utils")
 local graphics, mouse, physics, filesystem, keyboard
 do
   local _obj_0 = love
@@ -44,7 +44,8 @@ do
     menuItems = {
       Floater,
       Walker,
-      Health
+      Health,
+      Laser
     },
     objectData = { },
     objects = { },
@@ -124,6 +125,10 @@ do
           object.added = true
           self.objects[i] = Health(object.x, object.y)
         end
+        if object.objectType == "Laser" and not object.added then
+          object.added = true
+          self.objects[i] = Laser(object.x, object.y, object.endX, object.endY)
+        end
       end
     end,
     vec2 = function(self, x, y)
@@ -185,13 +190,17 @@ do
           self.activeDeleteIndex = i
           self.activeObject = true
         end
-        if obj.__class.__name == "Walker" then
-          graphics.setColor(0, 0, 0)
-          graphics.line(obj.originX, obj.originY, obj.endX, obj.endY)
-          self:drawCircle(obj.originX, obj.originY, 8)
-          self:drawCircle(obj.endX, obj.endY, 8)
-        end
         obj:draw()
+      end
+    end,
+    drawObjectGold = function(self)
+      for i = #self.objects, 1, -1 do
+        local obj = self.objects[i]
+        if obj.gold then
+          if #obj.gold > 0 and obj.body:isDestroyed() then
+            obj:drawGold()
+          end
+        end
       end
     end,
     drawCursor = function(self)
@@ -295,6 +304,8 @@ do
                 temp = self.menuItems[itemCounter](ox, oy)
               elseif className == "Walker" then
                 temp = self.menuItems[itemCounter](ox, oy, ox, oy)
+              elseif className == "Laser" then
+                temp = self.menuItems[itemCounter](ox + actualWidth / 2, oy, ox + actualWidth / 2, oy + actualHeight)
               end
               temp:draw(ox + actualWidth / 2, oy + actualHeight / 2)
             end
@@ -389,13 +400,16 @@ do
         self.cameraScale = self.cameraScale + self.scaleControlFactor * dt < self.maxScale and self.cameraScale + self.scaleControlFactor * dt or self.maxScale
       end
     end,
-    updateObjects = function(self, dt)
+    updateObjects = function(self, dt, player)
       for i = #self.objects, 1, -1 do
         if self.objects[i].body:isDestroyed() then
           self.objectData[i].added = false
         else
           if self.objects[i].__class.__name == "Floater" then
             self.objects[i]:update(dt)
+          end
+          if self.objects[i].__class.__name == "Laser" and player then
+            self.objects[i]:update(dt, player)
           end
         end
       end
@@ -431,7 +445,7 @@ do
           elseif self.tool == "object" then
             if (self.selectedMenuItem == Floater or self.selectedMenuItem == Health) and #self.activeVertices < 1 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
-            elseif self.selectedMenuItem == Walker and #self.activeVertices < 2 then
+            elseif (self.selectedMenuItem == Walker or self.selectedMenuItem == Laser) and #self.activeVertices < 2 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
             end
           end
@@ -536,12 +550,7 @@ do
                 objectType = className,
                 added = false
               }
-              insert(self.objectData, obj)
-              print("new object [" .. className .. "]: " .. inspect({
-                obj.x,
-                obj.y
-              }))
-            elseif className == "Walker" then
+            elseif className == "Walker" or className == "Laser" then
               obj = {
                 x = self.activeVertices[1].x,
                 y = self.activeVertices[1].y,
@@ -550,6 +559,8 @@ do
                 objectType = className,
                 added = false
               }
+            end
+            if obj then
               insert(self.objectData, obj)
               print("new object [" .. className .. "]: " .. inspect({
                 obj.x,

@@ -32,9 +32,12 @@ do
         self.health = self.maxHealth
       end
     end,
+    addGold = function(self, goldToAdd)
+      self.amountOfGold = self.amountOfGold + goldToAdd
+    end,
     damageByImpulse = function(self, x, y, attackPower)
       self.activeHitStun = true
-      self.body:applyLinearImpulse(-1000 * x, -1000 * y)
+      self.body:applyLinearImpulse(800 * x, 800 * y)
       return self:removeHealth(attackPower)
     end,
     damage = function(self, attackPower)
@@ -97,18 +100,31 @@ do
     end,
     jump = function(self, key)
       if #self.normal >= 2 then
-        if key == "space" and self.onGround and not self.activeHitStun then
+        if (key == "w" or key == "space") and self.onGround and not self.activeHitStun then
           local xv, _
           xv, _ = self.body:getLinearVelocity()
           return self.body:setLinearVelocity(xv, self.jumpVelocity)
         end
       end
     end,
+    getTrajectoryPoint = function(self, t)
+      local stepVelocity, stepGravity
+      stepVelocity = love.timer.getDelta() * 1000
+      return self.body:getX() + stepVelocity, self.body:getY() + stepVelocity * t - (1 / 2) * world:getGravity() * t ^ 2
+    end,
+    drawTrajectory = function(self)
+      local tpX, tpY
+      graphics.setColor(255, 0, 0)
+      for i = 0, 3, love.timer.getDelta() do
+        tpX, tpY = self:getTrajectoryPoint(i)
+        graphics.points(tpX, tpY)
+      end
+    end,
     draw = function(self)
       _class_0.__parent.__base.draw(self, {
-        200,
-        0,
-        195
+        25,
+        145,
+        245
       })
       local healthRatio
       healthRatio = self.health / self.maxHealth
@@ -122,10 +138,10 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y, width, height)
       if width == nil then
-        width = 32
+        width = 26
       end
       if height == nil then
-        height = 64
+        height = 48
       end
       self.x, self.y, self.width, self.height = x, y, width, height
       self.onGround = false
@@ -143,7 +159,8 @@ do
       self.activeHitStun = false
       self.maxHealth = 200
       self.health = self.maxHealth
-      self.weapon = Weapon(0, 0, 1000, nil, true, .15, 3500, 7, 15, 25)
+      self.weapon = Weapon(0, 0, 1000, math.pi / 75, true, .15, 3500, 7, 15, 25)
+      self.amountOfGold = 0
     end,
     __base = _base_0,
     __name = "Player",

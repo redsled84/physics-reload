@@ -5,11 +5,14 @@ do
 end
 local Entity = require("build.entity")
 local Weapon = require("build.weapon")
-local graphics
-graphics = love.graphics
+local audio, graphics
+do
+  local _obj_0 = love
+  audio, graphics = _obj_0.audio, _obj_0.graphics
+end
 local r
 r = function(theta)
-  return 30 - 30 * sin(theta)
+  return 30 - 40 * cos(theta)
 end
 local Floater
 do
@@ -20,6 +23,16 @@ do
     damage = function(self, attack)
       self.health = self.health - attack
     end,
+    updateGold = function(self)
+      if #self.gold > 0 then
+        for i = self.nGold, 1, -1 do
+          if self.gold[i].body:isDestroyed() then
+            table.remove(self.gold, i)
+            self.nGold = self.nGold - 1
+          end
+        end
+      end
+    end,
     update = function(self, dt)
       if not self.body:isDestroyed() then
         self.theta = self.theta + (self.step * dt)
@@ -27,7 +40,16 @@ do
         self.y = self.amplitude * r(self.theta) * sin(self.theta) + self.originY
         self.body:setPosition(self.x, self.y)
         if self.health <= 0 then
-          return self.body:destroy()
+          playSound(self.popSound)
+          self:destroy()
+        end
+      end
+      return self:updateGold()
+    end,
+    drawGold = function(self)
+      if #self.gold > 0 then
+        for i = 1, #self.gold do
+          self.gold[i]:draw()
         end
       end
     end,
@@ -42,8 +64,9 @@ do
         graphics.setColor(245, 245, 245)
         graphics.circle("fill", x, y, self.radius * (2 / 3))
         graphics.setColor(255, 35, 8)
-        return graphics.circle("fill", x, y, self.radius * (1 / 3))
+        graphics.circle("fill", x, y, self.radius * (1 / 3))
       end
+      return self:drawGold()
     end
   }
   _base_0.__index = _base_0
@@ -54,7 +77,7 @@ do
         radius = 15
       end
       if health == nil then
-        health = 50
+        health = 10
       end
       if radiusFunction == nil then
         radiusFunction = r
@@ -69,8 +92,11 @@ do
         amplitude = 1
       end
       self.originX, self.originY, self.radius, self.health, self.radiusFunction, self.step, self.theta, self.amplitude = originX, originY, radius, health, radiusFunction, step, theta, amplitude
+      self.popSound = audio.newSource("audio/balloon_pop.mp3", "static")
+      self.popSound:setVolume(.5)
       self.x = self.originX
       self.y = self.originY
+      self.attackPower = 20
       return _class_0.__parent.__init(self, self.x, self.y, {
         self.radius
       }, "static", "circle")

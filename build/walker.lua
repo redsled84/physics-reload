@@ -2,9 +2,26 @@ local sqrt
 sqrt = math.sqrt
 local collisionMasks = require("build.collisionMasks")
 local Entity = require("build.entity")
+local Gold = require("build.gold")
 local Weapon = require("build.weapon")
-local graphics
-graphics = love.graphics
+local graphics, audio
+do
+  local _obj_0 = love
+  graphics, audio = _obj_0.graphics, _obj_0.audio
+end
+local hitAttackPowers
+hitAttackPowers = {
+  60,
+  40,
+  40,
+  20,
+  20,
+  20,
+  20,
+  20,
+  20,
+  20
+}
 local Walker
 do
   local _class_0
@@ -41,21 +58,43 @@ do
       self.touchingWall = false
     end,
     shootWeapon = function(self, dt, targetX, targetY)
-      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY()
+      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY() - self.height / 4
       if self.awarenessDistance >= sqrt((targetX - self.weapon.x) ^ 2 + (targetY - self.weapon.y) ^ 2) then
         self.weapon:autoRemoveDestroyedBullets()
         self.weapon:shootAuto(targetX, targetY)
         return self.weapon:updateRateOfFire(dt)
       end
     end,
+    updateGold = function(self)
+      if #self.gold > 0 then
+        for i = self.nGold, 1, -1 do
+          if self.gold[i].body:isDestroyed() then
+            table.remove(self.gold, i)
+            self.nGold = self.nGold - 1
+          end
+        end
+      end
+    end,
     update = function(self, dt, targetX, targetY)
       if not self.body:isDestroyed() then
         self:move(dt)
         if self.health <= 0 then
-          self.body:destroy()
+          for i = 1, self.nGold do
+            self.gold[#self.gold + 1] = Gold(math.floor(self.body:getX()), math.floor(self.body:getY()))
+          end
+          playSound(self.steveSound)
+          self:destroy()
           return 
         end
-        return self:shootWeapon(dt, targetX, targetY)
+        self:shootWeapon(dt, targetX, targetY)
+      end
+      return self:updateGold()
+    end,
+    drawGold = function(self)
+      if #self.gold > 0 then
+        for i = 1, #self.gold do
+          self.gold[i]:draw()
+        end
       end
     end,
     draw = function(self, x, y)
@@ -73,6 +112,7 @@ do
         local offset
         offset = 7
         graphics.rectangle("fill", drawX + offset, drawY + offset, self.width - offset * 2, self.height - offset * 2)
+        self:drawGold()
       end
       return self.weapon:drawBullets()
     end
@@ -82,13 +122,13 @@ do
   _class_0 = setmetatable({
     __init = function(self, originX, originY, endX, endY, awarenessDistance, width, height)
       if awarenessDistance == nil then
-        awarenessDistance = 650
+        awarenessDistance = 680
       end
       if width == nil then
         width = 32
       end
       if height == nil then
-        height = 32
+        height = 64
       end
       self.originX, self.originY, self.endX, self.endY, self.awarenessDistance, self.width, self.height = originX, originY, endX, endY, awarenessDistance, width, height
       _class_0.__parent.__init(self, self.originX, self.originY, {
@@ -102,7 +142,9 @@ do
       self.xVelocity = 0
       self.moveSpeed = 200
       self.health = 50
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 18, false, .4, 3000, 4)
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 35, false, .35, 3000, 6, 5, 20)
+      self.steveSound = audio.newSource("audio/steve_hurt.mp3", "static")
+      self.hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
     end,
     __base = _base_0,
     __name = "Walker",

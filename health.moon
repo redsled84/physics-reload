@@ -5,7 +5,7 @@ Entity = require "build.entity"
 
 class Health extends Entity
   new: (@x, @y, @width=24, @height=24, @amountOfHealth=20) =>
-    super @x, @y, {@width, @height}, "static"
+    super @x, @y, {@width, @height}, "dynamic"
     @fixture\setFilterData collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0
     @sprite = graphics.newImage "sprites/health_pack.png"
     @sprite\setFilter "nearest", "nearest"
@@ -16,8 +16,8 @@ class Health extends Entity
     local drawX, drawY
     if not @body\isDestroyed! 
       if not x and not y
-        drawX = @body\getX!
-        drawY = @body\getY!
+        drawX = @body\getX! - @width / 2
+        drawY = @body\getY! - @height / 2
       else
         drawX = x - @width / 2
         drawY = y - @height / 2

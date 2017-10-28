@@ -2,15 +2,17 @@ local collisionMasks = require("build.collisionMasks")
 local Entity = require("build.entity")
 local graphics
 graphics = love.graphics
-local Health
+local getSign
+getSign = function()
+  return math.random(0, 1) == 0 and -1 or 1
+end
+local Gold
 do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    getHealth = function(self)
-      if not self.body:isDestroyed() then
-        return self.amountOfHealth
-      end
+    getValue = function(self)
+      return self.value
     end,
     draw = function(self, x, y)
       local drawX, drawY
@@ -19,38 +21,40 @@ do
           drawX = self.body:getX() - self.width / 2
           drawY = self.body:getY() - self.height / 2
         else
-          drawX = x - self.width / 2
-          drawY = y - self.height / 2
+          drawX = x - self.width
+          drawY = y - self.height
         end
-        graphics.setColor(255, 255, 255)
-        return graphics.draw(self.sprite, drawX, drawY, 0, 2, 2)
+        graphics.setColor(255, 255, 0)
+        return graphics.rectangle("fill", drawX, drawY, self.width, self.height)
       end
     end
   }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y, width, height, amountOfHealth)
+    __init = function(self, x, y, width, height, value, linearForce)
       if width == nil then
-        width = 24
+        width = 8
       end
       if height == nil then
-        height = 24
+        height = 8
       end
-      if amountOfHealth == nil then
-        amountOfHealth = 20
+      if value == nil then
+        value = 5
       end
-      self.x, self.y, self.width, self.height, self.amountOfHealth = x, y, width, height, amountOfHealth
+      if linearForce == nil then
+        linearForce = getSign() * math.random(22, 34)
+      end
+      self.x, self.y, self.width, self.height, self.value, self.linearForce = x, y, width, height, value, linearForce
       _class_0.__parent.__init(self, self.x, self.y, {
         self.width,
         self.height
-      }, "dynamic")
+      }, "dynamic", "rectangle")
       self.fixture:setFilterData(collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0)
-      self.sprite = graphics.newImage("sprites/health_pack.png")
-      return self.sprite:setFilter("nearest", "nearest")
+      return self.body:applyLinearImpulse(self.linearForce, 100)
     end,
     __base = _base_0,
-    __name = "Health",
+    __name = "Gold",
     __parent = _parent_0
   }, {
     __index = function(cls, name)
@@ -74,6 +78,6 @@ do
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
-  Health = _class_0
+  Gold = _class_0
 end
-return Health
+return Gold

@@ -15,9 +15,15 @@ class Entity
 
     @fixture = physics.newFixture @body, @shape
     @fixture\setUserData self
-    @fixture\setFilterData collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker, 0
+    @fixture\setFilterData collisionMasks.solid, collisionMasks.player +
+    collisionMasks.bulletHurtPlayer +
+    collisionMasks.bulletHurtEnemy +
+    collisionMasks.walker +
+    collisionMasks.items, 0
 
     @normal = {}
+    @gold = {}
+    @nGold = math.random 3, 10
 
   setNormal: (normal) =>
     @normal = normal
@@ -31,7 +37,7 @@ class Entity
       if @shapeType ~= "circle"
         graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
       else
-        graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
+        graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius
 
   destroy: =>
     @body\destroy!

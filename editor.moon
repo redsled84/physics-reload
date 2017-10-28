@@ -6,9 +6,9 @@ inspect = require "libs.inspect"
 Camera = require "libs.camera"
 Entity = require "build.entity"
 Floater = require "build.floater"
+Laser = require "build.laser"
 Walker = require "build.walker"
 Health = require "build.health"
-require "build.utils"
 
 {graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
 
@@ -34,6 +34,7 @@ class Editor
     Floater
     Walker
     Health
+    Laser
   }
   objectData: {}
   objects: {}
@@ -99,6 +100,9 @@ class Editor
       if object.objectType == "Health" and not object.added
         object.added = true
         @objects[i] = Health object.x, object.y
+      if object.objectType == "Laser" and not object.added
+        object.added = true
+        @objects[i] = Laser object.x, object.y, object.endX, object.endY
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -158,12 +162,19 @@ class Editor
         @activeDeleteIndex = i
         @activeObject = true
 
-      if obj.__class.__name == "Walker"
-        graphics.setColor 0, 0, 0
-        graphics.line obj.originX, obj.originY, obj.endX, obj.endY
-        @drawCircle obj.originX, obj.originY, 8
-        @drawCircle obj.endX, obj.endY, 8
+      -- if obj.__class.__name == "Walker"
+        -- graphics.setColor 0, 0, 0
+        -- graphics.line obj.originX, obj.originY, obj.endX, obj.endY
+        -- @drawCircle obj.originX, obj.originY, 8
+        -- @drawCircle obj.endX, obj.endY, 8
       obj\draw!
+
+  drawObjectGold: =>
+    for i=#@objects, 1, -1
+      obj = @objects[i]
+      if obj.gold
+        if #obj.gold > 0 and obj.body\isDestroyed!
+          obj\drawGold!
 
   drawCursor: =>
     graphics.setColor 10, 10, 10, 255
@@ -294,6 +305,8 @@ class Editor
               temp = @menuItems[itemCounter] ox, oy
             elseif className == "Walker"
               temp = @menuItems[itemCounter] ox, oy, ox, oy
+            elseif className == "Laser"
+              temp = @menuItems[itemCounter] ox + actualWidth / 2, oy, ox + actualWidth / 2, oy + actualHeight
 
             temp\draw ox + actualWidth / 2, oy + actualHeight / 2
               -- elseif .__class.__name == "Walker"
@@ -395,7 +408,7 @@ class Editor
       @cameraScale = @cameraScale + @scaleControlFactor * dt < @maxScale and
         @cameraScale + @scaleControlFactor * dt or @maxScale
 
-  updateObjects: (dt) =>
+  updateObjects: (dt, player) =>
     for i = #@objects, 1, -1 do
       if @objects[i].body\isDestroyed!
         @objectData[i].added = false
@@ -403,6 +416,8 @@ class Editor
       else
         if @objects[i].__class.__name == "Floater"
           @objects[i]\update dt
+        if @objects[i].__class.__name == "Laser" and player
+          @objects[i]\update dt, player
 
   updateWalkers: (dt, targetX, targetY) =>
     for i = #@objects, 1, -1 do
@@ -435,7 +450,7 @@ class Editor
         elseif @tool == "object"
           if (@selectedMenuItem == Floater or @selectedMenuItem == Health) and #@activeVertices < 1
             insert @activeVertices, @vec2(@activeX, @activeY)
-          elseif @selectedMenuItem == Walker and #@activeVertices < 2
+          elseif (@selectedMenuItem == Walker or @selectedMenuItem == Laser) and #@activeVertices < 2
             insert @activeVertices, @vec2(@activeX, @activeY)
       else
         print "there is already a vertice at that coordinate"
@@ -525,9 +540,7 @@ class Editor
               objectType: className,
               added: false,
             }
-            insert @objectData, obj
-            print "new object [" .. className .. "]: " .. inspect {obj.x, obj.y} 
-          elseif className == "Walker"
+          elseif className == "Walker" or className == "Laser"
             obj = {
               x: @activeVertices[1].x,
               y: @activeVertices[1].y,
@@ -536,6 +549,7 @@ class Editor
               objectType: className,
               added: false,
             }
+          if obj
             insert @objectData, obj
             print "new object [" .. className .. "]: " .. inspect {obj.x, obj.y} 
           @flushActiveVertices!

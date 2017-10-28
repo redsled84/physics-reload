@@ -21,7 +21,13 @@ do
         if self.shapeType ~= "circle" then
           return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else
-          return graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
+          return graphics.circle("fill", self.body:getX(), self.body:getY(), (function()
+            local _base_1 = self.shape
+            local _fn_0 = _base_1.getRadius
+            return function(...)
+              return _fn_0(_base_1, ...)
+            end
+          end)())
         end
       end
     end,
@@ -49,8 +55,10 @@ do
       end
       self.fixture = physics.newFixture(self.body, self.shape)
       self.fixture:setUserData(self)
-      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker, 0)
+      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker + collisionMasks.items, 0)
       self.normal = { }
+      self.gold = { }
+      self.nGold = math.random(3, 10)
     end,
     __base = _base_0,
     __name = "Entity"
