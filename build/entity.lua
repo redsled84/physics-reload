@@ -18,6 +18,10 @@ do
         else
           graphics.setColor(10, 10, 10, 140)
         end
+        if self.shapeType == "segment" then
+          graphics.line(self.x, self.y, self.shapeArgs[1], self.shapeArgs[2])
+          return 
+        end
         if self.shapeType ~= "circle" then
           return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else
@@ -52,13 +56,20 @@ do
         self.shape = physics.newCircleShape(self.shapeArgs[1])
       elseif self.shapeType == "polygon" then
         self.shape = physics.newPolygonShape(self.shapeArgs)
+      elseif self.shapeType == "segment" then
+        self.shape = physics.newEdgeShape(self.x, self.y, self.shapeArgs[1], self.shapeArgs[2])
       end
       self.fixture = physics.newFixture(self.body, self.shape)
       self.fixture:setUserData(self)
-      self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker + collisionMasks.items, 0)
-      self.normal = { }
-      self.gold = { }
-      self.nGold = math.random(3, 10)
+      self.body:setUserData(self)
+      if self.shapeType ~= "segment" then
+        self.fixture:setFilterData(collisionMasks.solid, collisionMasks.player + collisionMasks.bulletHurtPlayer + collisionMasks.bulletHurtEnemy + collisionMasks.walker + collisionMasks.items, 0)
+        self.normal = { }
+        self.gold = { }
+        self.nGold = math.random(3, 10)
+      else
+        return self.fixture:setFilterData(0, 0, 0)
+      end
     end,
     __base = _base_0,
     __name = "Entity"

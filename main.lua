@@ -47,6 +47,7 @@ updateCamera = function()
   local px, py
   px, py = cam:cameraCoords(player.x, player.y)
 end
+local bodyList
 love.load = function()
   love.update = function(dt)
     if toggleEditor then
@@ -56,9 +57,8 @@ love.load = function()
       player:update(dt)
       player:handleWeapon(dt, cam)
       world:update(dt)
-      editor:updateObjects(dt, player)
-      editor:updateWalkers(dt, player.body:getX(), player.body:getY())
-      return cam:lookAt(player.body:getX(), player.body:getY())
+      cam:lookAt(player.body:getX(), player.body:getY())
+      return editor:updateObjects(dt, player)
     end
   end
   love.draw = function()
@@ -97,17 +97,45 @@ love.load = function()
       toggleEditor = not toggleEditor
       cam:lookAt(0, 0)
     end
+    if key == "h" then
+      local bodies, count
+      bodies = world:getBodyList()
+      count = 0
+      local className
+      local nLasers, nWalkers, nHealth, nFloaters
+      nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
+      local nSpikes, nBounces, nSolids
+      nSpikes, nBounces, nSolids = 0, 0, 0
+      for i = #bodies, 1, -1 do
+        className = bodies[i]:getUserData().__class.__name
+        nLasers = className == "Laser" and nLasers + 1 or nLasers
+        nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
+        nHealth = className == "Health" and nHealth + 1 or nHealth
+        nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
+      end
+      print(#editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers + nWalkers + nHealth + nFloaters)
+    end
     if toggleEditor then
       editor:keypressed(key)
-      editor:hotLoad()
-      editor:hotLoadObjects()
-      player.body:setPosition(spawn.x, spawn.y)
-      player.xVelocity = 50
-      player.health = player.maxHealth
     else
+      editor.activeShapeType = "polygon"
       player:jump(key)
     end
     if key == "f3" then
+      editor.selectedObject = -1
+      editor.selectedShape = -1
+      editor.activeDeleteIndex = -1
+      editor:flushObjectGold()
+      if not toggleEditor then
+        editor:hotLoad()
+        editor:hotLoadObjects()
+        print(true)
+      end
+      player.body:setPosition(spawn.x, spawn.y)
+      player.amountOfGold = 0
+      player.deathSoundCount = 0
+      player.xVelocity = 50
+      player.health = player.maxHealth
       toggleEditor = not toggleEditor
     end
   end

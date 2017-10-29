@@ -1,20 +1,23 @@
-class Laser
+Entity = require "build.entity"
+class Laser extends Entity
   new: (@originX, @originY, @endX, @endY, @attackPower=math.random(600, 650)) =>
-    @body = {
-      isDestroyed: ->
-        return false
-    }
+    super @originX, @originY, {@endX, @endY}, "static", "segment"
     @laserSound = love.audio.newSource "audio/laser.wav", "static"
-    @laserSound\setVolume .5
+    @laserSound\setVolume .08
 
   update: (dt, player) =>
-    local xn, yn, fraction, dist
-    dist = math.sqrt((@originX - @endX)^2 + (@originY - @endY)^2)
-    xn, yn, fraction = player.shape\rayCast @originX, @originY, @endX, @endY, dist, player.body\getX!, player.body\getY!, 0
-    if xn and yn
+    local xn, yn, fraction
+    xn, yn, fraction = player.shape\rayCast @originX, @originY, @endX, @endY, 1, player.body\getX!, player.body\getY!, 0
+    if xn and yn and player.health > 0
       player\removeHealth @attackPower * dt
       playSound @laserSound
-  draw: =>
-    love.graphics.setColor 255, 0, 0
-    love.graphics.line @originX, @originY, @endX, @endY
+
+  draw: (ox, oy, ex, ey) =>
+    if not ox and not oy
+      love.graphics.setColor 255, 0, 0
+      love.graphics.line @originX, @originY, @endX, @endY
+    else
+      love.graphics.setColor 255, 0, 0
+      love.graphics.line ox, oy, ex, ey
+
 return Laser

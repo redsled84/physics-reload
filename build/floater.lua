@@ -92,7 +92,7 @@ do
         amplitude = 1
       end
       self.originX, self.originY, self.radius, self.health, self.radiusFunction, self.step, self.theta, self.amplitude = originX, originY, radius, health, radiusFunction, step, theta, amplitude
-      self.popSound = audio.newSource("audio/balloon_pop.mp3", "static")
+      self.popSound = audio.newSource("audio/steve_hurt.mp3", "static")
       self.popSound:setVolume(.5)
       self.x = self.originX
       self.y = self.originY

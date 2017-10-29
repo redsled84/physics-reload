@@ -4,11 +4,14 @@ import abs, ceil, floor, sin from math
 
 inspect = require "libs.inspect"
 Camera = require "libs.camera"
+
+Bounce = require "build.bounce"
 Entity = require "build.entity"
 Floater = require "build.floater"
 Laser = require "build.laser"
 Walker = require "build.walker"
 Health = require "build.health"
+Spike = require "build.spike"
 
 {graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
 
@@ -35,6 +38,9 @@ class Editor
     Walker
     Health
     Laser
+    Spike
+    Entity
+    Bounce
   }
   objectData: {}
   objects: {}
@@ -42,6 +48,7 @@ class Editor
   shapes: {}
   loadedFilename: ""
   tool: "polygon"
+  gold: {}
 
   gridSize: 32
   gridWidth: graphics.getWidth! / 32
@@ -73,36 +80,41 @@ class Editor
       @hotLoadObjects!
     @loadedFilename = filename
     
+  flushObjects: =>
+    if @objects and #@objects > 0
+      for k, v in pairs(@objects)
+        @objects[k] = nil
 
   hotLoad: =>
-    local target, entity
+    local target
     for i = #@data, 1, -1
       target = @data[i]
-      if target.shapeType == "polygon" and not target.added
-        target.added = true
-        entity = Entity 0, 0, target.vertices, "static", "polygon"
-        @entities[i] = entity
+      local entity
+      if not target.added
+        if target.shapeType == "polygon"
+          entity = Entity 0, 0, target.vertices, "static", "polygon"
+        if target.shapeType == "spike"
+          entity = Spike 0, 0, target.vertices
+        if target.shapeType == "bounce"
+          entity = Bounce 0, 0, target.vertices
+        if entity
+          target.added = true
+          @entities[i] = entity
 
     -- @hotLoadObjects!
 
   hotLoadObjects: =>
-    local object
-    for i = #@objectData, 1, -1
-      object = @objectData[i]
-      if object.added == nil
-        object.added = false
-      if object.objectType == "Floater" and not object.added
-        object.added = true
-        @objects[i] = Floater object.x, object.y
-      if object.objectType == "Walker" and not object.added
-        object.added = true
-        @objects[i] = Walker object.x, object.y, object.endX, object.endY
-      if object.objectType == "Health" and not object.added
-        object.added = true
-        @objects[i] = Health object.x, object.y
-      if object.objectType == "Laser" and not object.added
-        object.added = true
-        @objects[i] = Laser object.x, object.y, object.endX, object.endY
+    for k, v in pairs @objectData
+      if not v.added
+        if v.objectType == "Floater"
+          @objects[k] = Floater v.x, v.y
+        if v.objectType == "Walker"
+          @objects[k] = Walker v.x, v.y, v.endX, v.endY
+        if v.objectType == "Health"
+          @objects[k] = Health v.x, v.y
+        if v.objectType == "Laser"
+          @objects[k] = Laser v.x, v.y, v.endX, v.endY
+        v.added = true
 
   vec2: (x, y) =>
     return {x: x, y: y}
@@ -143,39 +155,41 @@ class Editor
     x, y = @activeX, @activeY
     for i=#@shapes, 1, -1
       shape = @shapes[i]
-      if shape\testPoint(0, 0, 0, x, y) and @selectedShape ~= i
+      if shape\testPoint(0, 0, 0, x, y) and @selectedShape ~= i and @tool == "polygon"
         @activeDeleteIndex = i
         @activeShape = true
         @drawOutlinedPolygon(@hovered, nil, tf(@data[i].vertices))
       elseif @selectedShape == i
         @drawOutlinedPolygon(@selected, nil, tf(@data[@selectedShape].vertices))
       else
-        @drawOutlinedPolygon(@normal, nil, tf(@data[i].vertices))
+        if @data[i].shapeType == "polygon"
+          @drawOutlinedPolygon(@normal, nil, tf(@data[i].vertices))
+        elseif @data[i].shapeType == "spike"
+          @drawOutlinedPolygon({135, 10, 0}, nil, tf(@data[i].vertices))
+        elseif @data[i].shapeType == "bounce"
+          @drawOutlinedPolygon({20, 165, 0}, nil, tf(@data[i].vertices))
 
   drawObjects: =>
     @activeObject = false
 
     graphics.setColor 255, 255, 255
-    for i=#@objects, 1, -1
-      obj = @objects[i]
-      if @objectData[i].x == @activeX and @objectData[i].y == @activeY and @selectedObject ~= i and not @viewObjectMenu
-        @activeDeleteIndex = i
+    for k, v in pairs @objects
+      if @objectData[k].x == @activeX and @objectData[k].y == @activeY and @selectedObject ~= i and @tool == "object"
+        @activeDeleteIndex = k
         @activeObject = true
 
-      -- if obj.__class.__name == "Walker"
+      -- if v.__class.__name == "Walker"
         -- graphics.setColor 0, 0, 0
-        -- graphics.line obj.originX, obj.originY, obj.endX, obj.endY
-        -- @drawCircle obj.originX, obj.originY, 8
-        -- @drawCircle obj.endX, obj.endY, 8
-      obj\draw!
+        -- graphics.line v.originX, v.originY, v.endX, v.endY
+        -- @drawCircle v.originX, v.originY, 8
+        -- @drawCircle v.endX, v.endY, 8
+      v\draw!
 
   drawObjectGold: =>
-    for i=#@objects, 1, -1
-      obj = @objects[i]
-      if obj.gold
-        if #obj.gold > 0 and obj.body\isDestroyed!
-          obj\drawGold!
-
+    for k, v in pairs @objects
+      if v.gold
+        if #v.gold > 0 and v.body\isDestroyed!
+          v\drawGold!
   drawCursor: =>
     graphics.setColor 10, 10, 10, 255
     graphics.circle "line", @activeX, @activeY, @activeClickerRadius
@@ -296,19 +310,33 @@ class Editor
               graphics.setColor unpack @hovered
               if mouse.isDown 1
                 @selectedMenuItem = @menuItems[itemCounter]
+                if @selectedMenuItem.__class.__name == "Spike"
+                  @activeShapeType = "spike"  
+                elseif @selectedMenuItem.__class.__name == "Entity"
+                  @activeShapeType = "polygon"
+                elseif @selectedMenuItem.__class.__name == "Bounce"
+                  @activeShapeType = "bounce"
                 graphics.setColor unpack @selected
                 
             graphics.rectangle "fill", ox, oy, actualWidth, actualHeight
 
             className = @menuItems[itemCounter].__class.__name
-            if className == "Floater" or className == "Health"
-              temp = @menuItems[itemCounter] ox, oy
-            elseif className == "Walker"
-              temp = @menuItems[itemCounter] ox, oy, ox, oy
-            elseif className == "Laser"
-              temp = @menuItems[itemCounter] ox + actualWidth / 2, oy, ox + actualWidth / 2, oy + actualHeight
 
-            temp\draw ox + actualWidth / 2, oy + actualHeight / 2
+            graphics.setColor 255, 255, 255
+            if className == "Floater"
+              graphics.print "floater", ox + actualWidth * (1/6), oy + actualHeight * (2/5)
+            elseif className == "Walker"
+              graphics.print "walker", ox + actualWidth * (1/6), oy + actualHeight * (3/8)
+            elseif className == "Health"
+              graphics.print "health", ox + actualWidth * (1/6), oy + actualHeight * (3/8)
+            elseif className == "Laser"
+              graphics.print "laser", ox + actualWidth * (1/4), oy + actualHeight * (2/5)
+            elseif className == "Spike"
+              graphics.print "spike", ox + actualWidth * (1/4), oy + actualHeight * (2/5)
+            elseif className == "Entity"
+              graphics.print "polygon", ox + actualWidth * (1/6), oy + actualHeight * (2/5)
+            elseif className == "Bounce"
+              graphics.print "bounce", ox + actualWidth * (1/6), oy + actualHeight * (3/8)
               -- elseif .__class.__name == "Walker"
               --   .draw ox+4, oy+4, itemWidth, itemHeight
           itemCounter += 1
@@ -316,22 +344,22 @@ class Editor
   drawObjectOrigin: =>
     local originRadius
     originRadius = 12
-    for i = 1, #@objectData
-      if @activeObject and @activeDeleteIndex == i
+    for k, v in pairs @objectData
+      if @activeObject and @activeDeleteIndex == k
         graphics.setColor @hovered[1], @hovered[2], @hovered[3], 120
-        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.circle "fill", v.x, v.y, originRadius
         graphics.setColor @hovered[1], @hovered[2], @hovered[3], 255
-        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
-      elseif @selectedObject == i
+        graphics.circle "line", v.x, v.y, originRadius
+      elseif @selectedObject == k
         graphics.setColor @selected[1], @selected[2], @selected[3], 120
-        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.circle "fill", v.x, v.y, originRadius
         graphics.setColor @selected[1], @selected[2], @selected[3], 255
-        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.circle "line", v.x, v.y, originRadius
       else
         graphics.setColor @normal[1], @normal[2], @normal[3], 120
-        graphics.circle "fill", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.circle "fill", v.x, v.y, originRadius
         graphics.setColor @normal[1], @normal[2], @normal[3], 255
-        graphics.circle "line", @objectData[i].x, @objectData[i].y, originRadius
+        graphics.circle "line", v.x, v.y, originRadius
 
   draw: =>
     @cam\attach!   
@@ -409,20 +437,18 @@ class Editor
         @cameraScale + @scaleControlFactor * dt or @maxScale
 
   updateObjects: (dt, player) =>
-    for i = #@objects, 1, -1 do
-      if @objects[i].body\isDestroyed!
-        @objectData[i].added = false
-        -- remove @objects, i
-      else
-        if @objects[i].__class.__name == "Floater"
-          @objects[i]\update dt
-        if @objects[i].__class.__name == "Laser" and player
-          @objects[i]\update dt, player
-
-  updateWalkers: (dt, targetX, targetY) =>
-    for i = #@objects, 1, -1 do
-      if @objects[i].__class.__name == "Walker"
-        @objects[i]\update dt, targetX, targetY
+    for k, v in pairs @objects
+      if v.body\isDestroyed!
+          @objectData[k].added = false
+          if v.gold
+            if #v.gold < 1
+              @objects[k] = nil
+      if v.__class.__name == "Floater"
+        v\update dt
+      if v.__class.__name == "Laser" and player
+        v\update dt, player
+      if v.__class.__name == "Walker" and player
+        v\update dt, player.body\getX!, player.body\getY!
 
   update: (dt) =>
     @cam\zoomTo @cameraScale
@@ -433,7 +459,7 @@ class Editor
     @gridLockCursor!
     @moveCamera dt
     @controlCameraAttributes dt
-    @updateObjects dt
+    -- @updateObjects dt
 
   mousepressed: (x, y, button) =>
     local found
@@ -487,25 +513,38 @@ class Editor
     for i = #@activeVertices, 1, -1
       remove @activeVertices, i
 
+  flushObjectGold: =>
+    for k, v in pairs @objects
+      if v.gold
+        if #v.gold > 0
+          for j = #v.gold, 1, -1
+            v.gold[j].body\destroy!
+            remove v.gold, j
+
   keypressed: (key) =>
     if key == "r"
       if @tool == "polygon"
         if #@activeVertices > 0
           remove @activeVertices, #@activeVertices
-        if @selectedShape > 0
+        if @selectedShape > 0 and @selectedShape <= #@entities
           remove @data, @selectedShape
           remove @shapes, @selectedShape
-          @entities[@selectedShape]\destroy!
+          if @entities[@selectedShape].body
+            @entities[@selectedShape]\destroy!
           remove @entities, @selectedShape
+          print @selectedShape, #@entities
 
           @selectedShape = -1
       elseif @tool == "object"
         if #@activeVertices > 0
           remove @activeVertices, #@activeVertices
-        if @selectedObject > 0
+        if @selectedObject > 0 and @objects
           remove @objectData, @selectedObject
-          @objects[@selectedObject].body\destroy!
-          remove @objects, @selectedObject
+
+          if @selectedObject <= #@objects
+            if not @objects[@selectedObject].body\isDestroyed!
+              @objects[@selectedObject].body\destroy!
+            remove @objects, @selectedObject
 
           @selectedObject = -1
 
@@ -515,7 +554,7 @@ class Editor
           print "error: not enough active vertices to create a polgon!"
           return
 
-        if @activeShapeType == "polygon"
+        if @activeShapeType == "polygon" or @activeShapeType == "spike" or @activeShapeType == "bounce"
           @shapes[#@shapes+1] = physics.newPolygonShape @verticesList @activeVertices 
           print "new polygon: ", inspect @verticesList @activeVertices
           insert @data, {
@@ -524,6 +563,7 @@ class Editor
             added: false
           }
         @flushActiveVertices!
+        @hotLoad!
       elseif @tool == "object"
         if #@activeVertices == 0
           print "error: not enough active vertices to create an object!"
@@ -553,6 +593,7 @@ class Editor
             insert @objectData, obj
             print "new object [" .. className .. "]: " .. inspect {obj.x, obj.y} 
           @flushActiveVertices!
+          @hotLoadObjects!
 
     if key == "m"
       @viewControls = not @viewControls
@@ -564,6 +605,9 @@ class Editor
 
     if key == "p"
       @saveFile!
+
+    -- if key == "h"
+      -- print #@objects, #@objectData, #@
 
     if key == "1"
       @tool = "polygon"

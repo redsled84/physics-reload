@@ -56,6 +56,7 @@ updateCamera = ->
   px, py = cam\cameraCoords player.x, player.y
 
 
+local bodyList
 love.load = ->
   love.update = (dt) ->
     if toggleEditor
@@ -67,8 +68,8 @@ love.load = ->
       world\update dt
       -- floater\update dt
 
-      editor\updateObjects dt, player
-      editor\updateWalkers dt, player.body\getX!, player.body\getY!
+      
+      -- editor\updateWalkers dt, player.body\getX!, player.body\getY!
 
 
       -- print weapon.canShoot, weapon.rateOfFire.time
@@ -82,6 +83,7 @@ love.load = ->
       -- print walker2.dir
 
       -- print editor.objects[#editor.objects].dir
+      editor\updateObjects dt, player
 
   love.draw = ->
     if toggleEditor
@@ -91,6 +93,7 @@ love.load = ->
       shake\preDraw!
 
       -- editor\drawGrid!
+      -- editor\drawShapes!
       for i = 1, #editor.entities
         editor.entities[i]\draw!
       editor\drawObjects!
@@ -124,17 +127,59 @@ love.load = ->
       toggleEditor = not toggleEditor
       cam\lookAt 0, 0
 
+    if key == "h"
+      local bodies, count
+      bodies = world\getBodyList!
+      count = 0
+      local className
+      local nLasers, nWalkers, nHealth, nFloaters
+      nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
+      local nSpikes, nBounces, nSolids
+      nSpikes, nBounces, nSolids = 0, 0, 0
+      for i = #bodies, 1, -1
+        -- count = (bodies[i]\getUserData!.__class.__name ~= "Laser" or bodies[i]\getUserData!.__class.__name ~= "Floater") and count + 1 or count
+        className = bodies[i]\getUserData!.__class.__name
+        -- if className ~= "Entity" or className ~= "Spike" or className ~= "Bounce"
+        --   count += 1
+        nLasers = className == "Laser" and nLasers + 1 or nLasers
+        nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
+        nHealth = className == "Health" and nHealth + 1 or nHealth
+        nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
+        -- nSpikes = className == "Spike" and nSpikes + 1 or nSpikes
+        -- nBounces = className == "Bounce" and nBounces + 1 or nBounces
+        -- nSolids = className == "Entity" and nSolids + 1 or nSolids
+
+      
+      print #editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers+nWalkers+nHealth+nFloaters
+      -- print inspect editor.objectData
+      -- print #editor.entities, #editor.shapes, #editor.data, nSpikes, nBounces, nSolids
+
+
     if toggleEditor
       editor\keypressed key
-      editor\hotLoad!
-      editor\hotLoadObjects!
-      player.body\setPosition spawn.x, spawn.y
-      player.xVelocity = 50
-      player.health = player.maxHealth
     else
       -- print inspect editor.objectData
       -- print #editor.objectData, #editor.objects
+      editor.activeShapeType = "polygon"
+
       player\jump key
 
     if key == "f3"
+      editor.selectedObject = -1
+      editor.selectedShape = -1
+      editor.activeDeleteIndex = -1
+
+      editor\flushObjectGold!
+      if not toggleEditor
+        editor\hotLoad!
+        editor\hotLoadObjects!
+        print true
+
+      player.body\setPosition spawn.x, spawn.y
+      player.amountOfGold = 0
+      player.deathSoundCount = 0
+      player.xVelocity = 50
+      player.health = player.maxHealth
+
       toggleEditor = not toggleEditor
+

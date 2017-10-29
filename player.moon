@@ -7,9 +7,9 @@ Timer = require "build.timer"
 Weapon = require "build.weapon"
 
 local vx, vy, frc, dec, top, low
-frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
+frc, acc, dec, top, low = 985, 900, 7500, 540, 45
 
-{keyboard: keyboard, graphics: graphics, mouse: mouse} = love
+{keyboard: keyboard, graphics: graphics, mouse: mouse, audio: audio} = love
 
 class Player extends Entity
   new: (@x, @y, @width=26, @height=48) =>
@@ -33,16 +33,22 @@ class Player extends Entity
     @printTimer = Timer .05
     @activeHitStun = false
 
-    @maxHealth = 200
+    @maxHealth = 350
     @health = @maxHealth
 
-    @weapon = Weapon 0, 0, 1000, math.pi/75, true, .15, 3500, 7, 15, 25
+    @weapon = Weapon 0, 0, 1000, math.pi/175, true, .10, 5500, 8, 15, 25
     @amountOfGold = 0
+
+    @deathSound = audio.newSource "audio/death.mp3", "static"
+    @deathSoundCount = 0
 
   removeHealth: (healthToRemove) =>
     if @health - healthToRemove > 0
       @health -= healthToRemove
     else
+      if @deathSoundCount < 1
+        @deathSoundCount += 1
+        playSound @deathSound
       @health = 0
 
   addHealth: (healthToAdd) =>
@@ -63,6 +69,9 @@ class Player extends Entity
     @removeHealth attackPower
 
   handleWeapon: (dt, cam) =>
+    if @health <= 0
+      return
+
     @weapon.x, @weapon.y = @body\getX!, @body\getY! - @height * (1 / 4)
     @weapon\autoRemoveDestroyedBullets!
     local mouseX, mouseY
@@ -76,8 +85,6 @@ class Player extends Entity
 
   update: (dt) =>
     if @health <= 0
-      @health = 0
-      @onGround = false
       return
 
     if @activeHitStun
@@ -120,6 +127,9 @@ class Player extends Entity
         @xVelocity += frc * dt
 
   jump: (key) =>
+    if @health <= 0
+      return
+
     if #@normal >= 2 then
       if (key == "w" or key == "space") and @onGround and not @activeHitStun
         local xv, _

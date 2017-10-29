@@ -4,9 +4,9 @@ Entity = require "build.entity"
 {graphics: graphics} = love
 
 class Health extends Entity
-  new: (@x, @y, @width=24, @height=24, @amountOfHealth=20) =>
+  new: (@x, @y, @width=24, @height=24, @amountOfHealth=35) =>
     super @x, @y, {@width, @height}, "dynamic"
-    @fixture\setFilterData collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0
+    @fixture\setFilterData collisionMasks.items, collisionMasks.solid + collisionMasks.player + collisionMasks.items, 0
     @sprite = graphics.newImage "sprites/health_pack.png"
     @sprite\setFilter "nearest", "nearest"
   getHealth: =>

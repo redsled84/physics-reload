@@ -9,20 +9,20 @@ Weapon = require "build.weapon"
 
 local hitAttackPowers
 hitAttackPowers = {
-  60,
-  40,
-  40,
-  20,
-  20,
-  20,
-  20,
-  20,
-  20,
-  20,
+  80,
+  50,
+  50,
+  50,
+  30,
+  30,
+  30,
+  30,
+  30,
+  30,
 }
 
 class Walker extends Entity
-  new: (@originX, @originY, @endX, @endY, @awarenessDistance=680, @width=32, @height=64) =>
+  new: (@originX, @originY, @endX, @endY, @awarenessDistance=720, @width=32, @height=64) =>
     super @originX, @originY, {@width, @height}, "dynamic"
     @originalDir = @originX > @endX and -1 or 1
     @dir = @originalDir
@@ -32,10 +32,9 @@ class Walker extends Entity
 
     @xVelocity = 0
     @moveSpeed = 200
-    @health = 50
-    @weapon = Weapon @x, @y, math.huge, math.pi / 35, false, .35, 3000, 6, 5, 20
+    @health = 65
+    @weapon = Weapon @x, @y, math.huge, math.pi / 45, false, .25, 3000, 6, 15, 30
 
-    @steveSound = audio.newSource "audio/steve_hurt.mp3", "static"
     @hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
 
   damage: (attack) =>
@@ -85,7 +84,6 @@ class Walker extends Entity
       if @health <= 0
         for i = 1, @nGold
           @gold[#@gold+1] = Gold math.floor(@body\getX!), math.floor(@body\getY!)
-        playSound @steveSound
         @destroy!
         return
 
@@ -97,18 +95,11 @@ class Walker extends Entity
       for i = 1, #@gold
         @gold[i]\draw!
 
-  draw: (x, y) =>
+  draw: =>
     if not @body\isDestroyed!
-      if not x and not y
-        x = @body\getX!
-        y = @body\getY!
-      -- else
-      --   x -= @width
-      --   y -= @height
-      -- super {255,0,0}
       local drawX, drawY
-      drawX = x - @width / 2
-      drawY = y - @height / 2
+      drawX = @body\getX! - @width / 2
+      drawY = @body\getY! - @height / 2
       graphics.setColor 45, 25, 20, 225
       graphics.rectangle "fill", drawX, drawY, @width, @height
       graphics.setColor 190, 85, 35, 250
@@ -116,7 +107,7 @@ class Walker extends Entity
       offset = 7
       graphics.rectangle "fill", drawX+offset, drawY+offset, @width-offset*2, @height-offset*2
 
-      @drawGold!
+    @drawGold!
     @weapon\drawBullets!
 
 return Walker

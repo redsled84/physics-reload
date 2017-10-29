@@ -10,7 +10,7 @@ r = (theta) ->
 
 class Floater extends Entity
   new: (@originX, @originY, @radius=15, @health=10, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
-    @popSound = audio.newSource "audio/balloon_pop.mp3", "static"
+    @popSound = audio.newSource "audio/steve_hurt.mp3", "static"
     @popSound\setVolume .5
     @x = @originX
     @y = @originY

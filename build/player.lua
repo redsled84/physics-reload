@@ -7,11 +7,11 @@ local Timer = require("build.timer")
 local Weapon = require("build.weapon")
 local vx, vy, frc, dec, top, low
 local acc
-frc, acc, dec, top, low = 1000, 1000, 8000, 600, 50
-local keyboard, graphics, mouse
+frc, acc, dec, top, low = 985, 900, 7500, 540, 45
+local keyboard, graphics, mouse, audio
 do
   local _obj_0 = love
-  keyboard, graphics, mouse = _obj_0.keyboard, _obj_0.graphics, _obj_0.mouse
+  keyboard, graphics, mouse, audio = _obj_0.keyboard, _obj_0.graphics, _obj_0.mouse, _obj_0.audio
 end
 local Player
 do
@@ -22,6 +22,10 @@ do
       if self.health - healthToRemove > 0 then
         self.health = self.health - healthToRemove
       else
+        if self.deathSoundCount < 1 then
+          self.deathSoundCount = self.deathSoundCount + 1
+          playSound(self.deathSound)
+        end
         self.health = 0
       end
     end,
@@ -44,6 +48,9 @@ do
       return self:removeHealth(attackPower)
     end,
     handleWeapon = function(self, dt, cam)
+      if self.health <= 0 then
+        return 
+      end
       self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY() - self.height * (1 / 4)
       self.weapon:autoRemoveDestroyedBullets()
       local mouseX, mouseY
@@ -56,8 +63,6 @@ do
     end,
     update = function(self, dt)
       if self.health <= 0 then
-        self.health = 0
-        self.onGround = false
         return 
       end
       if self.activeHitStun then
@@ -99,6 +104,9 @@ do
       end
     end,
     jump = function(self, key)
+      if self.health <= 0 then
+        return 
+      end
       if #self.normal >= 2 then
         if (key == "w" or key == "space") and self.onGround and not self.activeHitStun then
           local xv, _
@@ -157,10 +165,12 @@ do
       self.hitStunTimer = Timer(.5)
       self.printTimer = Timer(.05)
       self.activeHitStun = false
-      self.maxHealth = 200
+      self.maxHealth = 350
       self.health = self.maxHealth
-      self.weapon = Weapon(0, 0, 1000, math.pi / 75, true, .15, 3500, 7, 15, 25)
+      self.weapon = Weapon(0, 0, 1000, math.pi / 175, true, .10, 5500, 8, 15, 25)
       self.amountOfGold = 0
+      self.deathSound = audio.newSource("audio/death.mp3", "static")
+      self.deathSoundCount = 0
     end,
     __base = _base_0,
     __name = "Player",

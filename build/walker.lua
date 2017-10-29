@@ -11,16 +11,16 @@ do
 end
 local hitAttackPowers
 hitAttackPowers = {
-  60,
-  40,
-  40,
-  20,
-  20,
-  20,
-  20,
-  20,
-  20,
-  20
+  80,
+  50,
+  50,
+  50,
+  30,
+  30,
+  30,
+  30,
+  30,
+  30
 }
 local Walker
 do
@@ -82,7 +82,6 @@ do
           for i = 1, self.nGold do
             self.gold[#self.gold + 1] = Gold(math.floor(self.body:getX()), math.floor(self.body:getY()))
           end
-          playSound(self.steveSound)
           self:destroy()
           return 
         end
@@ -97,23 +96,19 @@ do
         end
       end
     end,
-    draw = function(self, x, y)
+    draw = function(self)
       if not self.body:isDestroyed() then
-        if not x and not y then
-          x = self.body:getX()
-          y = self.body:getY()
-        end
         local drawX, drawY
-        drawX = x - self.width / 2
-        drawY = y - self.height / 2
+        drawX = self.body:getX() - self.width / 2
+        drawY = self.body:getY() - self.height / 2
         graphics.setColor(45, 25, 20, 225)
         graphics.rectangle("fill", drawX, drawY, self.width, self.height)
         graphics.setColor(190, 85, 35, 250)
         local offset
         offset = 7
         graphics.rectangle("fill", drawX + offset, drawY + offset, self.width - offset * 2, self.height - offset * 2)
-        self:drawGold()
       end
+      self:drawGold()
       return self.weapon:drawBullets()
     end
   }
@@ -122,7 +117,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, originX, originY, endX, endY, awarenessDistance, width, height)
       if awarenessDistance == nil then
-        awarenessDistance = 680
+        awarenessDistance = 720
       end
       if width == nil then
         width = 32
@@ -141,9 +136,8 @@ do
       self.fixture:setFilterData(collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0)
       self.xVelocity = 0
       self.moveSpeed = 200
-      self.health = 50
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 35, false, .35, 3000, 6, 5, 20)
-      self.steveSound = audio.newSource("audio/steve_hurt.mp3", "static")
+      self.health = 65
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 45, false, .25, 3000, 6, 15, 30)
       self.hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
     end,
     __base = _base_0,

@@ -38,14 +38,14 @@ do
         height = 24
       end
       if amountOfHealth == nil then
-        amountOfHealth = 20
+        amountOfHealth = 35
       end
       self.x, self.y, self.width, self.height, self.amountOfHealth = x, y, width, height, amountOfHealth
       _class_0.__parent.__init(self, self.x, self.y, {
         self.width,
         self.height
       }, "dynamic")
-      self.fixture:setFilterData(collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0)
+      self.fixture:setFilterData(collisionMasks.items, collisionMasks.solid + collisionMasks.player + collisionMasks.items, 0)
       self.sprite = graphics.newImage("sprites/health_pack.png")
       return self.sprite:setFilter("nearest", "nearest")
     end,

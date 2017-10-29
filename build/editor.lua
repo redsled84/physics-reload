@@ -12,11 +12,13 @@ do
 end
 local inspect = require("libs.inspect")
 local Camera = require("libs.camera")
+local Bounce = require("build.bounce")
 local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Laser = require("build.laser")
 local Walker = require("build.walker")
 local Health = require("build.health")
+local Spike = require("build.spike")
 local graphics, mouse, physics, filesystem, keyboard
 do
   local _obj_0 = love
@@ -45,7 +47,10 @@ do
       Floater,
       Walker,
       Health,
-      Laser
+      Laser,
+      Spike,
+      Entity,
+      Bounce
     },
     objectData = { },
     objects = { },
@@ -53,6 +58,7 @@ do
     shapes = { },
     loadedFilename = "",
     tool = "polygon",
+    gold = { },
     gridSize = 32,
     gridWidth = graphics.getWidth() / 32,
     gridHeight = graphics.getHeight() / 32,
@@ -95,39 +101,52 @@ do
       end
       self.loadedFilename = filename
     end,
+    flushObjects = function(self)
+      if self.objects and #self.objects > 0 then
+        for k, v in pairs(self.objects) do
+          self.objects[k] = nil
+        end
+      end
+    end,
     hotLoad = function(self)
-      local target, entity
+      local target
       for i = #self.data, 1, -1 do
         target = self.data[i]
-        if target.shapeType == "polygon" and not target.added then
-          target.added = true
-          entity = Entity(0, 0, target.vertices, "static", "polygon")
-          self.entities[i] = entity
+        local entity
+        if not target.added then
+          if target.shapeType == "polygon" then
+            entity = Entity(0, 0, target.vertices, "static", "polygon")
+          end
+          if target.shapeType == "spike" then
+            entity = Spike(0, 0, target.vertices)
+          end
+          if target.shapeType == "bounce" then
+            entity = Bounce(0, 0, target.vertices)
+          end
+          if entity then
+            target.added = true
+            self.entities[i] = entity
+          end
         end
       end
     end,
     hotLoadObjects = function(self)
-      local object
-      for i = #self.objectData, 1, -1 do
-        object = self.objectData[i]
-        if object.added == nil then
-          object.added = false
-        end
-        if object.objectType == "Floater" and not object.added then
-          object.added = true
-          self.objects[i] = Floater(object.x, object.y)
-        end
-        if object.objectType == "Walker" and not object.added then
-          object.added = true
-          self.objects[i] = Walker(object.x, object.y, object.endX, object.endY)
-        end
-        if object.objectType == "Health" and not object.added then
-          object.added = true
-          self.objects[i] = Health(object.x, object.y)
-        end
-        if object.objectType == "Laser" and not object.added then
-          object.added = true
-          self.objects[i] = Laser(object.x, object.y, object.endX, object.endY)
+      print("hello lad")
+      for k, v in pairs(self.objectData) do
+        if not v.added then
+          if v.objectType == "Floater" then
+            self.objects[k] = Floater(v.x, v.y)
+          end
+          if v.objectType == "Walker" then
+            self.objects[k] = Walker(v.x, v.y, v.endX, v.endY)
+          end
+          if v.objectType == "Health" then
+            self.objects[k] = Health(v.x, v.y)
+          end
+          if v.objectType == "Laser" then
+            self.objects[k] = Laser(v.x, v.y, v.endX, v.endY)
+          end
+          v.added = true
         end
       end
     end,
@@ -170,35 +189,47 @@ do
       x, y = self.activeX, self.activeY
       for i = #self.shapes, 1, -1 do
         shape = self.shapes[i]
-        if shape:testPoint(0, 0, 0, x, y) and self.selectedShape ~= i then
+        if shape:testPoint(0, 0, 0, x, y) and self.selectedShape ~= i and self.tool == "polygon" then
           self.activeDeleteIndex = i
           self.activeShape = true
           self:drawOutlinedPolygon(self.hovered, nil, tf(self.data[i].vertices))
         elseif self.selectedShape == i then
           self:drawOutlinedPolygon(self.selected, nil, tf(self.data[self.selectedShape].vertices))
         else
-          self:drawOutlinedPolygon(self.normal, nil, tf(self.data[i].vertices))
+          if self.data[i].shapeType == "polygon" then
+            self:drawOutlinedPolygon(self.normal, nil, tf(self.data[i].vertices))
+          elseif self.data[i].shapeType == "spike" then
+            self:drawOutlinedPolygon({
+              135,
+              10,
+              0
+            }, nil, tf(self.data[i].vertices))
+          elseif self.data[i].shapeType == "bounce" then
+            self:drawOutlinedPolygon({
+              20,
+              165,
+              0
+            }, nil, tf(self.data[i].vertices))
+          end
         end
       end
     end,
     drawObjects = function(self)
       self.activeObject = false
       graphics.setColor(255, 255, 255)
-      for i = #self.objects, 1, -1 do
-        local obj = self.objects[i]
-        if self.objectData[i].x == self.activeX and self.objectData[i].y == self.activeY and self.selectedObject ~= i and not self.viewObjectMenu then
-          self.activeDeleteIndex = i
+      for k, v in pairs(self.objects) do
+        if self.objectData[k].x == self.activeX and self.objectData[k].y == self.activeY and self.selectedObject ~= i and self.tool == "object" then
+          self.activeDeleteIndex = k
           self.activeObject = true
         end
-        obj:draw()
+        v:draw()
       end
     end,
     drawObjectGold = function(self)
-      for i = #self.objects, 1, -1 do
-        local obj = self.objects[i]
-        if obj.gold then
-          if #obj.gold > 0 and obj.body:isDestroyed() then
-            obj:drawGold()
+      for k, v in pairs(self.objects) do
+        if v.gold then
+          if #v.gold > 0 and v.body:isDestroyed() then
+            v:drawGold()
           end
         end
       end
@@ -295,19 +326,34 @@ do
                 graphics.setColor(unpack(self.hovered))
                 if mouse.isDown(1) then
                   self.selectedMenuItem = self.menuItems[itemCounter]
+                  if self.selectedMenuItem.__class.__name == "Spike" then
+                    self.activeShapeType = "spike"
+                  elseif self.selectedMenuItem.__class.__name == "Entity" then
+                    self.activeShapeType = "polygon"
+                  elseif self.selectedMenuItem.__class.__name == "Bounce" then
+                    self.activeShapeType = "bounce"
+                  end
                   graphics.setColor(unpack(self.selected))
                 end
               end
               graphics.rectangle("fill", ox, oy, actualWidth, actualHeight)
               className = self.menuItems[itemCounter].__class.__name
-              if className == "Floater" or className == "Health" then
-                temp = self.menuItems[itemCounter](ox, oy)
+              graphics.setColor(255, 255, 255)
+              if className == "Floater" then
+                graphics.print("floater", ox + actualWidth * (1 / 6), oy + actualHeight * (2 / 5))
               elseif className == "Walker" then
-                temp = self.menuItems[itemCounter](ox, oy, ox, oy)
+                graphics.print("walker", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
+              elseif className == "Health" then
+                graphics.print("health", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
               elseif className == "Laser" then
-                temp = self.menuItems[itemCounter](ox + actualWidth / 2, oy, ox + actualWidth / 2, oy + actualHeight)
+                graphics.print("laser", ox + actualWidth * (1 / 4), oy + actualHeight * (2 / 5))
+              elseif className == "Spike" then
+                graphics.print("spike", ox + actualWidth * (1 / 4), oy + actualHeight * (2 / 5))
+              elseif className == "Entity" then
+                graphics.print("polygon", ox + actualWidth * (1 / 6), oy + actualHeight * (2 / 5))
+              elseif className == "Bounce" then
+                graphics.print("bounce", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
               end
-              temp:draw(ox + actualWidth / 2, oy + actualHeight / 2)
             end
             itemCounter = itemCounter + 1
           end
@@ -317,22 +363,22 @@ do
     drawObjectOrigin = function(self)
       local originRadius
       originRadius = 12
-      for i = 1, #self.objectData do
-        if self.activeObject and self.activeDeleteIndex == i then
+      for k, v in pairs(self.objectData) do
+        if self.activeObject and self.activeDeleteIndex == k then
           graphics.setColor(self.hovered[1], self.hovered[2], self.hovered[3], 120)
-          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.circle("fill", v.x, v.y, originRadius)
           graphics.setColor(self.hovered[1], self.hovered[2], self.hovered[3], 255)
-          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
-        elseif self.selectedObject == i then
+          graphics.circle("line", v.x, v.y, originRadius)
+        elseif self.selectedObject == k then
           graphics.setColor(self.selected[1], self.selected[2], self.selected[3], 120)
-          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.circle("fill", v.x, v.y, originRadius)
           graphics.setColor(self.selected[1], self.selected[2], self.selected[3], 255)
-          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.circle("line", v.x, v.y, originRadius)
         else
           graphics.setColor(self.normal[1], self.normal[2], self.normal[3], 120)
-          graphics.circle("fill", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.circle("fill", v.x, v.y, originRadius)
           graphics.setColor(self.normal[1], self.normal[2], self.normal[3], 255)
-          graphics.circle("line", self.objectData[i].x, self.objectData[i].y, originRadius)
+          graphics.circle("line", v.x, v.y, originRadius)
         end
       end
     end,
@@ -401,23 +447,23 @@ do
       end
     end,
     updateObjects = function(self, dt, player)
-      for i = #self.objects, 1, -1 do
-        if self.objects[i].body:isDestroyed() then
-          self.objectData[i].added = false
-        else
-          if self.objects[i].__class.__name == "Floater" then
-            self.objects[i]:update(dt)
-          end
-          if self.objects[i].__class.__name == "Laser" and player then
-            self.objects[i]:update(dt, player)
+      for k, v in pairs(self.objects) do
+        if v.body:isDestroyed() then
+          self.objectData[k].added = false
+          if v.gold then
+            if #v.gold < 1 then
+              self.objects[k] = nil
+            end
           end
         end
-      end
-    end,
-    updateWalkers = function(self, dt, targetX, targetY)
-      for i = #self.objects, 1, -1 do
-        if self.objects[i].__class.__name == "Walker" then
-          self.objects[i]:update(dt, targetX, targetY)
+        if v.__class.__name == "Floater" then
+          v:update(dt)
+        end
+        if v.__class.__name == "Laser" and player then
+          v:update(dt, player)
+        end
+        if v.__class.__name == "Walker" and player then
+          v:update(dt, player.body:getX(), player.body:getY())
         end
       end
     end,
@@ -427,8 +473,7 @@ do
       self:manipulateCursorRadius(dt)
       self:gridLockCursor()
       self:moveCamera(dt)
-      self:controlCameraAttributes(dt)
-      return self:updateObjects(dt)
+      return self:controlCameraAttributes(dt)
     end,
     mousepressed = function(self, x, y, button)
       local found
@@ -494,27 +539,46 @@ do
         remove(self.activeVertices, i)
       end
     end,
+    flushObjectGold = function(self)
+      for k, v in pairs(self.objects) do
+        if v.gold then
+          if #v.gold > 0 then
+            for j = #v.gold, 1, -1 do
+              v.gold[j].body:destroy()
+              remove(v.gold, j)
+            end
+          end
+        end
+      end
+    end,
     keypressed = function(self, key)
       if key == "r" then
         if self.tool == "polygon" then
           if #self.activeVertices > 0 then
             remove(self.activeVertices, #self.activeVertices)
           end
-          if self.selectedShape > 0 then
+          if self.selectedShape > 0 and self.selectedShape <= #self.entities then
             remove(self.data, self.selectedShape)
             remove(self.shapes, self.selectedShape)
-            self.entities[self.selectedShape]:destroy()
+            if self.entities[self.selectedShape].body then
+              self.entities[self.selectedShape]:destroy()
+            end
             remove(self.entities, self.selectedShape)
+            print(self.selectedShape, #self.entities)
             self.selectedShape = -1
           end
         elseif self.tool == "object" then
           if #self.activeVertices > 0 then
             remove(self.activeVertices, #self.activeVertices)
           end
-          if self.selectedObject > 0 then
+          if self.selectedObject > 0 and self.objects then
             remove(self.objectData, self.selectedObject)
-            self.objects[self.selectedObject].body:destroy()
-            remove(self.objects, self.selectedObject)
+            if self.selectedObject <= #self.objects then
+              if not self.objects[self.selectedObject].body:isDestroyed() then
+                self.objects[self.selectedObject].body:destroy()
+              end
+              remove(self.objects, self.selectedObject)
+            end
             self.selectedObject = -1
           end
         end
@@ -525,7 +589,7 @@ do
             print("error: not enough active vertices to create a polgon!")
             return 
           end
-          if self.activeShapeType == "polygon" then
+          if self.activeShapeType == "polygon" or self.activeShapeType == "spike" or self.activeShapeType == "bounce" then
             self.shapes[#self.shapes + 1] = physics.newPolygonShape(self:verticesList(self.activeVertices))
             print("new polygon: ", inspect(self:verticesList(self.activeVertices)))
             insert(self.data, {
@@ -535,6 +599,7 @@ do
             })
           end
           self:flushActiveVertices()
+          self:hotLoad()
         elseif self.tool == "object" then
           if #self.activeVertices == 0 then
             print("error: not enough active vertices to create an object!")
@@ -568,6 +633,7 @@ do
               }))
             end
             self:flushActiveVertices()
+            self:hotLoadObjects()
           end
         end
       end
