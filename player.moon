@@ -4,6 +4,7 @@ collisionMasks = require "build.collisionMasks"
 inspect = require "libs.inspect"
 Entity = require "build.entity"
 Timer = require "build.timer"
+Pistol = require "build.pistol"
 Weapon = require "build.weapon"
 
 local vx, vy, frc, dec, top, low
@@ -12,7 +13,7 @@ frc, acc, dec, top, low = 985, 900, 7500, 540, 45
 {keyboard: keyboard, graphics: graphics, mouse: mouse, audio: audio} = love
 
 class Player extends Entity
-  new: (@x, @y, @width=26, @height=48) =>
+  new: (@x, @y, @width=26, @height=54) =>
   -- new: (@x, @y, @width=32) =>
     @onGround = false
     
@@ -36,7 +37,7 @@ class Player extends Entity
     @maxHealth = 350
     @health = @maxHealth
 
-    @weapon = Weapon 0, 0, 1000, math.pi/175, true, .10, 5500, 8, 15, 25
+    @weapon = nil
     @amountOfGold = 0
 
     @deathSound = audio.newSource "audio/death.mp3", "static"
@@ -57,8 +58,18 @@ class Player extends Entity
     else
       @health = @maxHealth    
 
+  removeGold: (goldToRemove) =>
+    if @amountOfGold - goldToRemove < 0
+      return false
+    @amountOfGold -= goldToRemove
+    return true
+
+
   addGold: (goldToAdd) =>
     @amountOfGold += goldToAdd
+
+  changeWeapon: (weapon) =>
+    @weapon = weapon
 
   damageByImpulse: (x, y, attackPower) =>
     @activeHitStun = true
@@ -72,13 +83,10 @@ class Player extends Entity
     if @health <= 0
       return
 
-    @weapon.x, @weapon.y = @body\getX!, @body\getY! - @height * (1 / 4)
-    @weapon\autoRemoveDestroyedBullets!
-    local mouseX, mouseY
-    mouseX, mouseY = cam\worldCoords mouse.getX!, mouse.getY!
-    @weapon\shootAuto mouseX, mouseY
-    if not @weapon.canShoot
-      @weapon\updateRateOfFire dt
+    if not @weapon
+      return
+
+    @weapon\update dt, cam, self   
 
     @printTimer\update dt, () ->
       -- print @weapon.canShoot
@@ -108,6 +116,8 @@ class Player extends Entity
     @onGround = false
 
   moveWithKeys: (dt) =>
+    if @activeHitStun
+      return 
     if keyboard.isDown 'a'
       if @xVelocity > 0
         @xVelocity -= dec * dt
@@ -136,30 +146,63 @@ class Player extends Entity
         xv, _ = @body\getLinearVelocity!
         @body\setLinearVelocity xv, @jumpVelocity
 
-  getTrajectoryPoint: (t) =>
-    local stepVelocity, stepGravity
-    stepVelocity = love.timer.getDelta! * 1000
+  -- getTrajectoryPoint: (t) =>
+  --   local stepVelocity, stepGravity
+  --   stepVelocity = timer.getDelta! * 1000
 
-    return @body\getX! + stepVelocity, @body\getY! + stepVelocity * t - (1/2) * world\getGravity! * t^2
+  --   return @body\getX! + stepVelocity, @body\getY! + stepVelocity * t - (1/2) * world\getGravity! * t^2
 
-  drawTrajectory: =>
-    local tpX, tpY
-    graphics.setColor 255, 0, 0
-    for i = 0, 3, love.timer.getDelta!
-       tpX, tpY = @getTrajectoryPoint(i)
-       graphics.points tpX, tpY
+  -- drawTrajectory: =>
+  --   local tpX, tpY
+  --   graphics.setColor 255, 0, 0
+  --   for i = 0, 3, timer.getDelta!
+  --      tpX, tpY = @getTrajectoryPoint(i)
+  --      graphics.points tpX, tpY
+
+  drawHealth: =>
+    local healthRatio
+    healthRatio = @health / @maxHealth
+    graphics.setColor 0, 0, 0, 150
+    local buffer
+    buffer = 12
+    graphics.rectangle "fill", graphics.getWidth! / 3 - buffer, graphics.getHeight! - 70 - buffer, 1 * 300 + buffer * 2, 35 + buffer * 2
+    graphics.setColor 255, 0, 0, 175
+    graphics.rectangle "fill", graphics.getWidth! / 3, graphics.getHeight! - 70, healthRatio * 300, 35
+
+  drawLaser: (cam, cursorImage) =>
+    if @weapon and @health > 0
+      graphics.setColor 255, 0, 0, 150
+      local targetX, targetY, slope
+      targetX, targetY = cam\worldCoords mouse.getX! + cursorImage\getWidth! / 2, mouse.getY! + cursorImage\getHeight! / 2
+      local den, num
+      den = (@body\getX! - targetX)
+      num = ((@body\getY! - @height * (1/4)) - targetY)
+      slope = den ~= 0 and num / den or false 
+      if slope
+        targetX = targetX < @body\getX! and 1000 * -math.abs(1 / slope) or 1000 * math.abs(1 / slope)
+        targetY = targetX * slope
+        graphics.line @body\getX!, @body\getY! - @height * (1/4), targetX + @body\getX!, targetY + @body\getY!
+      else
+        if den == 0
+          if targetY < @body\getY!
+            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX!, @body\getY! - 1000
+          else
+            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX!, @body\getY! + 1000
+        elseif num == 0
+          if targetX < @body\getX!
+            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX! - 1000, @body\getY!
+          else
+            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX! + 1000, @body\getY!
 
   draw: =>
     super {25, 145, 245}
     -- graphics.setColor 25, 145, 245
     -- graphics.circle "fill", @body\getX!, @body\getY!, @radius
     
-    local healthRatio
-    healthRatio = @health / @maxHealth
-    graphics.setColor 255, 0, 0
-    graphics.rectangle "fill", @body\getX! - 15 - @width / 2, @body\getY! - @height / 2 - 15, healthRatio * 65, 10
     -- graphics.circle "fill", @body\getX!
 
+    if not @weapon
+      return
     @weapon\drawBullets!
     -- @drawTrajectory!
 

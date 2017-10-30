@@ -18,6 +18,7 @@ local hurtSound = love.audio.newSource("audio/steve_hurt.mp3", "static")
 local hitMarkerSound = love.audio.newSource("audio/hit_marker_cut.mp3", "static")
 local goldPickupSound = love.audio.newSource("audio/gold_pickup.wav", "static")
 hurtSound:setVolume(.35)
+hitMarkerSound:setVolume(.4)
 goldPickupSound:setVolume(.20)
 local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local obj1, obj2 = a:getUserData(), b:getUserData()
@@ -51,7 +52,11 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
       end
 
       if walker then
-        player:damageByImpulse(x, y, walker.hitAttackPower)
+        if walker.body:getY() < player.body:getY() and y > 0 then
+          player:damageByImpulse(x, -y, walker.hitAttackPower)
+        else
+          player:damageByImpulse(x, y, walker.hitAttackPower)
+        end
         playSound(hurtSound)
       end
 

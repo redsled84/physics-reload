@@ -10,7 +10,9 @@ local Gold = require("build.gold")
 local Player = require("build.player")
 local shake = require("build.shake")
 local Weapon = require("build.weapon")
-local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon, gold
+local Phone = require("build.phone")
+local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold
+local togglePhone
 local initGame
 initGame = function()
   editor = Editor()
@@ -20,11 +22,14 @@ initGame = function()
     y = 32
   }
   player = Player(spawn.x, spawn.y)
+  phone = Phone()
   setWorldCallbacks()
   cam = Camera(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
   cam:zoomTo(.8)
   toggleEditor = false
+  togglePhone = false
   love.graphics.setBackgroundColor(230, 237, 247)
+  cursorImage = love.graphics.newImage("sprites/cursor.png")
   local cursor = love.mouse.newCursor("sprites/cursor.png", 0, 0)
   return love.mouse.setCursor(cursor)
 end
@@ -54,8 +59,8 @@ love.load = function()
       return editor:update(dt)
     else
       shake:update(dt)
-      player:update(dt)
       player:handleWeapon(dt, cam)
+      player:update(dt)
       world:update(dt)
       cam:lookAt(player.body:getX(), player.body:getY())
       return editor:updateObjects(dt, player)
@@ -77,9 +82,16 @@ love.load = function()
         255,
         255
       })
+      player:drawLaser(cam, cursorImage)
       shake:postDraw()
       cam:detach()
-      player.weapon:drawAmmoCount()
+      if togglePhone then
+        phone:draw()
+      end
+      player:drawHealth()
+      if player.weapon then
+        player.weapon:drawAmmoCount()
+      end
       love.graphics.setColor(15, 15, 15)
       return love.graphics.print("Gold: " .. tostring(player.amountOfGold), 15, love.graphics.getHeight() - 100)
     end
@@ -87,6 +99,12 @@ love.load = function()
   love.mousepressed = function(x, y, button)
     if toggleEditor then
       return editor:mousepressed(x, y, button)
+    else
+      local targetX, targetY
+      targetX, targetY = cam:worldCoords(x, y)
+      if player.weapon then
+        return player.weapon:shootSemi(targetX, targetY, button)
+      end
     end
   end
   love.keypressed = function(key)
@@ -120,22 +138,30 @@ love.load = function()
     else
       editor.activeShapeType = "polygon"
       player:jump(key)
+      if togglePhone then
+        phone:buy(key, player)
+      end
+    end
+    if key == "e" then
+      togglePhone = not togglePhone
     end
     if key == "f3" then
       editor.selectedObject = -1
       editor.selectedShape = -1
       editor.activeDeleteIndex = -1
+      togglePhone = false
       editor:flushObjectGold()
       if not toggleEditor then
         editor:hotLoad()
         editor:hotLoadObjects()
-        print(true)
       end
       player.body:setPosition(spawn.x, spawn.y)
       player.amountOfGold = 0
       player.deathSoundCount = 0
       player.xVelocity = 50
       player.health = player.maxHealth
+      player:changeWeapon(nil)
+      phone:resetBuyList()
       toggleEditor = not toggleEditor
     end
   end

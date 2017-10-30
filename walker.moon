@@ -22,7 +22,7 @@ hitAttackPowers = {
 }
 
 class Walker extends Entity
-  new: (@originX, @originY, @endX, @endY, @awarenessDistance=720, @width=32, @height=64) =>
+  new: (@originX, @originY, @endX, @endY, @awarenessDistance=750, @width=32, @height=64) =>
     super @originX, @originY, {@width, @height}, "dynamic"
     @originalDir = @originX > @endX and -1 or 1
     @dir = @originalDir
@@ -32,8 +32,8 @@ class Walker extends Entity
 
     @xVelocity = 0
     @moveSpeed = 200
-    @health = 65
-    @weapon = Weapon @x, @y, math.huge, math.pi / 45, false, .25, 3000, 6, 15, 30
+    @health = 45
+    @weapon = Weapon @x, @y, math.huge, math.pi / 38, false, .45, 3000, 9, 7, 16
 
     @hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
 

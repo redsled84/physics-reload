@@ -117,7 +117,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, originX, originY, endX, endY, awarenessDistance, width, height)
       if awarenessDistance == nil then
-        awarenessDistance = 720
+        awarenessDistance = 750
       end
       if width == nil then
         width = 32
@@ -136,8 +136,8 @@ do
       self.fixture:setFilterData(collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0)
       self.xVelocity = 0
       self.moveSpeed = 200
-      self.health = 65
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 45, false, .25, 3000, 6, 15, 30)
+      self.health = 45
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 38, false, .45, 3000, 9, 7, 16)
       self.hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
     end,
     __base = _base_0,

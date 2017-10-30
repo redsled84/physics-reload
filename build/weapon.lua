@@ -14,6 +14,7 @@ do
   graphics, audio, mouse = _obj_0.graphics, _obj_0.audio, _obj_0.mouse
 end
 local ammoFont = graphics.newFont("fonts/FFFFORWA.TTF", 20)
+graphics.setFont(ammoFont)
 local Weapon
 do
   local _class_0
@@ -37,13 +38,13 @@ do
     shootBullet = function(self, x, y)
       local bullet
       self.canShoot = false
-      if self.ammoCount > 0 then
-        self.ammoCount = self.ammoCount - 1
+      if self.totalAmmo > 0 then
+        self.totalAmmo = self.totalAmmo - 1
       end
       if self.isPlayerWeapon then
         shake:more(self.shakeConstant)
       end
-      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize, self.bulletSize * 2, random(self.minAtkPower, self.maxAtkPower), self.isPlayerWeapon)
+      bullet = Bullet(self.x, self.y, x, y, self.bulletSpeed, self.bulletSize * (1 / 2), self.bulletSize * 2, random(self.minAtkPower, self.maxAtkPower), self.isPlayerWeapon)
       bullet.goalX, bullet.goalY = self:getVariableBulletVectors(bullet)
       bullet:calculateDirections()
       bullet:fire()
@@ -54,14 +55,14 @@ do
       local targetX, targetY
       targetX = x
       targetY = y
-      if self.isPlayerWeapon and mouse.isDown(1) and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+      if self.isPlayerWeapon and mouse.isDown(1) and self.canShoot and self.totalAmmo > 0 and self.fireControl == "auto" then
         return self:shootBullet(targetX, targetY)
-      elseif not self.isPlayerWeapon and self.canShoot and self.ammoCount > 0 and self.fireControl == "auto" then
+      elseif not self.isPlayerWeapon and self.canShoot and self.totalAmmo > 0 and self.fireControl == "auto" then
         return self:shootBullet(targetX, targetY)
       end
     end,
     shootSemi = function(self, x, y, button)
-      if button == 1 and self.canShoot and self.ammoCount > 0 and self.fireControl == "semi" then
+      if button == 1 and self.canShoot and self.totalAmmo > 0 and self.fireControl == "semi" then
         return self:shootBullet(x, y)
       end
     end,
@@ -73,9 +74,24 @@ do
         end
       end
     end,
-    drawBullets = function(self)
+    update = function(self, dt, cam, obj)
+      if obj then
+        self.x, self.y = obj.body:getX(), obj.body:getY() - obj.height * (1 / 4)
+      end
+      self:autoRemoveDestroyedBullets()
+      local mouseX, mouseY
+      mouseX, mouseY = cam:worldCoords(mouse.getX(), mouse.getY())
+      self:shootAuto(mouseX, mouseY)
+      if not self.wcanShoot then
+        return self:updateRateOfFire(dt)
+      end
+    end,
+    drawBullets = function(self, color)
+      graphics.setColor(0, 0, 255)
+      if color then
+        graphics.setColor(unpack(color))
+      end
       for i = 1, #self.bullets do
-        graphics.setColor(0, 0, 255)
         local b = self.bullets[i]
         if not b.body:isDestroyed() then
           b:draw()
@@ -83,9 +99,8 @@ do
       end
     end,
     drawAmmoCount = function(self)
-      graphics.setFont(ammoFont)
       graphics.setColor(0, 0, 0)
-      return graphics.print(self.ammoCount, 35, graphics:getHeight() - 45)
+      return graphics.print(self.totalAmmo, 35, graphics:getHeight() - 45)
     end
   }
   _base_0.__index = _base_0

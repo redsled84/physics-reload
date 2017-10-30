@@ -1,30 +1,27 @@
-local Entity = require("build.entity")
-local graphics
-graphics = love.graphics
-local Bounce
+local Weapon = require("build.weapon")
+local Pistol
 do
   local _class_0
-  local _parent_0 = Entity
+  local _parent_0 = Weapon
   local _base_0 = {
-    draw = function(self)
-      graphics.setColor(20, 255, 0, 65)
-      graphics.polygon("fill", self.shapeArgs)
-      graphics.setColor(20, 255, 0, 255)
-      return graphics.polygon("line", self.shapeArgs)
+    drawBullets = function(self)
+      return _class_0.__parent.__base.drawBullets(self, {
+        255,
+        10,
+        125
+      })
     end
   }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y, shapeArgs, bouncePower)
-      if bouncePower == nil then
-        bouncePower = 700
-      end
-      self.x, self.y, self.shapeArgs, self.bouncePower = x, y, shapeArgs, bouncePower
-      return _class_0.__parent.__init(self, self.x, self.y, self.shapeArgs, "static", "polygon")
+    __init = function(self, x, y)
+      self.x, self.y = x, y
+      _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 50, true, .2, 3000, 6, 8, 15)
+      self.fireControl = "semi"
     end,
     __base = _base_0,
-    __name = "Bounce",
+    __name = "Pistol",
     __parent = _parent_0
   }, {
     __index = function(cls, name)
@@ -48,6 +45,6 @@ do
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
-  Bounce = _class_0
+  Pistol = _class_0
 end
-return Bounce
+return Pistol

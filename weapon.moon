@@ -9,6 +9,8 @@ shake = require "build.shake"
 
 ammoFont = graphics.newFont "fonts/FFFFORWA.TTF", 20
 
+graphics.setFont ammoFont
+
 class Weapon
   new: (@x, @y, @totalAmmo, @sprayAngle=math.pi/100, @isPlayerWeapon=false, @rateOfFire=.25, @bulletSpeed=2700, @bulletSize=10,
   @minAtkPower=5,@maxAtkPower=15) =>
@@ -54,13 +56,13 @@ class Weapon
   shootBullet: (x, y) =>
     local bullet
     @canShoot = false
-    if @ammoCount > 0
-      @ammoCount -= 1
+    if @totalAmmo > 0
+      @totalAmmo -= 1
 
     if @isPlayerWeapon
       shake\more @shakeConstant
 
-    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize, @bulletSize*2, random(@minAtkPower, @maxAtkPower), @isPlayerWeapon
+    bullet = Bullet @x, @y, x, y, @bulletSpeed, @bulletSize * (1/2), @bulletSize*2, random(@minAtkPower, @maxAtkPower), @isPlayerWeapon
     bullet.goalX, bullet.goalY = @getVariableBulletVectors bullet
     -- print @x, @y, -bullet.distance * math.cos(angle) + @x, 
     bullet\calculateDirections!
@@ -75,13 +77,13 @@ class Weapon
     local targetX, targetY
     targetX = x
     targetY = y
-    if @isPlayerWeapon and mouse.isDown(1) and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+    if @isPlayerWeapon and mouse.isDown(1) and @canShoot and @totalAmmo > 0 and @fireControl == "auto"
       @shootBullet targetX, targetY
-    elseif not @isPlayerWeapon and @canShoot and @ammoCount > 0 and @fireControl == "auto"
+    elseif not @isPlayerWeapon and @canShoot and @totalAmmo > 0 and @fireControl == "auto"
       @shootBullet targetX, targetY
 
   shootSemi: (x, y, button) =>
-    if button == 1 and @canShoot and @ammoCount > 0 and @fireControl == "semi"
+    if button == 1 and @canShoot and @totalAmmo > 0 and @fireControl == "semi"
       @shootBullet x, y
 
   autoRemoveDestroyedBullets: =>
@@ -90,17 +92,28 @@ class Weapon
       if b.body\isDestroyed!
         remove @bullets, i
 
-  drawBullets: =>
+  update: (dt, cam, obj) =>
+    if obj
+      @x, @y = obj.body\getX!, obj.body\getY! - obj.height * (1 / 4)
+    @autoRemoveDestroyedBullets!
+    local mouseX, mouseY
+    mouseX, mouseY = cam\worldCoords mouse.getX!, mouse.getY!
+    @shootAuto mouseX, mouseY
+    if not @wcanShoot
+      @updateRateOfFire dt
+
+  drawBullets: (color) =>
+    graphics.setColor 0, 0, 255
+    if color
+      graphics.setColor unpack color
     for i = 1, #@bullets
-      graphics.setColor 0, 0, 255
       b = @bullets[i]
       if not b.body\isDestroyed!
         b\draw!
 
   drawAmmoCount: =>
-    graphics.setFont ammoFont
     graphics.setColor 0, 0, 0
-    graphics.print @ammoCount, 35, graphics\getHeight! - 45
+    graphics.print @totalAmmo, 35, graphics\getHeight! - 45
 
   -- draw: (x, y) =>
     -- graphics.setColor 255, 255, 255

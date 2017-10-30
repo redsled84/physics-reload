@@ -1,6 +1,6 @@
 Entity = require "build.entity"
 class Laser extends Entity
-  new: (@originX, @originY, @endX, @endY, @attackPower=math.random(600, 650)) =>
+  new: (@originX, @originY, @endX, @endY, @attackPower=math.random(300, 350)) =>
     super @originX, @originY, {@endX, @endY}, "static", "segment"
     @laserSound = love.audio.newSource "audio/laser.wav", "static"
     @laserSound\setVolume .08

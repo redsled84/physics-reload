@@ -27,7 +27,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, originX, originY, endX, endY, attackPower)
       if attackPower == nil then
-        attackPower = math.random(600, 650)
+        attackPower = math.random(300, 350)
       end
       self.originX, self.originY, self.endX, self.endY, self.attackPower = originX, originY, endX, endY, attackPower
       _class_0.__parent.__init(self, self.originX, self.originY, {

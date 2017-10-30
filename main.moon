@@ -12,8 +12,10 @@ Player = require "build.player"
 shake = require "build.shake"
 -- Walker = require "build.walker"
 Weapon = require "build.weapon"
+Phone = require "build.phone"
 
-local cam, editor, player, spawn, toggleEditor, walker, walker2, weapon, gold
+local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold
+local togglePhone
 initGame = ->
   editor = Editor!
   -- shake = Shake!
@@ -24,6 +26,7 @@ initGame = ->
   -- spawn position of the player
   spawn = {x: 64, y: 32}
   player = Player spawn.x, spawn.y
+  phone = Phone!
   -- floor = Entity 100, 500, {600, 32}
   -- walker = Walker 300, 32, 450, 32
   -- walker2 = Walker -200, -198, -100, -198
@@ -36,8 +39,10 @@ initGame = ->
   cam\zoomTo .8
 
   toggleEditor = false
+  togglePhone = false
 
   love.graphics.setBackgroundColor 230, 237, 247
+  cursorImage = love.graphics.newImage "sprites/cursor.png"
   cursor = love.mouse.newCursor "sprites/cursor.png", 0, 0
   love.mouse.setCursor cursor
 
@@ -63,8 +68,10 @@ love.load = ->
       editor\update dt
     else
       shake\update dt
-      player\update dt
       player\handleWeapon dt, cam
+      player\update dt
+
+      -- print player.weapon.canShoot
       world\update dt
       -- floater\update dt
 
@@ -100,6 +107,8 @@ love.load = ->
       editor\drawObjectGold!
       
       player\draw {0, 255, 255}
+      player\drawLaser cam, cursorImage
+      
       -- player\drawTrajectory!
 
       -- floater\draw!
@@ -111,13 +120,23 @@ love.load = ->
       shake\postDraw!
       cam\detach!
     
-      player.weapon\drawAmmoCount!
+      if togglePhone
+        phone\draw!
+
+      player\drawHealth!
+      if player.weapon
+        player.weapon\drawAmmoCount!
       love.graphics.setColor 15, 15, 15
       love.graphics.print "Gold: " .. tostring(player.amountOfGold), 15, love.graphics.getHeight! - 100
 
   love.mousepressed = (x, y, button) ->
     if toggleEditor
       editor\mousepressed x, y, button
+    else
+      local targetX, targetY
+      targetX, targetY = cam\worldCoords x, y
+      if player.weapon
+        player.weapon\shootSemi targetX, targetY, button
 
   love.keypressed = (key) ->
     if key == "escape" and not toggleEditor
@@ -163,23 +182,31 @@ love.load = ->
       editor.activeShapeType = "polygon"
 
       player\jump key
+      if togglePhone
+        phone\buy key, player
+    if key == "e"
+      togglePhone = not togglePhone
 
     if key == "f3"
       editor.selectedObject = -1
       editor.selectedShape = -1
       editor.activeDeleteIndex = -1
 
+      togglePhone = false
+
       editor\flushObjectGold!
       if not toggleEditor
         editor\hotLoad!
         editor\hotLoadObjects!
-        print true
 
       player.body\setPosition spawn.x, spawn.y
       player.amountOfGold = 0
       player.deathSoundCount = 0
       player.xVelocity = 50
       player.health = player.maxHealth
+      player\changeWeapon nil
+
+      phone\resetBuyList!
 
       toggleEditor = not toggleEditor
 

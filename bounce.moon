@@ -3,7 +3,7 @@ Entity = require "build.entity"
 {graphics: graphics} = love
 
 class Bounce extends Entity
-  new: (@x, @y, @shapeArgs, @bouncePower=800) =>
+  new: (@x, @y, @shapeArgs, @bouncePower=700) =>
     super @x, @y, @shapeArgs, "static", "polygon"
   draw: =>
     -- super {20, 225, 0}

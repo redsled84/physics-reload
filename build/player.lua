@@ -4,6 +4,7 @@ local collisionMasks = require("build.collisionMasks")
 local inspect = require("libs.inspect")
 local Entity = require("build.entity")
 local Timer = require("build.timer")
+local Pistol = require("build.pistol")
 local Weapon = require("build.weapon")
 local vx, vy, frc, dec, top, low
 local acc
@@ -36,8 +37,18 @@ do
         self.health = self.maxHealth
       end
     end,
+    removeGold = function(self, goldToRemove)
+      if self.amountOfGold - goldToRemove < 0 then
+        return false
+      end
+      self.amountOfGold = self.amountOfGold - goldToRemove
+      return true
+    end,
     addGold = function(self, goldToAdd)
       self.amountOfGold = self.amountOfGold + goldToAdd
+    end,
+    changeWeapon = function(self, weapon)
+      self.weapon = weapon
     end,
     damageByImpulse = function(self, x, y, attackPower)
       self.activeHitStun = true
@@ -51,14 +62,10 @@ do
       if self.health <= 0 then
         return 
       end
-      self.weapon.x, self.weapon.y = self.body:getX(), self.body:getY() - self.height * (1 / 4)
-      self.weapon:autoRemoveDestroyedBullets()
-      local mouseX, mouseY
-      mouseX, mouseY = cam:worldCoords(mouse.getX(), mouse.getY())
-      self.weapon:shootAuto(mouseX, mouseY)
-      if not self.weapon.canShoot then
-        self.weapon:updateRateOfFire(dt)
+      if not self.weapon then
+        return 
       end
+      self.weapon:update(dt, cam, self)
       return self.printTimer:update(dt, function() end)
     end,
     update = function(self, dt)
@@ -81,6 +88,9 @@ do
       self.onGround = false
     end,
     moveWithKeys = function(self, dt)
+      if self.activeHitStun then
+        return 
+      end
       if keyboard.isDown('a') then
         if self.xVelocity > 0 then
           self.xVelocity = self.xVelocity - (dec * dt)
@@ -115,17 +125,44 @@ do
         end
       end
     end,
-    getTrajectoryPoint = function(self, t)
-      local stepVelocity, stepGravity
-      stepVelocity = love.timer.getDelta() * 1000
-      return self.body:getX() + stepVelocity, self.body:getY() + stepVelocity * t - (1 / 2) * world:getGravity() * t ^ 2
+    drawHealth = function(self)
+      local healthRatio
+      healthRatio = self.health / self.maxHealth
+      graphics.setColor(0, 0, 0, 150)
+      local buffer
+      buffer = 12
+      graphics.rectangle("fill", graphics.getWidth() / 3 - buffer, graphics.getHeight() - 70 - buffer, 1 * 300 + buffer * 2, 35 + buffer * 2)
+      graphics.setColor(255, 0, 0, 175)
+      return graphics.rectangle("fill", graphics.getWidth() / 3, graphics.getHeight() - 70, healthRatio * 300, 35)
     end,
-    drawTrajectory = function(self)
-      local tpX, tpY
-      graphics.setColor(255, 0, 0)
-      for i = 0, 3, love.timer.getDelta() do
-        tpX, tpY = self:getTrajectoryPoint(i)
-        graphics.points(tpX, tpY)
+    drawLaser = function(self, cam, cursorImage)
+      if self.weapon and self.health > 0 then
+        graphics.setColor(255, 0, 0, 150)
+        local targetX, targetY, slope
+        targetX, targetY = cam:worldCoords(mouse.getX() + cursorImage:getWidth() / 2, mouse.getY() + cursorImage:getHeight() / 2)
+        local den, num
+        den = (self.body:getX() - targetX)
+        num = ((self.body:getY() - self.height * (1 / 4)) - targetY)
+        slope = den ~= 0 and num / den or false
+        if slope then
+          targetX = targetX < self.body:getX() and 1000 * -math.abs(1 / slope) or 1000 * math.abs(1 / slope)
+          targetY = targetX * slope
+          return graphics.line(self.body:getX(), self.body:getY() - self.height * (1 / 4), targetX + self.body:getX(), targetY + self.body:getY())
+        else
+          if den == 0 then
+            if targetY < self.body:getY() then
+              return graphics.line(self.body:getX(), self.body:getY() - self.height * (1 / 4), self.body:getX(), self.body:getY() - 1000)
+            else
+              return graphics.line(self.body:getX(), self.body:getY() - self.height * (1 / 4), self.body:getX(), self.body:getY() + 1000)
+            end
+          elseif num == 0 then
+            if targetX < self.body:getX() then
+              return graphics.line(self.body:getX(), self.body:getY() - self.height * (1 / 4), self.body:getX() - 1000, self.body:getY())
+            else
+              return graphics.line(self.body:getX(), self.body:getY() - self.height * (1 / 4), self.body:getX() + 1000, self.body:getY())
+            end
+          end
+        end
       end
     end,
     draw = function(self)
@@ -134,10 +171,9 @@ do
         145,
         245
       })
-      local healthRatio
-      healthRatio = self.health / self.maxHealth
-      graphics.setColor(255, 0, 0)
-      graphics.rectangle("fill", self.body:getX() - 15 - self.width / 2, self.body:getY() - self.height / 2 - 15, healthRatio * 65, 10)
+      if not self.weapon then
+        return 
+      end
       return self.weapon:drawBullets()
     end
   }
@@ -149,7 +185,7 @@ do
         width = 26
       end
       if height == nil then
-        height = 48
+        height = 54
       end
       self.x, self.y, self.width, self.height = x, y, width, height
       self.onGround = false
@@ -167,7 +203,7 @@ do
       self.activeHitStun = false
       self.maxHealth = 350
       self.health = self.maxHealth
-      self.weapon = Weapon(0, 0, 1000, math.pi / 175, true, .10, 5500, 8, 15, 25)
+      self.weapon = nil
       self.amountOfGold = 0
       self.deathSound = audio.newSource("audio/death.mp3", "static")
       self.deathSoundCount = 0

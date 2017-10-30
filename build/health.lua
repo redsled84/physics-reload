@@ -38,7 +38,7 @@ do
         height = 24
       end
       if amountOfHealth == nil then
-        amountOfHealth = 35
+        amountOfHealth = math.random(45, 70)
       end
       self.x, self.y, self.width, self.height, self.amountOfHealth = x, y, width, height, amountOfHealth
       _class_0.__parent.__init(self, self.x, self.y, {

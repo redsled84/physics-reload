@@ -131,7 +131,6 @@ do
       end
     end,
     hotLoadObjects = function(self)
-      print("hello lad")
       for k, v in pairs(self.objectData) do
         if not v.added then
           if v.objectType == "Floater" then
