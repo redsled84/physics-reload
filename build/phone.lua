@@ -11,7 +11,7 @@ do
   local _class_0
   local _base_0 = {
     x = love.graphics.getWidth() - width - buffer * 1.25,
-    y = love.graphics.getHeight() - height - buffer * .5,
+    y = love.graphics.getHeight() - height - buffer,
     width = width,
     height = height,
     sound = love.audio.newSource("audio/bought_cut.mp3", "static"),
@@ -23,9 +23,9 @@ do
     },
     costs = {
       0,
-      50,
       100,
-      250
+      300,
+      500
     },
     buyRecords = {
       false,
@@ -33,6 +33,7 @@ do
       false,
       false
     },
+    lastBoughtItem = false,
     draw = function(self)
       love.graphics.setColor(0, 255, 255, 180)
       love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
@@ -65,6 +66,12 @@ do
         end
         love.graphics.setColor(255, 255, 0)
         love.graphics.print(tostring(self.costs[i]), itemX + itemWidth + 35, itemY + itemHeight * (1 / 3))
+        if self.lastBoughtItem then
+          if self.lastBoughtItem.__class.__name == className then
+            love.graphics.setColor(20, 20, 20, 200)
+            love.graphics.rectangle("fill", itemX - 50, itemY + itemHeight * (1 / 3) - 15, 35, 50)
+          end
+        end
         love.graphics.setColor(255, 255, 255)
         love.graphics.print(i, itemX - 40, itemY + itemHeight * (1 / 3))
       end
@@ -75,16 +82,21 @@ do
           local bought
           if not self.buyRecords[i] then
             bought = player:removeGold(self.costs[i])
+            local weapon
             if bought then
               self.buyRecords[i] = true
-              player:changeWeapon(self.items[i](player.body:getX(), player.body:getY()))
-              self.sound:setVolume(.3)
+              weapon = self.items[i](player.body:getX(), player.body:getY())
+              self.lastBoughtItem = weapon
+              player:changeWeapon(weapon)
+              self.sound:setVolume(.45)
               playSound(self.sound)
             else
               print("not enough money to buy [" .. self.items[i].__class.__name .. "]")
             end
           else
-            player:changeWeapon(self.items[i](player.body:getX(), player.body:getY()))
+            local weapon = self.items[i](player.body:getX(), player.body:getY())
+            self.lastBoughtItem = weapon
+            player:changeWeapon(weapon)
           end
         end
       end

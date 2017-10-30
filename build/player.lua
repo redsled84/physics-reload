@@ -84,8 +84,7 @@ do
       if yv > self.terminalVelocity then
         yv = self.terminalVelocity
       end
-      self.body:setLinearVelocity(self.xVelocity, yv)
-      self.onGround = false
+      return self.body:setLinearVelocity(self.xVelocity, yv)
     end,
     moveWithKeys = function(self, dt)
       if self.activeHitStun then
@@ -131,9 +130,9 @@ do
       graphics.setColor(0, 0, 0, 150)
       local buffer
       buffer = 12
-      graphics.rectangle("fill", graphics.getWidth() / 3 - buffer, graphics.getHeight() - 70 - buffer, 1 * 300 + buffer * 2, 35 + buffer * 2)
-      graphics.setColor(255, 0, 0, 175)
-      return graphics.rectangle("fill", graphics.getWidth() / 3, graphics.getHeight() - 70, healthRatio * 300, 35)
+      graphics.rectangle("fill", graphics.getWidth() * (3 / 7) - buffer, graphics.getHeight() - 70 - buffer, 1 * 300 + buffer * 2, 15 + buffer * 2)
+      graphics.setColor(255, 0, 0, 120)
+      return graphics.rectangle("fill", graphics.getWidth() * (3 / 7), graphics.getHeight() - 70, healthRatio * 300, 15)
     end,
     drawLaser = function(self, cam, cursorImage)
       if self.weapon and self.health > 0 then
@@ -144,6 +143,11 @@ do
         den = (self.body:getX() - targetX)
         num = ((self.body:getY() - self.height * (1 / 4)) - targetY)
         slope = den ~= 0 and num / den or false
+        if den > 0 then
+          self.dir = -1
+        else
+          self.dir = 1
+        end
         if slope then
           targetX = targetX < self.body:getX() and 1000 * -math.abs(1 / slope) or 1000 * math.abs(1 / slope)
           targetY = targetX * slope
@@ -165,11 +169,27 @@ do
         end
       end
     end,
+    drawGold = function(self)
+      local buffer
+      buffer = 12
+      graphics.setColor(0, 0, 0, 150)
+      graphics.rectangle("fill", graphics.getWidth() * (5 / 7) - buffer * 2, graphics.getHeight() - buffer * 7.5, 220, 54)
+      graphics.setColor(255, 223, 0, 150)
+      return graphics.print("GOLD: " .. tostring(self.amountOfGold), graphics.getWidth() * (5 / 7) - buffer, graphics.getHeight() - buffer * 6)
+    end,
+    drawAmmo = function(self)
+      local buffer
+      buffer = 12
+      graphics.setColor(0, 0, 0, 150)
+      graphics.rectangle("fill", graphics.getWidth() * (1.9 / 7) - buffer * 2, graphics.getHeight() - buffer * 7.5, 185, 54)
+      graphics.setColor(255, 255, 255, 150)
+      return graphics.print("AMMO: " .. tostring(self.weapon.totalAmmo), graphics.getWidth() * (1.9 / 7) - buffer, graphics.getHeight() - buffer * 6)
+    end,
     draw = function(self)
       _class_0.__parent.__base.draw(self, {
-        25,
-        145,
-        245
+        5,
+        5,
+        5
       })
       if not self.weapon then
         return 
@@ -189,14 +209,30 @@ do
       end
       self.x, self.y, self.width, self.height = x, y, width, height
       self.onGround = false
+      local bevel
+      bevel = 3
       _class_0.__parent.__init(self, self.x, self.y, {
-        self.width,
-        self.height
-      }, "dynamic", "rectangle")
+        self.width / 2 - bevel,
+        -self.height / 2,
+        self.width / 2,
+        -self.height / 2 + bevel,
+        self.width / 2,
+        self.height / 2 - bevel,
+        self.width / 2 - bevel,
+        self.height / 2,
+        -self.width / 2 + bevel,
+        self.height / 2,
+        -self.width / 2,
+        self.height / 2 - bevel,
+        -self.width / 2,
+        -self.height / 2 + bevel,
+        -self.width / 2 + bevel,
+        -self.height / 2
+      }, "dynamic", "polygon")
       self.body:setFixedRotation(true)
-      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker + collisionMasks.items, 0)
+      self.fixture:setFilterData(collisionMasks.player, collisionMasks.solid + collisionMasks.bulletHurtPlayer + collisionMasks.walker + collisionMasks.items + collisionMasks.turret, 0)
       self.xVelocity = 0
-      self.terminalVelocity = 800
+      self.terminalVelocity = 1000
       self.jumpVelocity = -700
       self.hitStunTimer = Timer(.5)
       self.printTimer = Timer(.05)
@@ -205,6 +241,7 @@ do
       self.health = self.maxHealth
       self.weapon = nil
       self.amountOfGold = 0
+      self.dir = 0
       self.deathSound = audio.newSource("audio/death.mp3", "static")
       self.deathSoundCount = 0
     end,

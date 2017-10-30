@@ -97,6 +97,7 @@ do
       end
     end,
     draw = function(self)
+      self.weapon:drawBullets()
       if not self.body:isDestroyed() then
         local drawX, drawY
         drawX = self.body:getX() - self.width / 2
@@ -108,8 +109,7 @@ do
         offset = 7
         graphics.rectangle("fill", drawX + offset, drawY + offset, self.width - offset * 2, self.height - offset * 2)
       end
-      self:drawGold()
-      return self.weapon:drawBullets()
+      return self:drawGold()
     end
   }
   _base_0.__index = _base_0
@@ -135,9 +135,9 @@ do
       self.body:setFixedRotation(true)
       self.fixture:setFilterData(collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0)
       self.xVelocity = 0
-      self.moveSpeed = 200
-      self.health = 45
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 38, false, .45, 3000, 9, 7, 16)
+      self.moveSpeed = 275
+      self.health = math.random(35, 45)
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 45, false, .45, 4000, 9, 6, 12)
       self.hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
     end,
     __base = _base_0,

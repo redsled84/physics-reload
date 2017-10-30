@@ -45,6 +45,7 @@ do
         self.width,
         self.height
       }, "dynamic")
+      self.body:setMass(.1)
       self.fixture:setFilterData(collisionMasks.items, collisionMasks.solid + collisionMasks.player + collisionMasks.items, 0)
       self.sprite = graphics.newImage("sprites/health_pack.png")
       return self.sprite:setFilter("nearest", "nearest")

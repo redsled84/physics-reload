@@ -5,4 +5,5 @@ return {
 	walker = 8,
 	bulletHurtEnemy = 16,
   items = 32,
+  turret = 64,
 }

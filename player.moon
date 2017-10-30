@@ -17,17 +17,37 @@ class Player extends Entity
   -- new: (@x, @y, @width=32) =>
     @onGround = false
     
-    super @x, @y, {@width, @height}, "dynamic", "rectangle"
+    local bevel
+    bevel = 3
+    super @x, @y, {
+      @width / 2 - bevel,
+      -@height / 2,
+      @width / 2,
+      -@height / 2 + bevel,
+      @width / 2,
+      @height / 2 - bevel,
+      @width / 2 - bevel,
+      @height / 2,
+      -@width / 2 + bevel,
+      @height / 2,
+      -@width / 2,
+      @height / 2 - bevel,
+      -@width / 2,
+      -@height / 2 + bevel,
+      -@width / 2 + bevel,
+      -@height / 2
+    }, "dynamic", "polygon"
 
     @body\setFixedRotation true
     @fixture\setFilterData collisionMasks.player,
       collisionMasks.solid +
       collisionMasks.bulletHurtPlayer +
       collisionMasks.walker +
-      collisionMasks.items, 0
+      collisionMasks.items +
+      collisionMasks.turret, 0
 
     @xVelocity = 0
-    @terminalVelocity = 800
+    @terminalVelocity = 1000
     @jumpVelocity = -700
 
     @hitStunTimer = Timer .5
@@ -39,6 +59,7 @@ class Player extends Entity
 
     @weapon = nil
     @amountOfGold = 0
+    @dir = 0
 
     @deathSound = audio.newSource "audio/death.mp3", "static"
     @deathSoundCount = 0
@@ -113,8 +134,6 @@ class Player extends Entity
         -- @xVelocity *= (1 / math.abs @normal[1])
     @body\setLinearVelocity @xVelocity, yv
 
-    @onGround = false
-
   moveWithKeys: (dt) =>
     if @activeHitStun
       return 
@@ -150,7 +169,8 @@ class Player extends Entity
   --   local stepVelocity, stepGravity
   --   stepVelocity = timer.getDelta! * 1000
 
-  --   return @body\getX! + stepVelocity, @body\getY! + stepVelocity * t - (1/2) * world\getGravity! * t^2
+  --   return @body\getX! + stepVelocity,
+  --     @body\getY! + stepVelocity * t - (1/2) * world\getGravity! * t^2
 
   -- drawTrajectory: =>
   --   local tpX, tpY
@@ -165,45 +185,74 @@ class Player extends Entity
     graphics.setColor 0, 0, 0, 150
     local buffer
     buffer = 12
-    graphics.rectangle "fill", graphics.getWidth! / 3 - buffer, graphics.getHeight! - 70 - buffer, 1 * 300 + buffer * 2, 35 + buffer * 2
-    graphics.setColor 255, 0, 0, 175
-    graphics.rectangle "fill", graphics.getWidth! / 3, graphics.getHeight! - 70, healthRatio * 300, 35
+    graphics.rectangle "fill", graphics.getWidth! * (3/7) - buffer, graphics.getHeight! - 70 - buffer,
+      1 * 300 + buffer * 2, 15 + buffer * 2
+    graphics.setColor 255, 0, 0, 120
+    graphics.rectangle "fill", graphics.getWidth! * (3/7), graphics.getHeight! - 70,
+      healthRatio * 300, 15
 
   drawLaser: (cam, cursorImage) =>
     if @weapon and @health > 0
       graphics.setColor 255, 0, 0, 150
       local targetX, targetY, slope
-      targetX, targetY = cam\worldCoords mouse.getX! + cursorImage\getWidth! / 2, mouse.getY! + cursorImage\getHeight! / 2
+      targetX, targetY = cam\worldCoords mouse.getX! + cursorImage\getWidth! / 2,
+        mouse.getY! + cursorImage\getHeight! / 2
       local den, num
       den = (@body\getX! - targetX)
       num = ((@body\getY! - @height * (1/4)) - targetY)
       slope = den ~= 0 and num / den or false 
+      if den > 0
+        @dir = -1
+      else
+        @dir = 1
       if slope
-        targetX = targetX < @body\getX! and 1000 * -math.abs(1 / slope) or 1000 * math.abs(1 / slope)
+        targetX = targetX < @body\getX! and
+          1000 * -math.abs(1 / slope) or 1000 * math.abs(1 / slope)
         targetY = targetX * slope
-        graphics.line @body\getX!, @body\getY! - @height * (1/4), targetX + @body\getX!, targetY + @body\getY!
+        graphics.line @body\getX!, @body\getY! - @height * (1/4),
+          targetX + @body\getX!, targetY + @body\getY!
       else
         if den == 0
           if targetY < @body\getY!
-            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX!, @body\getY! - 1000
+            graphics.line @body\getX!, @body\getY! - @height * (1/4),
+              @body\getX!, @body\getY! - 1000
           else
-            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX!, @body\getY! + 1000
+            graphics.line @body\getX!, @body\getY! - @height * (1/4),
+              @body\getX!, @body\getY! + 1000
         elseif num == 0
           if targetX < @body\getX!
-            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX! - 1000, @body\getY!
+            graphics.line @body\getX!, @body\getY! - @height * (1/4),
+              @body\getX! - 1000, @body\getY!
           else
-            graphics.line @body\getX!, @body\getY! - @height * (1/4), @body\getX! + 1000, @body\getY!
+            graphics.line @body\getX!, @body\getY! - @height * (1/4),
+              @body\getX! + 1000, @body\getY!
+
+  drawGold: =>
+    local buffer
+    buffer = 12
+    graphics.setColor 0, 0, 0, 150
+    graphics.rectangle "fill", graphics.getWidth! * (5/7) - buffer * 2, graphics.getHeight! - buffer * 7.5, 220, 54
+    graphics.setColor 255, 223, 0, 150
+    graphics.print "GOLD: " .. tostring(@amountOfGold), graphics.getWidth! * (5/7) - buffer, graphics.getHeight! - buffer * 6
+
+  drawAmmo: =>
+    local buffer
+    buffer = 12
+    graphics.setColor 0, 0, 0, 150
+    graphics.rectangle "fill", graphics.getWidth! * (1.9/7) - buffer * 2, graphics.getHeight! - buffer * 7.5, 185, 54
+    graphics.setColor 255, 255, 255, 150
+    graphics.print "AMMO: " .. tostring(@weapon.totalAmmo), graphics.getWidth! * (1.9/7) - buffer, graphics.getHeight! - buffer * 6    
 
   draw: =>
-    super {25, 145, 245}
+    super {5, 5, 5}
+    if not @weapon
+      return
+    @weapon\drawBullets!
     -- graphics.setColor 25, 145, 245
     -- graphics.circle "fill", @body\getX!, @body\getY!, @radius
     
     -- graphics.circle "fill", @body\getX!
 
-    if not @weapon
-      return
-    @weapon\drawBullets!
     -- @drawTrajectory!
 
 

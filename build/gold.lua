@@ -24,7 +24,7 @@ do
           drawX = x - self.width
           drawY = y - self.height
         end
-        graphics.setColor(255, 255, 0)
+        graphics.setColor(255, 223, 0, 200)
         return graphics.rectangle("fill", drawX, drawY, self.width, self.height)
       end
     end
@@ -32,7 +32,7 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, x, y, width, height, value, linearForce)
+    __init = function(self, x, y, width, height, value, linearForce, yForce)
       if width == nil then
         width = 8
       end
@@ -45,13 +45,16 @@ do
       if linearForce == nil then
         linearForce = getSign() * math.random(22, 34)
       end
-      self.x, self.y, self.width, self.height, self.value, self.linearForce = x, y, width, height, value, linearForce
+      if yForce == nil then
+        yForce = 100
+      end
+      self.x, self.y, self.width, self.height, self.value, self.linearForce, self.yForce = x, y, width, height, value, linearForce, yForce
       _class_0.__parent.__init(self, self.x, self.y, {
         self.width,
         self.height
       }, "dynamic", "rectangle")
       self.fixture:setFilterData(collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0)
-      return self.body:applyLinearImpulse(self.linearForce, 100)
+      return self.body:applyLinearImpulse(self.linearForce, self.yForce)
     end,
     __base = _base_0,
     __name = "Gold",

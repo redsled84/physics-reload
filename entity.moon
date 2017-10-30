@@ -46,7 +46,7 @@ class Entity
       if @shapeType ~= "circle"
         graphics.polygon "fill", @body\getWorldPoints @shape\getPoints!
       else
-        graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius
+        graphics.circle "fill", @body\getX!, @body\getY!, @shape\getRadius!
 
   destroy: =>
     @body\destroy!

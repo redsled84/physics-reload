@@ -93,8 +93,8 @@ class Weapon
         remove @bullets, i
 
   update: (dt, cam, obj) =>
-    if obj
-      @x, @y = obj.body\getX!, obj.body\getY! - obj.height * (1 / 4)
+    if obj and @isPlayerWeapon
+      @x, @y = obj.body\getX! + obj.width * (1 / 2) * obj.dir, obj.body\getY! - obj.height * (1 / 4)
     @autoRemoveDestroyedBullets!
     local mouseX, mouseY
     mouseX, mouseY = cam\worldCoords mouse.getX!, mouse.getY!

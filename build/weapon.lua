@@ -75,8 +75,8 @@ do
       end
     end,
     update = function(self, dt, cam, obj)
-      if obj then
-        self.x, self.y = obj.body:getX(), obj.body:getY() - obj.height * (1 / 4)
+      if obj and self.isPlayerWeapon then
+        self.x, self.y = obj.body:getX() + obj.width * (1 / 2) * obj.dir, obj.body:getY() - obj.height * (1 / 4)
       end
       self:autoRemoveDestroyedBullets()
       local mouseX, mouseY

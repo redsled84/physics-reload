@@ -7,13 +7,13 @@ getSign = () ->
   return math.random(0, 1) == 0 and -1 or 1
 
 class Gold extends Entity
-  new: (@x, @y, @width=8, @height=8, @value=5, @linearForce=getSign! * math.random(22, 34)) =>
+  new: (@x, @y, @width=8, @height=8, @value=5, @linearForce=getSign! * math.random(22, 34), @yForce=100) =>
   --   super @x, @y, {@width, @height}, "static"
 
   -- new: (@x, @y, @width=8, @height=8) =>
     super @x, @y, {@width, @height}, "dynamic", "rectangle"
     @fixture\setFilterData collisionMasks.items, collisionMasks.solid + collisionMasks.player, 0
-    @body\applyLinearImpulse @linearForce, 100
+    @body\applyLinearImpulse @linearForce, @yForce
 
   getValue: =>
     return @value
@@ -27,7 +27,7 @@ class Gold extends Entity
       else
         drawX = x - @width
         drawY = y - @height
-      graphics.setColor 255, 255, 0
+      graphics.setColor 255, 223, 0, 200
       graphics.rectangle "fill", drawX, drawY, @width, @height
 
 return Gold

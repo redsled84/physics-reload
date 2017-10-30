@@ -1,3 +1,23 @@
+-- Copyright (c) 2017 Lucas Black
+
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+
+-- The above copyright notice and this permission notice shall be included in all
+-- copies or substantial portions of the Software.
+
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
+
 import insert, remove from table
 import len from string
 import abs, ceil, floor, sin from math
@@ -10,10 +30,17 @@ Entity = require "build.entity"
 Floater = require "build.floater"
 Laser = require "build.laser"
 Walker = require "build.walker"
+Turret = require "build.turret"
 Health = require "build.health"
 Spike = require "build.spike"
 
-{graphics: graphics, mouse: mouse, physics: physics, filesystem: filesystem, keyboard: keyboard} = love
+{
+  graphics: graphics
+  mouse: mouse
+  physics: physics
+  filesystem: filesystem
+  keyboard: keyboard
+} = love
 
 class Editor
   cam: Camera graphics.getWidth! / 2, graphics.getHeight! / 2
@@ -36,6 +63,7 @@ class Editor
   menuItems: {
     Floater
     Walker
+    Turret
     Health
     Laser
     Spike
@@ -114,6 +142,8 @@ class Editor
           @objects[k] = Health v.x, v.y
         if v.objectType == "Laser"
           @objects[k] = Laser v.x, v.y, v.endX, v.endY
+        if v.objectType == "Turret"
+          @objects[k] = Turret v.x, v.y
         v.added = true
 
   vec2: (x, y) =>
@@ -174,7 +204,8 @@ class Editor
 
     graphics.setColor 255, 255, 255
     for k, v in pairs @objects
-      if @objectData[k].x == @activeX and @objectData[k].y == @activeY and @selectedObject ~= i and @tool == "object"
+      if @objectData[k].x == @activeX and @objectData[k].y == @activeY and
+      @selectedObject ~= i and @tool == "object" then
         @activeDeleteIndex = k
         @activeObject = true
 
@@ -251,7 +282,7 @@ class Editor
   drawControls: =>
     if @viewControls and not @viewObjectMenu
       graphics.setColor 0, 0, 0, 155
-      graphics.rectangle "fill", 0, 0, 930, 250
+      graphics.rectangle "fill", 0, 0, 930, 350
       graphics.setColor 255, 255, 255
       graphics.print "Press 'W A S D' to move the camera around \n" ..
       "Press 'q' to zoom out and 'e' to zoom in \n" ..
@@ -263,7 +294,7 @@ class Editor
       "Press 'm' to minimize this box\n" ..
       "Press '1' to create and destroy polygon shapes\n" ..
       "Press '2' to create and destroy objects\n" .. 
-      "Press 'j' to access the object menu", 15, 15
+      "Press 'f' to access the object menu", 15, 15
     else
       graphics.setColor 0, 0, 0, 155
       graphics.rectangle "fill", 0, 0, 475, 48
@@ -282,9 +313,10 @@ class Editor
 
   drawObjectMenu: =>
     -- constants for menu window
-    local x, y, w, h, xoffset, yoffset, itemCounter, nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
+    local x, y, w, h, xoffset, yoffset, itemCounter
     x, y, w, h = @getWidthRatio(1,8), @getHeightRatio(1,8), @getWidthRatio(3,4), @getHeightRatio(3,4)
     xoffset, yoffset = 10, 10
+    local nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
     nItemsWide, nItemsTall = w/6, h/6
     itemWidth, itemHeight = nItemsWide-xoffset, nItemsTall-yoffset
     actualWidth, actualHeight = itemWidth-xoffset*2, itemHeight-yoffset*2
@@ -327,6 +359,8 @@ class Editor
               graphics.print "floater", ox + actualWidth * (1/6), oy + actualHeight * (2/5)
             elseif className == "Walker"
               graphics.print "walker", ox + actualWidth * (1/6), oy + actualHeight * (3/8)
+            elseif className == "Turret"
+              graphics.print "turret", ox + actualWidth * (1/6), oy + actualHeight * (3/8)  
             elseif className == "Health"
               graphics.print "health", ox + actualWidth * (1/6), oy + actualHeight * (3/8)
             elseif className == "Laser"
@@ -449,6 +483,8 @@ class Editor
         v\update dt, player
       if v.__class.__name == "Walker" and player
         v\update dt, player.body\getX!, player.body\getY!
+      if v.__class.__name == "Turret" and player
+        v\update dt, player
 
   update: (dt) =>
     @cam\zoomTo @cameraScale
@@ -474,7 +510,8 @@ class Editor
         if @tool == "polygon"
           insert @activeVertices, @vec2(@activeX, @activeY)
         elseif @tool == "object"
-          if (@selectedMenuItem == Floater or @selectedMenuItem == Health) and #@activeVertices < 1
+          if (@selectedMenuItem == Floater or @selectedMenuItem == Health or
+          @selectedMenuItem == Turret) and #@activeVertices < 1
             insert @activeVertices, @vec2(@activeX, @activeY)
           elseif (@selectedMenuItem == Walker or @selectedMenuItem == Laser) and #@activeVertices < 2
             insert @activeVertices, @vec2(@activeX, @activeY)
@@ -573,14 +610,14 @@ class Editor
         if @selectedMenuItem
           className = @selectedMenuItem.__class.__name
           -- adding the object data
-          if className == "Floater" or className == "Health"
+          if className == "Floater" or className == "Health" or className == "Turret"
             obj = {
               x: @activeVertices[1].x,
               y: @activeVertices[1].y,
               objectType: className,
               added: false,
             }
-          elseif className == "Walker" or className == "Laser"
+          elseif className == "Walker" or className == "Laser" and #@activeVertices > 1
             obj = {
               x: @activeVertices[1].x,
               y: @activeVertices[1].y,
@@ -599,7 +636,7 @@ class Editor
       @viewControls = not @viewControls
       @viewObjectMenu = false
 
-    if key == "j"
+    if key == "f"
       @viewObjectMenu = not @viewObjectMenu
       @viewControls = false
 

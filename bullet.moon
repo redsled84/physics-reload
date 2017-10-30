@@ -14,7 +14,7 @@ class Bullet extends Entity
     @body\setMass .01
 
     if @canHurtEnemies
-        @fixture\setFilterData collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0
+        @fixture\setFilterData collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker + collisionMasks.turret, 0
     else
         @fixture\setFilterData collisionMasks.bulletHurtPlayer, collisionMasks.solid + collisionMasks.player, 0
 

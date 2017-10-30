@@ -6,6 +6,7 @@ Entity = require "build.entity"
 class Health extends Entity
   new: (@x, @y, @width=24, @height=24, @amountOfHealth=math.random(45, 70)) =>
     super @x, @y, {@width, @height}, "dynamic"
+    @body\setMass .1
     @fixture\setFilterData collisionMasks.items, collisionMasks.solid + collisionMasks.player + collisionMasks.items, 0
     @sprite = graphics.newImage "sprites/health_pack.png"
     @sprite\setFilter "nearest", "nearest"

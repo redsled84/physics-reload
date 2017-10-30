@@ -18,7 +18,7 @@ do
         max = .5
       end
       self.max = max
-      self.time = 0
+      self.time = math.random(0, self.max * 100) / 100
     end,
     __base = _base_0,
     __name = "Timer"

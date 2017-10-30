@@ -31,9 +31,9 @@ class Walker extends Entity
     @fixture\setFilterData collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0
 
     @xVelocity = 0
-    @moveSpeed = 200
-    @health = 45
-    @weapon = Weapon @x, @y, math.huge, math.pi / 38, false, .45, 3000, 9, 7, 16
+    @moveSpeed = 275
+    @health = math.random(35, 45)
+    @weapon = Weapon @x, @y, math.huge, math.pi / 45, false, .45, 4000, 9, 6, 12
 
     @hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
 
@@ -96,6 +96,7 @@ class Walker extends Entity
         @gold[i]\draw!
 
   draw: =>
+    @weapon\drawBullets!
     if not @body\isDestroyed!
       local drawX, drawY
       drawX = @body\getX! - @width / 2
@@ -108,6 +109,5 @@ class Walker extends Entity
       graphics.rectangle "fill", drawX+offset, drawY+offset, @width-offset*2, @height-offset*2
 
     @drawGold!
-    @weapon\drawBullets!
 
 return Walker

@@ -25,13 +25,7 @@ do
         if self.shapeType ~= "circle" then
           return graphics.polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
         else
-          return graphics.circle("fill", self.body:getX(), self.body:getY(), (function()
-            local _base_1 = self.shape
-            local _fn_0 = _base_1.getRadius
-            return function(...)
-              return _fn_0(_base_1, ...)
-            end
-          end)())
+          return graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
         end
       end
     end,

@@ -8,15 +8,16 @@ local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Gold = require("build.gold")
 local Player = require("build.player")
+local Turret = require("build.turret")
 local shake = require("build.shake")
 local Weapon = require("build.weapon")
 local Phone = require("build.phone")
-local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold
+local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold, turret
 local togglePhone
 local initGame
 initGame = function()
   editor = Editor()
-  editor:loadSavedFile("levels/level10.lua")
+  editor:loadSavedFile("levels/level6.lua")
   spawn = {
     x = 64,
     y = 32
@@ -31,7 +32,8 @@ initGame = function()
   love.graphics.setBackgroundColor(230, 237, 247)
   cursorImage = love.graphics.newImage("sprites/cursor.png")
   local cursor = love.mouse.newCursor("sprites/cursor.png", 0, 0)
-  return love.mouse.setCursor(cursor)
+  love.mouse.setCursor(cursor)
+  return love.mouse.setGrabbed(true)
 end
 initGame()
 local viewPort, xoffset, yoffset
@@ -89,11 +91,10 @@ love.load = function()
         phone:draw()
       end
       player:drawHealth()
+      player:drawGold()
       if player.weapon then
-        player.weapon:drawAmmoCount()
+        return player:drawAmmo()
       end
-      love.graphics.setColor(15, 15, 15)
-      return love.graphics.print("Gold: " .. tostring(player.amountOfGold), 15, love.graphics.getHeight() - 100)
     end
   end
   love.mousepressed = function(x, y, button)
@@ -107,6 +108,25 @@ love.load = function()
       end
     end
   end
+  local editorDebugPrint
+  editorDebugPrint = function()
+    local bodies, count
+    bodies = world:getBodyList()
+    count = 0
+    local className
+    local nLasers, nWalkers, nHealth, nFloaters
+    nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
+    local nSpikes, nBounces, nSolids
+    nSpikes, nBounces, nSolids = 0, 0, 0
+    for i = #bodies, 1, -1 do
+      className = bodies[i]:getUserData().__class.__name
+      nLasers = className == "Laser" and nLasers + 1 or nLasers
+      nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
+      nHealth = className == "Health" and nHealth + 1 or nHealth
+      nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
+    end
+    return print(#editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers + nWalkers + nHealth + nFloaters)
+  end
   love.keypressed = function(key)
     if key == "escape" and not toggleEditor then
       editor:saveFile()
@@ -116,22 +136,7 @@ love.load = function()
       cam:lookAt(0, 0)
     end
     if key == "h" then
-      local bodies, count
-      bodies = world:getBodyList()
-      count = 0
-      local className
-      local nLasers, nWalkers, nHealth, nFloaters
-      nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
-      local nSpikes, nBounces, nSolids
-      nSpikes, nBounces, nSolids = 0, 0, 0
-      for i = #bodies, 1, -1 do
-        className = bodies[i]:getUserData().__class.__name
-        nLasers = className == "Laser" and nLasers + 1 or nLasers
-        nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
-        nHealth = className == "Health" and nHealth + 1 or nHealth
-        nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
-      end
-      print(#editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers + nWalkers + nHealth + nFloaters)
+      editorDebugPrint()
     end
     if toggleEditor then
       editor:keypressed(key)
@@ -150,6 +155,7 @@ love.load = function()
       editor.selectedShape = -1
       editor.activeDeleteIndex = -1
       togglePhone = false
+      phone.lastBoughtItem = false
       editor:flushObjectGold()
       if not toggleEditor then
         editor:hotLoad()

@@ -121,9 +121,6 @@ return {
    {116},
    {117},
    {118},
-},
--- Table: {3}
-{
    {119},
    {120},
    {121},
@@ -140,6 +137,9 @@ return {
    {132},
    {133},
    {134},
+},
+-- Table: {3}
+{
    {135},
    {136},
    {137},
@@ -168,583 +168,718 @@ return {
    {160},
    {161},
    {162},
+   {163},
+   {164},
+   {165},
+   {166},
+   {167},
+   {168},
+   {169},
+   {170},
+   {171},
+   {172},
+   {173},
+   {174},
+   {175},
+   {176},
+   {177},
+   {178},
+   {179},
+   {180},
+   {181},
+   {182},
+   {183},
+   {184},
+   {185},
+   {186},
+   {187},
+   {188},
+   {189},
+   {190},
+   {191},
+   {192},
+   {193},
+   {194},
+   {195},
+   {196},
+   {197},
+   {198},
+   {199},
+   {200},
+   {201},
+   {202},
+   {203},
+   {204},
+   {205},
+   {206},
+   {207},
+   {208},
+   {209},
+   {210},
+   {211},
+   {212},
+   {213},
+   {214},
+   {215},
+   {216},
+   {217},
 },
 -- Table: {4}
-{
-   ["vertices"]={163},
-   ["shapeType"]="polygon",
-},
--- Table: {5}
-{
-   ["vertices"]={164},
-   ["shapeType"]="polygon",
-},
--- Table: {6}
-{
-   ["vertices"]={165},
-   ["shapeType"]="polygon",
-},
--- Table: {7}
-{
-   ["vertices"]={166},
-   ["shapeType"]="polygon",
-},
--- Table: {8}
-{
-   ["vertices"]={167},
-   ["shapeType"]="polygon",
-},
--- Table: {9}
-{
-   ["vertices"]={168},
-   ["shapeType"]="polygon",
-},
--- Table: {10}
-{
-   ["vertices"]={169},
-   ["shapeType"]="polygon",
-},
--- Table: {11}
-{
-   ["vertices"]={170},
-   ["shapeType"]="polygon",
-},
--- Table: {12}
-{
-   ["vertices"]={171},
-   ["shapeType"]="spike",
-},
--- Table: {13}
-{
-   ["vertices"]={172},
-   ["shapeType"]="bounce",
-},
--- Table: {14}
-{
-   ["vertices"]={173},
-   ["shapeType"]="polygon",
-},
--- Table: {15}
-{
-   ["vertices"]={174},
-   ["shapeType"]="polygon",
-},
--- Table: {16}
-{
-   ["vertices"]={175},
-   ["shapeType"]="polygon",
-},
--- Table: {17}
-{
-   ["vertices"]={176},
-   ["shapeType"]="polygon",
-},
--- Table: {18}
-{
-   ["vertices"]={177},
-   ["shapeType"]="polygon",
-},
--- Table: {19}
-{
-   ["vertices"]={178},
-   ["shapeType"]="polygon",
-},
--- Table: {20}
-{
-   ["vertices"]={179},
-   ["shapeType"]="polygon",
-},
--- Table: {21}
-{
-   ["vertices"]={180},
-   ["shapeType"]="bounce",
-},
--- Table: {22}
-{
-   ["vertices"]={181},
-   ["shapeType"]="polygon",
-},
--- Table: {23}
-{
-   ["vertices"]={182},
-   ["shapeType"]="polygon",
-},
--- Table: {24}
-{
-   ["vertices"]={183},
-   ["shapeType"]="polygon",
-},
--- Table: {25}
-{
-   ["vertices"]={184},
-   ["shapeType"]="polygon",
-},
--- Table: {26}
-{
-   ["vertices"]={185},
-   ["shapeType"]="polygon",
-},
--- Table: {27}
-{
-   ["vertices"]={186},
-   ["shapeType"]="polygon",
-},
--- Table: {28}
-{
-   ["vertices"]={187},
-   ["shapeType"]="polygon",
-},
--- Table: {29}
-{
-   ["vertices"]={188},
-   ["shapeType"]="polygon",
-},
--- Table: {30}
-{
-   ["vertices"]={189},
-   ["shapeType"]="polygon",
-},
--- Table: {31}
-{
-   ["vertices"]={190},
-   ["shapeType"]="polygon",
-},
--- Table: {32}
-{
-   ["vertices"]={191},
-   ["shapeType"]="polygon",
-},
--- Table: {33}
-{
-   ["vertices"]={192},
-   ["shapeType"]="polygon",
-},
--- Table: {34}
-{
-   ["vertices"]={193},
-   ["shapeType"]="polygon",
-},
--- Table: {35}
-{
-   ["vertices"]={194},
-   ["shapeType"]="polygon",
-},
--- Table: {36}
-{
-   ["vertices"]={195},
-   ["shapeType"]="bounce",
-},
--- Table: {37}
-{
-   ["vertices"]={196},
-   ["shapeType"]="polygon",
-},
--- Table: {38}
-{
-   ["vertices"]={197},
-   ["shapeType"]="bounce",
-},
--- Table: {39}
-{
-   ["vertices"]={198},
-   ["shapeType"]="polygon",
-},
--- Table: {40}
-{
-   ["vertices"]={199},
-   ["shapeType"]="polygon",
-},
--- Table: {41}
-{
-   ["vertices"]={200},
-   ["shapeType"]="polygon",
-},
--- Table: {42}
-{
-   ["vertices"]={201},
-   ["shapeType"]="polygon",
-},
--- Table: {43}
-{
-   ["vertices"]={202},
-   ["shapeType"]="polygon",
-},
--- Table: {44}
-{
-   ["vertices"]={203},
-   ["shapeType"]="polygon",
-},
--- Table: {45}
-{
-   ["vertices"]={204},
-   ["shapeType"]="polygon",
-},
--- Table: {46}
-{
-   ["vertices"]={205},
-   ["shapeType"]="polygon",
-},
--- Table: {47}
-{
-   ["vertices"]={206},
-   ["shapeType"]="bounce",
-},
--- Table: {48}
-{
-   ["vertices"]={207},
-   ["shapeType"]="polygon",
-},
--- Table: {49}
-{
-   ["vertices"]={208},
-   ["shapeType"]="polygon",
-},
--- Table: {50}
-{
-   ["vertices"]={209},
-   ["shapeType"]="polygon",
-},
--- Table: {51}
-{
-   ["vertices"]={210},
-   ["shapeType"]="polygon",
-},
--- Table: {52}
-{
-   ["vertices"]={211},
-   ["shapeType"]="polygon",
-},
--- Table: {53}
-{
-   ["vertices"]={212},
-   ["shapeType"]="polygon",
-},
--- Table: {54}
-{
-   ["vertices"]={213},
-   ["shapeType"]="polygon",
-},
--- Table: {55}
-{
-   ["vertices"]={214},
-   ["shapeType"]="bounce",
-},
--- Table: {56}
-{
-   ["vertices"]={215},
-   ["shapeType"]="polygon",
-},
--- Table: {57}
-{
-   ["vertices"]={216},
-   ["shapeType"]="polygon",
-},
--- Table: {58}
-{
-   ["vertices"]={217},
-   ["shapeType"]="polygon",
-},
--- Table: {59}
 {
    ["vertices"]={218},
    ["shapeType"]="polygon",
 },
--- Table: {60}
+-- Table: {5}
 {
    ["vertices"]={219},
    ["shapeType"]="polygon",
 },
--- Table: {61}
+-- Table: {6}
 {
    ["vertices"]={220},
    ["shapeType"]="polygon",
 },
--- Table: {62}
+-- Table: {7}
 {
    ["vertices"]={221},
    ["shapeType"]="polygon",
 },
--- Table: {63}
+-- Table: {8}
 {
    ["vertices"]={222},
    ["shapeType"]="polygon",
 },
--- Table: {64}
+-- Table: {9}
 {
    ["vertices"]={223},
    ["shapeType"]="polygon",
 },
--- Table: {65}
+-- Table: {10}
 {
    ["vertices"]={224},
    ["shapeType"]="polygon",
 },
--- Table: {66}
+-- Table: {11}
 {
    ["vertices"]={225},
    ["shapeType"]="polygon",
 },
--- Table: {67}
+-- Table: {12}
 {
    ["vertices"]={226},
-   ["shapeType"]="polygon",
+   ["shapeType"]="spike",
 },
--- Table: {68}
+-- Table: {13}
 {
    ["vertices"]={227},
-   ["shapeType"]="polygon",
-},
--- Table: {69}
-{
-   ["vertices"]={228},
    ["shapeType"]="bounce",
 },
--- Table: {70}
+-- Table: {14}
+{
+   ["vertices"]={228},
+   ["shapeType"]="polygon",
+},
+-- Table: {15}
 {
    ["vertices"]={229},
    ["shapeType"]="polygon",
 },
--- Table: {71}
+-- Table: {16}
 {
    ["vertices"]={230},
-   ["shapeType"]="bounce",
+   ["shapeType"]="polygon",
 },
--- Table: {72}
+-- Table: {17}
 {
    ["vertices"]={231},
    ["shapeType"]="polygon",
 },
--- Table: {73}
+-- Table: {18}
 {
    ["vertices"]={232},
    ["shapeType"]="polygon",
 },
--- Table: {74}
+-- Table: {19}
 {
    ["vertices"]={233},
    ["shapeType"]="polygon",
 },
--- Table: {75}
+-- Table: {20}
 {
    ["vertices"]={234},
    ["shapeType"]="polygon",
 },
--- Table: {76}
+-- Table: {21}
 {
    ["vertices"]={235},
    ["shapeType"]="bounce",
 },
--- Table: {77}
+-- Table: {22}
 {
    ["vertices"]={236},
    ["shapeType"]="polygon",
 },
--- Table: {78}
+-- Table: {23}
 {
    ["vertices"]={237},
    ["shapeType"]="polygon",
 },
--- Table: {79}
+-- Table: {24}
 {
    ["vertices"]={238},
    ["shapeType"]="polygon",
 },
--- Table: {80}
+-- Table: {25}
 {
    ["vertices"]={239},
    ["shapeType"]="polygon",
 },
--- Table: {81}
+-- Table: {26}
 {
    ["vertices"]={240},
    ["shapeType"]="polygon",
 },
--- Table: {82}
+-- Table: {27}
 {
    ["vertices"]={241},
    ["shapeType"]="polygon",
 },
--- Table: {83}
+-- Table: {28}
 {
    ["vertices"]={242},
-   ["shapeType"]="bounce",
+   ["shapeType"]="polygon",
 },
--- Table: {84}
+-- Table: {29}
 {
    ["vertices"]={243},
-   ["shapeType"]="bounce",
+   ["shapeType"]="polygon",
 },
--- Table: {85}
+-- Table: {30}
 {
    ["vertices"]={244},
    ["shapeType"]="polygon",
 },
--- Table: {86}
+-- Table: {31}
 {
    ["vertices"]={245},
    ["shapeType"]="polygon",
 },
--- Table: {87}
+-- Table: {32}
 {
    ["vertices"]={246},
    ["shapeType"]="polygon",
 },
--- Table: {88}
+-- Table: {33}
 {
    ["vertices"]={247},
    ["shapeType"]="polygon",
 },
--- Table: {89}
+-- Table: {34}
 {
    ["vertices"]={248},
    ["shapeType"]="polygon",
 },
--- Table: {90}
+-- Table: {35}
 {
    ["vertices"]={249},
-   ["shapeType"]="polygon",
-},
--- Table: {91}
-{
-   ["vertices"]={250},
    ["shapeType"]="bounce",
 },
--- Table: {92}
+-- Table: {36}
+{
+   ["vertices"]={250},
+   ["shapeType"]="polygon",
+},
+-- Table: {37}
 {
    ["vertices"]={251},
    ["shapeType"]="bounce",
 },
--- Table: {93}
+-- Table: {38}
 {
    ["vertices"]={252},
    ["shapeType"]="polygon",
 },
--- Table: {94}
+-- Table: {39}
 {
    ["vertices"]={253},
-   ["shapeType"]="spike",
+   ["shapeType"]="polygon",
 },
--- Table: {95}
+-- Table: {40}
 {
    ["vertices"]={254},
    ["shapeType"]="polygon",
 },
--- Table: {96}
+-- Table: {41}
 {
    ["vertices"]={255},
    ["shapeType"]="polygon",
 },
--- Table: {97}
+-- Table: {42}
 {
    ["vertices"]={256},
    ["shapeType"]="polygon",
 },
--- Table: {98}
+-- Table: {43}
 {
    ["vertices"]={257},
    ["shapeType"]="polygon",
 },
--- Table: {99}
+-- Table: {44}
 {
    ["vertices"]={258},
    ["shapeType"]="polygon",
 },
--- Table: {100}
+-- Table: {45}
 {
    ["vertices"]={259},
-   ["shapeType"]="polygon",
+   ["shapeType"]="bounce",
 },
--- Table: {101}
+-- Table: {46}
 {
    ["vertices"]={260},
    ["shapeType"]="polygon",
 },
--- Table: {102}
+-- Table: {47}
 {
    ["vertices"]={261},
    ["shapeType"]="polygon",
 },
--- Table: {103}
+-- Table: {48}
 {
    ["vertices"]={262},
    ["shapeType"]="polygon",
 },
--- Table: {104}
+-- Table: {49}
 {
    ["vertices"]={263},
-   ["shapeType"]="spike",
+   ["shapeType"]="polygon",
 },
--- Table: {105}
+-- Table: {50}
 {
    ["vertices"]={264},
    ["shapeType"]="polygon",
 },
--- Table: {106}
+-- Table: {51}
 {
    ["vertices"]={265},
    ["shapeType"]="polygon",
 },
--- Table: {107}
+-- Table: {52}
 {
    ["vertices"]={266},
-   ["shapeType"]="polygon",
+   ["shapeType"]="bounce",
 },
--- Table: {108}
+-- Table: {53}
 {
    ["vertices"]={267},
    ["shapeType"]="polygon",
 },
--- Table: {109}
+-- Table: {54}
 {
    ["vertices"]={268},
    ["shapeType"]="polygon",
 },
--- Table: {110}
+-- Table: {55}
 {
    ["vertices"]={269},
    ["shapeType"]="polygon",
 },
--- Table: {111}
+-- Table: {56}
 {
    ["vertices"]={270},
    ["shapeType"]="polygon",
 },
--- Table: {112}
+-- Table: {57}
 {
    ["vertices"]={271},
+   ["shapeType"]="polygon",
+},
+-- Table: {58}
+{
+   ["vertices"]={272},
+   ["shapeType"]="polygon",
+},
+-- Table: {59}
+{
+   ["vertices"]={273},
+   ["shapeType"]="polygon",
+},
+-- Table: {60}
+{
+   ["vertices"]={274},
+   ["shapeType"]="polygon",
+},
+-- Table: {61}
+{
+   ["vertices"]={275},
+   ["shapeType"]="polygon",
+},
+-- Table: {62}
+{
+   ["vertices"]={276},
+   ["shapeType"]="polygon",
+},
+-- Table: {63}
+{
+   ["vertices"]={277},
+   ["shapeType"]="polygon",
+},
+-- Table: {64}
+{
+   ["vertices"]={278},
+   ["shapeType"]="polygon",
+},
+-- Table: {65}
+{
+   ["vertices"]={279},
+   ["shapeType"]="bounce",
+},
+-- Table: {66}
+{
+   ["vertices"]={280},
+   ["shapeType"]="polygon",
+},
+-- Table: {67}
+{
+   ["vertices"]={281},
+   ["shapeType"]="bounce",
+},
+-- Table: {68}
+{
+   ["vertices"]={282},
+   ["shapeType"]="polygon",
+},
+-- Table: {69}
+{
+   ["vertices"]={283},
+   ["shapeType"]="polygon",
+},
+-- Table: {70}
+{
+   ["vertices"]={284},
+   ["shapeType"]="polygon",
+},
+-- Table: {71}
+{
+   ["vertices"]={285},
+   ["shapeType"]="polygon",
+},
+-- Table: {72}
+{
+   ["vertices"]={286},
+   ["shapeType"]="bounce",
+},
+-- Table: {73}
+{
+   ["vertices"]={287},
+   ["shapeType"]="polygon",
+},
+-- Table: {74}
+{
+   ["vertices"]={288},
+   ["shapeType"]="polygon",
+},
+-- Table: {75}
+{
+   ["vertices"]={289},
+   ["shapeType"]="polygon",
+},
+-- Table: {76}
+{
+   ["vertices"]={290},
+   ["shapeType"]="polygon",
+},
+-- Table: {77}
+{
+   ["vertices"]={291},
+   ["shapeType"]="polygon",
+},
+-- Table: {78}
+{
+   ["vertices"]={292},
+   ["shapeType"]="polygon",
+},
+-- Table: {79}
+{
+   ["vertices"]={293},
+   ["shapeType"]="bounce",
+},
+-- Table: {80}
+{
+   ["vertices"]={294},
+   ["shapeType"]="bounce",
+},
+-- Table: {81}
+{
+   ["vertices"]={295},
+   ["shapeType"]="polygon",
+},
+-- Table: {82}
+{
+   ["vertices"]={296},
+   ["shapeType"]="polygon",
+},
+-- Table: {83}
+{
+   ["vertices"]={297},
+   ["shapeType"]="polygon",
+},
+-- Table: {84}
+{
+   ["vertices"]={298},
+   ["shapeType"]="polygon",
+},
+-- Table: {85}
+{
+   ["vertices"]={299},
+   ["shapeType"]="polygon",
+},
+-- Table: {86}
+{
+   ["vertices"]={300},
+   ["shapeType"]="polygon",
+},
+-- Table: {87}
+{
+   ["vertices"]={301},
+   ["shapeType"]="bounce",
+},
+-- Table: {88}
+{
+   ["vertices"]={302},
+   ["shapeType"]="bounce",
+},
+-- Table: {89}
+{
+   ["vertices"]={303},
+   ["shapeType"]="polygon",
+},
+-- Table: {90}
+{
+   ["vertices"]={304},
    ["shapeType"]="spike",
+},
+-- Table: {91}
+{
+   ["vertices"]={305},
+   ["shapeType"]="polygon",
+},
+-- Table: {92}
+{
+   ["vertices"]={306},
+   ["shapeType"]="polygon",
+},
+-- Table: {93}
+{
+   ["vertices"]={307},
+   ["shapeType"]="polygon",
+},
+-- Table: {94}
+{
+   ["vertices"]={308},
+   ["shapeType"]="polygon",
+},
+-- Table: {95}
+{
+   ["vertices"]={309},
+   ["shapeType"]="polygon",
+},
+-- Table: {96}
+{
+   ["vertices"]={310},
+   ["shapeType"]="polygon",
+},
+-- Table: {97}
+{
+   ["vertices"]={311},
+   ["shapeType"]="polygon",
+},
+-- Table: {98}
+{
+   ["vertices"]={312},
+   ["shapeType"]="polygon",
+},
+-- Table: {99}
+{
+   ["vertices"]={313},
+   ["shapeType"]="spike",
+},
+-- Table: {100}
+{
+   ["vertices"]={314},
+   ["shapeType"]="polygon",
+},
+-- Table: {101}
+{
+   ["vertices"]={315},
+   ["shapeType"]="polygon",
+},
+-- Table: {102}
+{
+   ["vertices"]={316},
+   ["shapeType"]="polygon",
+},
+-- Table: {103}
+{
+   ["vertices"]={317},
+   ["shapeType"]="polygon",
+},
+-- Table: {104}
+{
+   ["vertices"]={318},
+   ["shapeType"]="polygon",
+},
+-- Table: {105}
+{
+   ["vertices"]={319},
+   ["shapeType"]="polygon",
+},
+-- Table: {106}
+{
+   ["vertices"]={320},
+   ["shapeType"]="polygon",
+},
+-- Table: {107}
+{
+   ["vertices"]={321},
+   ["shapeType"]="polygon",
+},
+-- Table: {108}
+{
+   ["vertices"]={322},
+   ["shapeType"]="polygon",
+},
+-- Table: {109}
+{
+   ["vertices"]={323},
+   ["shapeType"]="polygon",
+},
+-- Table: {110}
+{
+   ["vertices"]={324},
+   ["shapeType"]="polygon",
+},
+-- Table: {111}
+{
+   ["vertices"]={325},
+   ["shapeType"]="polygon",
+},
+-- Table: {112}
+{
+   ["vertices"]={326},
+   ["shapeType"]="bounce",
 },
 -- Table: {113}
 {
-   ["vertices"]={272},
-   ["shapeType"]="spike",
+   ["vertices"]={327},
+   ["shapeType"]="polygon",
 },
 -- Table: {114}
 {
-   ["vertices"]={273},
-   ["shapeType"]="spike",
+   ["vertices"]={328},
+   ["shapeType"]="polygon",
 },
 -- Table: {115}
 {
-   ["vertices"]={274},
-   ["shapeType"]="spike",
+   ["vertices"]={329},
+   ["shapeType"]="bounce",
 },
 -- Table: {116}
 {
-   ["vertices"]={275},
-   ["shapeType"]="spike",
+   ["vertices"]={330},
+   ["shapeType"]="bounce",
 },
 -- Table: {117}
 {
-   ["vertices"]={276},
-   ["shapeType"]="spike",
+   ["vertices"]={331},
+   ["shapeType"]="polygon",
 },
 -- Table: {118}
 {
-   ["vertices"]={277},
-   ["shapeType"]="spike",
+   ["vertices"]={332},
+   ["shapeType"]="polygon",
 },
 -- Table: {119}
+{
+   ["vertices"]={333},
+   ["shapeType"]="polygon",
+},
+-- Table: {120}
+{
+   ["vertices"]={334},
+   ["shapeType"]="polygon",
+},
+-- Table: {121}
+{
+   ["vertices"]={335},
+   ["shapeType"]="polygon",
+},
+-- Table: {122}
+{
+   ["vertices"]={336},
+   ["shapeType"]="polygon",
+},
+-- Table: {123}
+{
+   ["vertices"]={337},
+   ["shapeType"]="polygon",
+},
+-- Table: {124}
+{
+   ["vertices"]={338},
+   ["shapeType"]="polygon",
+},
+-- Table: {125}
+{
+   ["vertices"]={339},
+   ["shapeType"]="polygon",
+},
+-- Table: {126}
+{
+   ["vertices"]={340},
+   ["shapeType"]="polygon",
+},
+-- Table: {127}
+{
+   ["vertices"]={341},
+   ["shapeType"]="polygon",
+},
+-- Table: {128}
+{
+   ["vertices"]={342},
+   ["shapeType"]="polygon",
+},
+-- Table: {129}
+{
+   ["vertices"]={343},
+   ["shapeType"]="polygon",
+},
+-- Table: {130}
+{
+   ["vertices"]={344},
+   ["shapeType"]="polygon",
+},
+-- Table: {131}
+{
+   ["vertices"]={345},
+   ["shapeType"]="polygon",
+},
+-- Table: {132}
+{
+   ["vertices"]={346},
+   ["shapeType"]="polygon",
+},
+-- Table: {133}
+{
+   ["vertices"]={347},
+   ["shapeType"]="polygon",
+},
+-- Table: {134}
+{
+   ["vertices"]={348},
+   ["shapeType"]="bounce",
+},
+-- Table: {135}
 {
    ["x"]=-32,
    ["y"]=896,
@@ -752,7 +887,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=320,
 },
--- Table: {120}
+-- Table: {136}
 {
    ["x"]=-1568,
    ["y"]=32,
@@ -760,7 +895,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-1856,
 },
--- Table: {121}
+-- Table: {137}
 {
    ["x"]=-608,
    ["y"]=1088,
@@ -768,43 +903,43 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-384,
 },
--- Table: {122}
+-- Table: {138}
 {
    ["y"]=288,
    ["x"]=-2432,
    ["objectType"]="Floater",
 },
--- Table: {123}
+-- Table: {139}
 {
    ["y"]=160,
    ["x"]=-2144,
    ["objectType"]="Floater",
 },
--- Table: {124}
+-- Table: {140}
 {
    ["y"]=64,
    ["x"]=-608,
    ["objectType"]="Health",
 },
--- Table: {125}
+-- Table: {141}
 {
    ["y"]=64,
    ["x"]=-672,
    ["objectType"]="Health",
 },
--- Table: {126}
+-- Table: {142}
 {
    ["y"]=64,
    ["x"]=-544,
    ["objectType"]="Health",
 },
--- Table: {127}
+-- Table: {143}
 {
    ["y"]=0,
    ["x"]=-608,
    ["objectType"]="Health",
 },
--- Table: {128}
+-- Table: {144}
 {
    ["x"]=-2720,
    ["y"]=32,
@@ -812,7 +947,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-2560,
 },
--- Table: {129}
+-- Table: {145}
 {
    ["x"]=-1920,
    ["y"]=-192,
@@ -820,7 +955,7 @@ return {
    ["endX"]=-2048,
    ["objectType"]="Walker",
 },
--- Table: {130}
+-- Table: {146}
 {
    ["x"]=-1504,
    ["y"]=-160,
@@ -828,7 +963,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-1632,
 },
--- Table: {131}
+-- Table: {147}
 {
    ["x"]=-800,
    ["y"]=-832,
@@ -836,7 +971,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-704,
 },
--- Table: {132}
+-- Table: {148}
 {
    ["x"]=-1376,
    ["y"]=-1184,
@@ -844,19 +979,19 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-1216,
 },
--- Table: {133}
+-- Table: {149}
 {
    ["y"]=-1536,
    ["x"]=-2048,
    ["objectType"]="Floater",
 },
--- Table: {134}
+-- Table: {150}
 {
    ["y"]=-1664,
    ["x"]=-2048,
    ["objectType"]="Floater",
 },
--- Table: {135}
+-- Table: {151}
 {
    ["x"]=-2272,
    ["y"]=-1536,
@@ -864,7 +999,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-2336,
 },
--- Table: {136}
+-- Table: {152}
 {
    ["x"]=-2336,
    ["y"]=-2080,
@@ -872,7 +1007,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-2400,
 },
--- Table: {137}
+-- Table: {153}
 {
    ["x"]=-1888,
    ["y"]=-1952,
@@ -880,7 +1015,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-1792,
 },
--- Table: {138}
+-- Table: {154}
 {
    ["x"]=-2016,
    ["y"]=-1280,
@@ -888,7 +1023,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-1856,
 },
--- Table: {139}
+-- Table: {155}
 {
    ["x"]=288,
    ["y"]=352,
@@ -896,7 +1031,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=384,
 },
--- Table: {140}
+-- Table: {156}
 {
    ["x"]=224,
    ["y"]=672,
@@ -904,67 +1039,67 @@ return {
    ["objectType"]="Walker",
    ["endX"]=128,
 },
--- Table: {141}
+-- Table: {157}
 {
    ["y"]=-1312,
    ["x"]=-320,
    ["objectType"]="Health",
 },
--- Table: {142}
+-- Table: {158}
 {
    ["y"]=-1312,
    ["x"]=-288,
    ["objectType"]="Health",
 },
--- Table: {143}
+-- Table: {159}
 {
    ["y"]=-1312,
    ["x"]=-256,
    ["objectType"]="Health",
 },
--- Table: {144}
+-- Table: {160}
 {
    ["y"]=-1344,
    ["x"]=-256,
    ["objectType"]="Health",
 },
--- Table: {145}
+-- Table: {161}
 {
    ["y"]=-1344,
    ["x"]=-288,
    ["objectType"]="Health",
 },
--- Table: {146}
+-- Table: {162}
 {
    ["y"]=-1344,
    ["x"]=-320,
    ["objectType"]="Health",
 },
--- Table: {147}
+-- Table: {163}
 {
    ["y"]=736,
    ["x"]=-1920,
    ["objectType"]="Health",
 },
--- Table: {148}
+-- Table: {164}
 {
    ["y"]=736,
    ["x"]=-1760,
    ["objectType"]="Health",
 },
--- Table: {149}
+-- Table: {165}
 {
    ["y"]=736,
    ["x"]=-1600,
    ["objectType"]="Health",
 },
--- Table: {150}
+-- Table: {166}
 {
    ["y"]=736,
    ["x"]=-1440,
    ["objectType"]="Health",
 },
--- Table: {151}
+-- Table: {167}
 {
    ["x"]=320,
    ["y"]=-1536,
@@ -972,7 +1107,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=192,
 },
--- Table: {152}
+-- Table: {168}
 {
    ["x"]=-256,
    ["y"]=-1088,
@@ -980,7 +1115,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=-160,
 },
--- Table: {153}
+-- Table: {169}
 {
    ["x"]=448,
    ["y"]=-1248,
@@ -988,7 +1123,7 @@ return {
    ["objectType"]="Walker",
    ["endX"]=352,
 },
--- Table: {154}
+-- Table: {170}
 {
    ["x"]=224,
    ["y"]=-960,
@@ -996,19 +1131,13 @@ return {
    ["objectType"]="Walker",
    ["endX"]=128,
 },
--- Table: {155}
-{
-   ["y"]=800,
-   ["x"]=-672,
-   ["objectType"]="Health",
-},
--- Table: {156}
+-- Table: {171}
 {
    ["y"]=800,
    ["x"]=-576,
    ["objectType"]="Health",
 },
--- Table: {157}
+-- Table: {172}
 {
    ["x"]=-384,
    ["y"]=832,
@@ -1016,7 +1145,7 @@ return {
    ["objectType"]="Laser",
    ["endX"]=-192,
 },
--- Table: {158}
+-- Table: {173}
 {
    ["x"]=-192,
    ["y"]=-128,
@@ -1024,19 +1153,19 @@ return {
    ["objectType"]="Laser",
    ["endX"]=-320,
 },
--- Table: {159}
+-- Table: {174}
 {
    ["y"]=-160,
    ["x"]=-2688,
    ["objectType"]="Health",
 },
--- Table: {160}
+-- Table: {175}
 {
    ["y"]=-160,
    ["x"]=-2592,
    ["objectType"]="Health",
 },
--- Table: {161}
+-- Table: {176}
 {
    ["x"]=-2016,
    ["y"]=-160,
@@ -1044,7 +1173,7 @@ return {
    ["objectType"]="Laser",
    ["endX"]=-1984,
 },
--- Table: {162}
+-- Table: {177}
 {
    ["x"]=-1504,
    ["y"]=96,
@@ -1052,195 +1181,455 @@ return {
    ["objectType"]="Laser",
    ["endX"]=-1536,
 },
--- Table: {163}
-{
-   -704,
-   -704,
-   -1152,
-   -704,
-   -1152,
-   -192,
-   -704,
-   -192,
-},
--- Table: {164}
-{
-   480,
-   -32,
-   480,
-   928,
-   384,
-   928,
-   384,
-   -32,
-},
--- Table: {165}
-{
-   480,
-   1344,
-   -96,
-   1344,
-   -96,
-   928,
-   480,
-   928,
-},
--- Table: {166}
-{
-   -96,
-   1120,
-   -640,
-   1120,
-   -640,
-   1344,
-   -96,
-   1344,
-},
--- Table: {167}
-{
-   -1376,
-   96,
-   -2048,
-   96,
-   -2048,
-   544,
-   -1376,
-   544,
-},
--- Table: {168}
-{
-   -1376,
-   384,
-   -1376,
-   96,
-   -1280,
-   96,
-   -1280,
-   384,
-},
--- Table: {169}
-{
-   -352,
-   -192,
-   -352,
-   96,
-   -480,
-   96,
-   -480,
-   -192,
-},
--- Table: {170}
-{
-   -1856,
-   960,
-   -1856,
-   1344,
-   -2048,
-   1344,
-   -2048,
-   960,
-},
--- Table: {171}
-{
-   -480,
-   320,
-   -480,
-   384,
-   -1280,
-   384,
-   -1280,
-   320,
-},
--- Table: {172}
-{
-   -2176,
-   1344,
-   -2048,
-   1344,
-   -2048,
-   992,
-   -2176,
-   992,
-},
--- Table: {173}
-{
-   -480,
-   768,
-   -352,
-   768,
-   -352,
-   96,
-   -480,
-   96,
-},
--- Table: {174}
-{
-   128,
-   768,
-   -192,
-   768,
-   -192,
-   96,
-   128,
-   96,
-},
--- Table: {175}
-{
-   -192,
-   416,
-   -352,
-   416,
-   -352,
-   768,
-   -192,
-   768,
-},
--- Table: {176}
-{
-   1184,
-   1344,
-   1184,
-   2048,
-   -3136,
-   2048,
-   -3136,
-   1344,
-},
--- Table: {177}
-{
-   1184,
-   -928,
-   480,
-   -928,
-   480,
-   1344,
-   1184,
-   1344,
-},
 -- Table: {178}
 {
-   -2752,
-   1344,
-   -2752,
-   672,
-   -2176,
-   672,
-   -2176,
-   1344,
+   ["y"]=800,
+   ["x"]=-608,
+   ["objectType"]="Health",
 },
 -- Table: {179}
 {
-   -3904,
-   672,
-   -3904,
-   1344,
-   -2752,
-   1344,
-   -2752,
-   672,
+   ["y"]=-96,
+   ["x"]=352,
+   ["objectType"]="Turret",
 },
 -- Table: {180}
 {
+   ["y"]=576,
+   ["x"]=352,
+   ["objectType"]="Turret",
+},
+-- Table: {181}
+{
+   ["y"]=256,
+   ["x"]=128,
+   ["objectType"]="Turret",
+},
+-- Table: {182}
+{
+   ["y"]=352,
+   ["x"]=-2176,
+   ["objectType"]="Turret",
+},
+-- Table: {183}
+{
+   ["y"]=-96,
+   ["x"]=-2656,
+   ["objectType"]="Turret",
+},
+-- Table: {184}
+{
+   ["y"]=-448,
+   ["x"]=-1792,
+   ["objectType"]="Turret",
+},
+-- Table: {185}
+{
+   ["y"]=-1536,
+   ["x"]=-352,
+   ["objectType"]="Turret",
+},
+-- Table: {186}
+{
+   ["y"]=-1056,
+   ["x"]=320,
+   ["objectType"]="Turret",
+},
+-- Table: {187}
+{
+   ["y"]=768,
+   ["x"]=-1024,
+   ["objectType"]="Turret",
+},
+-- Table: {188}
+{
+   ["y"]=544,
+   ["x"]=-1696,
+   ["objectType"]="Turret",
+},
+-- Table: {189}
+{
+   ["y"]=-128,
+   ["x"]=-2016,
+   ["objectType"]="Turret",
+},
+-- Table: {190}
+{
+   ["y"]=-192,
+   ["x"]=-1088,
+   ["objectType"]="Turret",
+},
+-- Table: {191}
+{
+   ["y"]=-192,
+   ["x"]=-896,
+   ["objectType"]="Turret",
+},
+-- Table: {192}
+{
+   ["y"]=-1248,
+   ["x"]=-800,
+   ["objectType"]="Turret",
+},
+-- Table: {193}
+{
+   ["y"]=-1408,
+   ["x"]=-1600,
+   ["objectType"]="Turret",
+},
+-- Table: {194}
+{
+   ["y"]=-1888,
+   ["x"]=-1504,
+   ["objectType"]="Turret",
+},
+-- Table: {195}
+{
+   ["y"]=-1888,
+   ["x"]=-1312,
+   ["objectType"]="Turret",
+},
+-- Table: {196}
+{
+   ["y"]=-1888,
+   ["x"]=-1120,
+   ["objectType"]="Turret",
+},
+-- Table: {197}
+{
+   ["y"]=-1888,
+   ["x"]=-928,
+   ["objectType"]="Turret",
+},
+-- Table: {198}
+{
+   ["y"]=-1888,
+   ["x"]=-1696,
+   ["objectType"]="Turret",
+},
+-- Table: {199}
+{
+   ["y"]=-2528,
+   ["x"]=-512,
+   ["objectType"]="Turret",
+},
+-- Table: {200}
+{
+   ["y"]=-2624,
+   ["x"]=-1536,
+   ["objectType"]="Turret",
+},
+-- Table: {201}
+{
+   ["x"]=-1472,
+   ["y"]=-2400,
+   ["endY"]=-2400,
+   ["objectType"]="Walker",
+   ["endX"]=-1184,
+},
+-- Table: {202}
+{
+   ["x"]=-800,
+   ["y"]=-2400,
+   ["endY"]=-2400,
+   ["objectType"]="Walker",
+   ["endX"]=-896,
+},
+-- Table: {203}
+{
+   ["x"]=-960,
+   ["y"]=-2400,
+   ["endY"]=-2400,
+   ["objectType"]="Walker",
+   ["endX"]=-1056,
+},
+-- Table: {204}
+{
+   ["y"]=-1696,
+   ["x"]=-1568,
+   ["objectType"]="Health",
+},
+-- Table: {205}
+{
+   ["y"]=-1696,
+   ["x"]=-1312,
+   ["objectType"]="Health",
+},
+-- Table: {206}
+{
+   ["y"]=-1696,
+   ["x"]=-1088,
+   ["objectType"]="Health",
+},
+-- Table: {207}
+{
+   ["y"]=-2368,
+   ["x"]=-2240,
+   ["objectType"]="Health",
+},
+-- Table: {208}
+{
+   ["y"]=-2368,
+   ["x"]=-2176,
+   ["objectType"]="Health",
+},
+-- Table: {209}
+{
+   ["y"]=-2368,
+   ["x"]=-2112,
+   ["objectType"]="Health",
+},
+-- Table: {210}
+{
+   ["x"]=-576,
+   ["y"]=-2624,
+   ["endY"]=-2624,
+   ["objectType"]="Walker",
+   ["endX"]=-448,
+},
+-- Table: {211}
+{
+   ["x"]=-416,
+   ["y"]=-2624,
+   ["endY"]=-2624,
+   ["objectType"]="Walker",
+   ["endX"]=-256,
+},
+-- Table: {212}
+{
+   ["x"]=-224,
+   ["y"]=-2624,
+   ["endY"]=-2624,
+   ["objectType"]="Walker",
+   ["endX"]=-64,
+},
+-- Table: {213}
+{
+   ["x"]=64,
+   ["y"]=-2624,
+   ["endY"]=-2624,
+   ["objectType"]="Walker",
+   ["endX"]=-32,
+},
+-- Table: {214}
+{
+   ["x"]=-1376,
+   ["y"]=-1664,
+   ["endY"]=-1888,
+   ["objectType"]="Laser",
+   ["endX"]=-1408,
+},
+-- Table: {215}
+{
+   ["x"]=-1024,
+   ["y"]=-1664,
+   ["endY"]=-1888,
+   ["objectType"]="Laser",
+   ["endX"]=-992,
+},
+-- Table: {216}
+{
+   ["y"]=-2528,
+   ["x"]=-1152,
+   ["objectType"]="Turret",
+},
+-- Table: {217}
+{
+   ["x"]=-1216,
+   ["y"]=-2592,
+   ["endY"]=-2592,
+   ["endX"]=-1056,
+   ["objectType"]="Walker",
+},
+-- Table: {218}
+{
+   -704,
+   -704,
+   -1152,
+   -704,
+   -1152,
+   -192,
+   -704,
+   -192,
+},
+-- Table: {219}
+{
+   480,
+   -32,
+   480,
+   928,
+   384,
+   928,
+   384,
+   -32,
+},
+-- Table: {220}
+{
+   480,
+   1344,
+   -96,
+   1344,
+   -96,
+   928,
+   480,
+   928,
+},
+-- Table: {221}
+{
+   -96,
+   1120,
+   -640,
+   1120,
+   -640,
+   1344,
+   -96,
+   1344,
+},
+-- Table: {222}
+{
+   -1376,
+   96,
+   -2048,
+   96,
+   -2048,
+   544,
+   -1376,
+   544,
+},
+-- Table: {223}
+{
+   -1376,
+   384,
+   -1376,
+   96,
+   -1280,
+   96,
+   -1280,
+   384,
+},
+-- Table: {224}
+{
+   -352,
+   -192,
+   -352,
+   96,
+   -480,
+   96,
+   -480,
+   -192,
+},
+-- Table: {225}
+{
+   -1856,
+   960,
+   -1856,
+   1344,
+   -2048,
+   1344,
+   -2048,
+   960,
+},
+-- Table: {226}
+{
+   -480,
+   320,
+   -480,
+   384,
+   -1280,
+   384,
+   -1280,
+   320,
+},
+-- Table: {227}
+{
+   -2176,
+   1344,
+   -2048,
+   1344,
+   -2048,
+   992,
+   -2176,
+   992,
+},
+-- Table: {228}
+{
+   -480,
+   768,
+   -352,
+   768,
+   -352,
+   96,
+   -480,
+   96,
+},
+-- Table: {229}
+{
+   128,
+   768,
+   -192,
+   768,
+   -192,
+   96,
+   128,
+   96,
+},
+-- Table: {230}
+{
+   -192,
+   416,
+   -352,
+   416,
+   -352,
+   768,
+   -192,
+   768,
+},
+-- Table: {231}
+{
+   1184,
+   1344,
+   1184,
+   2048,
+   -3136,
+   2048,
+   -3136,
+   1344,
+},
+-- Table: {232}
+{
+   1184,
+   -928,
+   480,
+   -928,
+   480,
+   1344,
+   1184,
+   1344,
+},
+-- Table: {233}
+{
+   -2752,
+   1344,
+   -2752,
+   672,
+   -2176,
+   672,
+   -2176,
+   1344,
+},
+-- Table: {234}
+{
+   -3904,
+   672,
+   -3904,
+   1344,
+   -2752,
+   1344,
+   -2752,
+   672,
+},
+-- Table: {235}
+{
    -2464,
    672,
    -2464,
@@ -1250,7 +1639,7 @@ return {
    -2688,
    672,
 },
--- Table: {181}
+-- Table: {236}
 {
    -2048,
    352,
@@ -1261,7 +1650,7 @@ return {
    -2048,
    320,
 },
--- Table: {182}
+-- Table: {237}
 {
    -480,
    128,
@@ -1270,7 +1659,7 @@ return {
    -672,
    128,
 },
--- Table: {183}
+-- Table: {238}
 {
    -480,
    96,
@@ -1281,7 +1670,7 @@ return {
    -736,
    96,
 },
--- Table: {184}
+-- Table: {239}
 {
    -2752,
    256,
@@ -1292,7 +1681,7 @@ return {
    -2752,
    160,
 },
--- Table: {185}
+-- Table: {240}
 {
    -1920,
    -576,
@@ -1303,7 +1692,7 @@ return {
    -1920,
    -704,
 },
--- Table: {186}
+-- Table: {241}
 {
    -3776,
    672,
@@ -1314,7 +1703,7 @@ return {
    -2752,
    672,
 },
--- Table: {187}
+-- Table: {242}
 {
    -3776,
    -352,
@@ -1325,7 +1714,7 @@ return {
    -2752,
    -352,
 },
--- Table: {188}
+-- Table: {243}
 {
    -1920,
    -576,
@@ -1336,7 +1725,7 @@ return {
    -1920,
    -704,
 },
--- Table: {189}
+-- Table: {244}
 {
    -2752,
    -448,
@@ -1347,7 +1736,7 @@ return {
    -1152,
    -448,
 },
--- Table: {190}
+-- Table: {245}
 {
    -1152,
    -448,
@@ -1356,7 +1745,7 @@ return {
    -1408,
    -448,
 },
--- Table: {191}
+-- Table: {246}
 {
    -480,
    -896,
@@ -1367,7 +1756,7 @@ return {
    -480,
    -192,
 },
--- Table: {192}
+-- Table: {247}
 {
    -2752,
    256,
@@ -1376,18 +1765,7 @@ return {
    -2560,
    256,
 },
--- Table: {193}
-{
-   -1920,
-   -160,
-   -1920,
-   -128,
-   -2048,
-   -128,
-   -2048,
-   -160,
-},
--- Table: {194}
+-- Table: {248}
 {
    -704,
    -256,
@@ -1398,7 +1776,7 @@ return {
    -704,
    -192,
 },
--- Table: {195}
+-- Table: {249}
 {
    -704,
    -288,
@@ -1409,7 +1787,7 @@ return {
    -704,
    -256,
 },
--- Table: {196}
+-- Table: {250}
 {
    -480,
    96,
@@ -1420,7 +1798,7 @@ return {
    -512,
    96,
 },
--- Table: {197}
+-- Table: {251}
 {
    -480,
    32,
@@ -1431,7 +1809,7 @@ return {
    -512,
    32,
 },
--- Table: {198}
+-- Table: {252}
 {
    -352,
    -896,
@@ -1442,7 +1820,7 @@ return {
    -480,
    -896,
 },
--- Table: {199}
+-- Table: {253}
 {
    -3520,
    -704,
@@ -1453,7 +1831,7 @@ return {
    -1216,
    -704,
 },
--- Table: {200}
+-- Table: {254}
 {
    -704,
    -704,
@@ -1464,7 +1842,7 @@ return {
    -800,
    -704,
 },
--- Table: {201}
+-- Table: {255}
 {
    -480,
    -1728,
@@ -1475,18 +1853,7 @@ return {
    -480,
    -1312,
 },
--- Table: {202}
-{
-   -1984,
-   -1728,
-   -1984,
-   -1408,
-   -480,
-   -1408,
-   -480,
-   -1728,
-},
--- Table: {203}
+-- Table: {256}
 {
    -1824,
    -1152,
@@ -1495,7 +1862,7 @@ return {
    -1632,
    -1152,
 },
--- Table: {204}
+-- Table: {257}
 {
    -1824,
    -1152,
@@ -1506,7 +1873,7 @@ return {
    -1824,
    -1248,
 },
--- Table: {205}
+-- Table: {258}
 {
    -3680,
    -1152,
@@ -1517,7 +1884,7 @@ return {
    -2336,
    -1152,
 },
--- Table: {206}
+-- Table: {259}
 {
    -2304,
    -1248,
@@ -1528,7 +1895,7 @@ return {
    -2304,
    -1280,
 },
--- Table: {207}
+-- Table: {260}
 {
    -2336,
    -1472,
@@ -1539,7 +1906,7 @@ return {
    -2336,
    -1504,
 },
--- Table: {208}
+-- Table: {261}
 {
    -2912,
    -2048,
@@ -1550,7 +1917,7 @@ return {
    -2528,
    -2048,
 },
--- Table: {209}
+-- Table: {262}
 {
    -1792,
    -2272,
@@ -1559,18 +1926,7 @@ return {
    -2048,
    -2272,
 },
--- Table: {210}
-{
-   -2912,
-   -2272,
-   -2912,
-   -2496,
-   -1792,
-   -2496,
-   -1792,
-   -2272,
-},
--- Table: {211}
+-- Table: {263}
 {
    -1792,
    -2496,
@@ -1581,7 +1937,7 @@ return {
    -1792,
    -1888,
 },
--- Table: {212}
+-- Table: {264}
 {
    -1792,
    -1888,
@@ -1592,7 +1948,7 @@ return {
    -1792,
    -1920,
 },
--- Table: {213}
+-- Table: {265}
 {
    -2528,
    -2048,
@@ -1603,7 +1959,7 @@ return {
    -2400,
    -2048,
 },
--- Table: {214}
+-- Table: {266}
 {
    -352,
    160,
@@ -1614,7 +1970,7 @@ return {
    -352,
    128,
 },
--- Table: {215}
+-- Table: {267}
 {
    -256,
    160,
@@ -1625,7 +1981,7 @@ return {
    -352,
    160,
 },
--- Table: {216}
+-- Table: {268}
 {
    -192,
    96,
@@ -1636,7 +1992,7 @@ return {
    -256,
    96,
 },
--- Table: {217}
+-- Table: {269}
 {
    512,
    -928,
@@ -1647,7 +2003,7 @@ return {
    352,
    -928,
 },
--- Table: {218}
+-- Table: {270}
 {
    1312,
    -928,
@@ -1658,7 +2014,7 @@ return {
    512,
    -928,
 },
--- Table: {219}
+-- Table: {271}
 {
    1312,
    -1728,
@@ -1669,18 +2025,7 @@ return {
    -352,
    -1728,
 },
--- Table: {220}
-{
-   -224,
-   -2976,
-   -224,
-   -2336,
-   -1536,
-   -2336,
-   -1536,
-   -2976,
-},
--- Table: {221}
+-- Table: {272}
 {
    -1536,
    -3040,
@@ -1691,7 +2036,7 @@ return {
    -1536,
    -2496,
 },
--- Table: {222}
+-- Table: {273}
 {
    -3680,
    -2048,
@@ -1702,7 +2047,7 @@ return {
    -2912,
    -2048,
 },
--- Table: {223}
+-- Table: {274}
 {
    384,
    416,
@@ -1713,7 +2058,7 @@ return {
    384,
    384,
 },
--- Table: {224}
+-- Table: {275}
 {
    128,
    704,
@@ -1724,7 +2069,7 @@ return {
    224,
    704,
 },
--- Table: {225}
+-- Table: {276}
 {
    128,
    128,
@@ -1735,7 +2080,7 @@ return {
    192,
    128,
 },
--- Table: {226}
+-- Table: {277}
 {
    -1376,
    384,
@@ -1746,7 +2091,7 @@ return {
    -1376,
    544,
 },
--- Table: {227}
+-- Table: {278}
 {
    384,
    768,
@@ -1757,7 +2102,7 @@ return {
    384,
    832,
 },
--- Table: {228}
+-- Table: {279}
 {
    384,
    736,
@@ -1768,7 +2113,7 @@ return {
    352,
    736,
 },
--- Table: {229}
+-- Table: {280}
 {
    128,
    448,
@@ -1779,7 +2124,7 @@ return {
    128,
    512,
 },
--- Table: {230}
+-- Table: {281}
 {
    160,
    416,
@@ -1790,7 +2135,7 @@ return {
    160,
    448,
 },
--- Table: {231}
+-- Table: {282}
 {
    384,
    192,
@@ -1801,7 +2146,7 @@ return {
    384,
    256,
 },
--- Table: {232}
+-- Table: {283}
 {
    480,
    -32,
@@ -1812,7 +2157,7 @@ return {
    384,
    -32,
 },
--- Table: {233}
+-- Table: {284}
 {
    128,
    -448,
@@ -1823,7 +2168,7 @@ return {
    128,
    -96,
 },
--- Table: {234}
+-- Table: {285}
 {
    128,
    -192,
@@ -1832,7 +2177,7 @@ return {
    128,
    -96,
 },
--- Table: {235}
+-- Table: {286}
 {
    384,
    160,
@@ -1843,7 +2188,7 @@ return {
    352,
    160,
 },
--- Table: {236}
+-- Table: {287}
 {
    -160,
    -1056,
@@ -1854,7 +2199,7 @@ return {
    -352,
    -1056,
 },
--- Table: {237}
+-- Table: {288}
 {
    -224,
    -1312,
@@ -1865,7 +2210,7 @@ return {
    -352,
    -1312,
 },
--- Table: {238}
+-- Table: {289}
 {
    512,
    -1696,
@@ -1876,7 +2221,7 @@ return {
    352,
    -1696,
 },
--- Table: {239}
+-- Table: {290}
 {
    192,
    -1472,
@@ -1887,7 +2232,7 @@ return {
    352,
    -1472,
 },
--- Table: {240}
+-- Table: {291}
 {
    -480,
    832,
@@ -1898,7 +2243,7 @@ return {
    -544,
    832,
 },
--- Table: {241}
+-- Table: {292}
 {
    -352,
    -192,
@@ -1909,7 +2254,7 @@ return {
    -352,
    -128,
 },
--- Table: {242}
+-- Table: {293}
 {
    -352,
    -224,
@@ -1920,7 +2265,7 @@ return {
    -352,
    -192,
 },
--- Table: {243}
+-- Table: {294}
 {
    -192,
    -448,
@@ -1931,7 +2276,7 @@ return {
    -192,
    -480,
 },
--- Table: {244}
+-- Table: {295}
 {
    -224,
    -704,
@@ -1942,7 +2287,7 @@ return {
    -352,
    -704,
 },
--- Table: {245}
+-- Table: {296}
 {
    -352,
    -1024,
@@ -1951,7 +2296,7 @@ return {
    -352,
    -896,
 },
--- Table: {246}
+-- Table: {297}
 {
    -352,
    -672,
@@ -1960,7 +2305,7 @@ return {
    -224,
    -672,
 },
--- Table: {247}
+-- Table: {298}
 {
    480,
    -864,
@@ -1971,7 +2316,7 @@ return {
    128,
    -864,
 },
--- Table: {248}
+-- Table: {299}
 {
    480,
    -928,
@@ -1982,7 +2327,7 @@ return {
    352,
    -928,
 },
--- Table: {249}
+-- Table: {300}
 {
    -480,
    -544,
@@ -1993,7 +2338,7 @@ return {
    -480,
    -480,
 },
--- Table: {250}
+-- Table: {301}
 {
    -480,
    -576,
@@ -2004,7 +2349,7 @@ return {
    -512,
    -576,
 },
--- Table: {251}
+-- Table: {302}
 {
    -1056,
    -896,
@@ -2015,7 +2360,7 @@ return {
    -1056,
    -928,
 },
--- Table: {252}
+-- Table: {303}
 {
    -1056,
    -896,
@@ -2026,7 +2371,7 @@ return {
    -1216,
    -896,
 },
--- Table: {253}
+-- Table: {304}
 {
    -1056,
    -704,
@@ -2037,7 +2382,7 @@ return {
    -1056,
    -768,
 },
--- Table: {254}
+-- Table: {305}
 {
    -768,
    -1408,
@@ -2046,7 +2391,7 @@ return {
    -896,
    -1408,
 },
--- Table: {255}
+-- Table: {306}
 {
    -480,
    -1408,
@@ -2057,7 +2402,7 @@ return {
    -768,
    -1408,
 },
--- Table: {256}
+-- Table: {307}
 {
    -3168,
    -2880,
@@ -2068,7 +2413,7 @@ return {
    -3360,
    -2880,
 },
--- Table: {257}
+-- Table: {308}
 {
    -1312,
    960,
@@ -2079,18 +2424,7 @@ return {
    -1856,
    960,
 },
--- Table: {258}
-{
-   -480,
-   896,
-   -480,
-   928,
-   -704,
-   928,
-   -704,
-   896,
-},
--- Table: {259}
+-- Table: {309}
 {
    -544,
    896,
@@ -2101,7 +2435,7 @@ return {
    -480,
    896,
 },
--- Table: {260}
+-- Table: {310}
 {
    -480,
    768,
@@ -2110,7 +2444,7 @@ return {
    -480,
    928,
 },
--- Table: {261}
+-- Table: {311}
 {
    -1184,
    1056,
@@ -2121,7 +2455,7 @@ return {
    -1312,
    1056,
 },
--- Table: {262}
+-- Table: {312}
 {
    -1312,
    1056,
@@ -2130,7 +2464,7 @@ return {
    -1216,
    1056,
 },
--- Table: {263}
+-- Table: {313}
 {
    -1184,
    1344,
@@ -2141,7 +2475,7 @@ return {
    -1184,
    1280,
 },
--- Table: {264}
+-- Table: {314}
 {
    -1952,
    768,
@@ -2152,7 +2486,7 @@ return {
    -1408,
    768,
 },
--- Table: {265}
+-- Table: {315}
 {
    -96,
    1120,
@@ -2161,7 +2495,7 @@ return {
    -96,
    928,
 },
--- Table: {266}
+-- Table: {316}
 {
    -2528,
    -96,
@@ -2172,7 +2506,7 @@ return {
    -2752,
    -96,
 },
--- Table: {267}
+-- Table: {317}
 {
    -2752,
    -448,
@@ -2181,7 +2515,7 @@ return {
    -2752,
    -224,
 },
--- Table: {268}
+-- Table: {318}
 {
    -1504,
    -96,
@@ -2192,103 +2526,330 @@ return {
    -1632,
    -96,
 },
--- Table: {269}
+-- Table: {319}
 {
-   -1536,
-   -2336,
-   -768,
-   -2336,
-   -768,
-   -1888,
-   -1536,
-   -1888,
+   -640,
+   928,
+   -640,
+   896,
+   -480,
+   896,
+   -480,
+   928,
 },
--- Table: {270}
+-- Table: {320}
 {
-   1312,
-   -2336,
-   1312,
-   -1728,
-   -768,
-   -1728,
-   -768,
-   -2336,
+   160,
+   -128,
+   160,
+   0,
+   128,
+   0,
+   128,
+   -96,
 },
--- Table: {271}
+-- Table: {321}
 {
-   -1344,
-   -1888,
-   -1344,
-   -1728,
-   -1376,
-   -1728,
-   -1376,
-   -1888,
-},
--- Table: {272}
-{
-   -1312,
-   -1824,
-   -1312,
-   -1792,
-   -1344,
-   -1792,
-   -1344,
-   -1824,
-},
--- Table: {273}
-{
-   -1344,
-   -1856,
-   -1344,
-   -1888,
-   -1248,
-   -1888,
-   -1248,
-   -1856,
-},
--- Table: {274}
-{
-   -1184,
-   -1888,
-   -1184,
-   -1728,
-   -1216,
-   -1728,
-   -1216,
-   -1888,
-},
--- Table: {275}
-{
-   -1120,
-   -1888,
-   -1120,
-   -1728,
-   -1152,
-   -1728,
-   -1152,
-   -1888,
-},
--- Table: {276}
-{
-   -1120,
-   -1824,
+   -960,
+   736,
+   -960,
+   768,
    -1056,
+   768,
+   -1056,
+   736,
+},
+-- Table: {322}
+{
+   -1920,
+   -160,
+   -1920,
+   -128,
+   -2080,
+   -128,
+   -2080,
+   -160,
+},
+-- Table: {323}
+{
+   -480,
+   -1664,
+   -2016,
+   -1664,
+   -2016,
+   -1408,
+   -480,
+   -1408,
+},
+-- Table: {324}
+{
+   -1536,
+   -2336,
+   -768,
+   -2336,
+   -768,
+   -1888,
+   -1536,
+   -1888,
+},
+-- Table: {325}
+{
+   1440,
    -1728,
+   1440,
+   -2336,
+   -480,
+   -2336,
+   -480,
+   -1728,
+},
+-- Table: {326}
+{
+   -736,
+   -1664,
+   -512,
+   -1664,
+   -512,
+   -1696,
+   -736,
+   -1696,
+},
+-- Table: {327}
+{
+   -480,
+   -1952,
+   -512,
+   -1952,
+   -512,
+   -1920,
+   -480,
+   -1888,
+},
+-- Table: {328}
+{
+   -768,
+   -2240,
+   -736,
+   -2240,
+   -736,
+   -2208,
+   -768,
+   -2176,
+},
+-- Table: {329}
+{
+   -768,
+   -2240,
+   -736,
+   -2240,
+   -736,
+   -2272,
+   -768,
+   -2272,
+},
+-- Table: {330}
+{
+   -480,
+   -1984,
+   -480,
+   -1952,
+   -512,
+   -1952,
+   -512,
+   -1984,
+},
+-- Table: {331}
+{
+   -480,
+   -2592,
+   -608,
+   -2592,
+   -608,
+   -2560,
+   -480,
+   -2560,
+},
+-- Table: {332}
+{
+   1152,
+   -2592,
+   1152,
+   -2336,
+   -480,
+   -2336,
+   -480,
+   -2592,
+},
+-- Table: {333}
+{
+   -1536,
+   -3008,
+   -1216,
+   -3008,
+   -1536,
+   -2688,
+},
+-- Table: {334}
+{
+   -288,
+   -3360,
+   -288,
+   -3008,
+   -1536,
+   -3008,
+   -1536,
+   -3360,
+},
+-- Table: {335}
+{
+   -640,
+   -3008,
+   -640,
+   -2816,
+   -832,
+   -3008,
+},
+-- Table: {336}
+{
+   128,
+   -3008,
+   128,
+   -2816,
+   -640,
+   -2816,
+   -640,
+   -3008,
+},
+-- Table: {337}
+{
+   576,
+   -3552,
+   576,
+   -3008,
+   -288,
+   -3008,
+   -288,
+   -3552,
+},
+-- Table: {338}
+{
+   -2176,
+   -3040,
+   -2176,
+   -3680,
+   -1536,
+   -3680,
+   -1536,
+   -3040,
+},
+-- Table: {339}
+{
+   -2912,
+   -2272,
+   -2912,
+   -2496,
+   -2400,
+   -2496,
+   -2400,
+   -2272,
+},
+-- Table: {340}
+{
+   -1792,
+   -2272,
+   -1792,
+   -2496,
+   -2048,
+   -2496,
+   -2048,
+   -2272,
+},
+-- Table: {341}
+{
+   -2368,
+   -2240,
+   -2368,
+   -2208,
+   -2400,
+   -2208,
+   -2400,
+   -2240,
+},
+-- Table: {342}
+{
+   -2272,
+   -2208,
+   -2272,
+   -2336,
+   -2304,
+   -2336,
+   -2304,
+   -2208,
+},
+-- Table: {343}
+{
+   -2048,
+   -2336,
+   -2048,
+   -2272,
+   -2272,
+   -2272,
+   -2272,
+   -2336,
+},
+-- Table: {344}
+{
+   -1216,
+   -3008,
+   -832,
+   -3008,
+   -640,
+   -2816,
+   -1408,
+   -2816,
+},
+-- Table: {345}
+{
+   608,
+   -3008,
+   608,
+   -2592,
+   128,
+   -2592,
+   128,
+   -3008,
+},
+-- Table: {346}
+{
+   -1248,
+   -2528,
+   -1248,
+   -2560,
    -1024,
-   -1728,
-   -1120,
-   -1888,
+   -2560,
+   -1024,
+   -2528,
 },
--- Table: {277}
+-- Table: {347}
 {
-   -1056,
+   -2336,
+   -1824,
+   -2304,
+   -1824,
+   -2304,
+   -1792,
+   -2336,
    -1760,
-   -1056,
-   -1888,
-   -1024,
-   -1888,
-   -1024,
-   -1728,
+},
+-- Table: {348}
+{
+   -2336,
+   -1824,
+   -2304,
+   -1824,
+   -2304,
+   -1856,
+   -2336,
+   -1856,
 },
 }

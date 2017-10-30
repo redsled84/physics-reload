@@ -11,7 +11,7 @@ buffer = 120
 
 class Phone
   x: love.graphics.getWidth! - width - buffer * 1.25
-  y: love.graphics.getHeight! - height - buffer * .5
+  y: love.graphics.getHeight! - height - buffer
   width: width
   height: height
   sound: love.audio.newSource "audio/bought_cut.mp3", "static"
@@ -24,9 +24,9 @@ class Phone
   }
   costs: {
     0
-    50
     100
-    250
+    300
+    500
   }
   buyRecords: {
     false
@@ -34,6 +34,7 @@ class Phone
     false
     false
   }
+  lastBoughtItem: false
 
   draw: =>
     love.graphics.setColor 0, 255, 255, 180
@@ -51,8 +52,12 @@ class Phone
       itemX, itemY = @x + itemBuffer, itemBuffer + @y + itemBuffer * 2 * (i - 1)
       itemY += itemHeight * (i-1)
       className = @items[i].__class.__name
+
+      -- 
       love.graphics.setColor 20, 20, 20, 200
       love.graphics.rectangle "fill", itemX, itemY, itemWidth, itemHeight
+
+      -- item text
       love.graphics.setColor 255, 255, 255
       if className == "Pistol"
         love.graphics.print "pistol", itemX + itemWidth / 3.5, itemY + itemHeight * (1/4)
@@ -62,8 +67,15 @@ class Phone
         love.graphics.print "assault rifle", itemX + 10, itemY + itemHeight * (1/4)
       if className == "HeavyRifle"
         love.graphics.print "heavy rifle", itemX + 10, itemY + itemHeight * (1/4)
+
+      -- cost of item  
       love.graphics.setColor 255, 255, 0
       love.graphics.print tostring(@costs[i]), itemX + itemWidth + 35, itemY + itemHeight * (1/3)
+
+      if @lastBoughtItem
+        if @lastBoughtItem.__class.__name == className
+          love.graphics.setColor 20, 20, 20, 200
+          love.graphics.rectangle "fill", itemX - 50, itemY+itemHeight * (1/3) - 15, 35, 50
       love.graphics.setColor 255, 255, 255
       love.graphics.print i, itemX-40, itemY+itemHeight * (1/3)
 
@@ -73,15 +85,20 @@ class Phone
         local bought
         if not @buyRecords[i]
           bought = player\removeGold @costs[i]
+          local weapon
           if bought
             @buyRecords[i] = true
-            player\changeWeapon @items[i](player.body\getX!, player.body\getY!)
-            @sound\setVolume .3
+            weapon = @items[i](player.body\getX!, player.body\getY!)
+            @lastBoughtItem = weapon
+            player\changeWeapon weapon
+            @sound\setVolume .45
             playSound @sound
           else
             print "not enough money to buy [" .. @items[i].__class.__name .. "]"
         else
-          player\changeWeapon @items[i](player.body\getX!, player.body\getY!)
+          weapon = @items[i](player.body\getX!, player.body\getY!)
+          @lastBoughtItem = weapon
+          player\changeWeapon weapon
 
   resetBuyList: =>
     for i = 1, #@buyRecords

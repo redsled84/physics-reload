@@ -2,9 +2,9 @@ Weapon = require "build.weapon"
 
 class Shotgun extends Weapon
   new: (@x, @y) =>
-    super @x, @y, 1000, math.pi / 9, true, .85, 1800, 7, 10, 19
+    super @x, @y, 1000, math.pi / 8, true, .85, 1950, 7, 10, 19
     @fireControl = "semi"
-    @shotPerRound = 6
+    @shotPerRound = 8
     @loadSound = love.audio.newSource "audio/shotgun_pump.mp3", "static"
     @loadSound\setVolume .2
     @playOnce = 0

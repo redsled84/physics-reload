@@ -17,6 +17,7 @@ local Entity = require("build.entity")
 local Floater = require("build.floater")
 local Laser = require("build.laser")
 local Walker = require("build.walker")
+local Turret = require("build.turret")
 local Health = require("build.health")
 local Spike = require("build.spike")
 local graphics, mouse, physics, filesystem, keyboard
@@ -46,6 +47,7 @@ do
     menuItems = {
       Floater,
       Walker,
+      Turret,
       Health,
       Laser,
       Spike,
@@ -144,6 +146,9 @@ do
           end
           if v.objectType == "Laser" then
             self.objects[k] = Laser(v.x, v.y, v.endX, v.endY)
+          end
+          if v.objectType == "Turret" then
+            self.objects[k] = Turret(v.x, v.y)
           end
           v.added = true
         end
@@ -284,9 +289,9 @@ do
     drawControls = function(self)
       if self.viewControls and not self.viewObjectMenu then
         graphics.setColor(0, 0, 0, 155)
-        graphics.rectangle("fill", 0, 0, 930, 250)
+        graphics.rectangle("fill", 0, 0, 930, 350)
         graphics.setColor(255, 255, 255)
-        return graphics.print("Press 'W A S D' to move the camera around \n" .. "Press 'q' to zoom out and 'e' to zoom in \n" .. "Press 'c' to increase camera speed and 'z' to decrease camera speed \n" .. "Press LEFT CLICK to add polygon point \n" .. "Press 'space' to add a polygon to the level \n" .. "Press RIGHT CLICK to select a polygon \n" .. "Press 'r' remove the last placed point, or a selected polygon \n" .. "Press 'm' to minimize this box\n" .. "Press '1' to create and destroy polygon shapes\n" .. "Press '2' to create and destroy objects\n" .. "Press 'j' to access the object menu", 15, 15)
+        return graphics.print("Press 'W A S D' to move the camera around \n" .. "Press 'q' to zoom out and 'e' to zoom in \n" .. "Press 'c' to increase camera speed and 'z' to decrease camera speed \n" .. "Press LEFT CLICK to add polygon point \n" .. "Press 'space' to add a polygon to the level \n" .. "Press RIGHT CLICK to select a polygon \n" .. "Press 'r' remove the last placed point, or a selected polygon \n" .. "Press 'm' to minimize this box\n" .. "Press '1' to create and destroy polygon shapes\n" .. "Press '2' to create and destroy objects\n" .. "Press 'f' to access the object menu", 15, 15)
       else
         graphics.setColor(0, 0, 0, 155)
         graphics.rectangle("fill", 0, 0, 475, 48)
@@ -305,9 +310,10 @@ do
       return graphics.getHeight() * num / den
     end,
     drawObjectMenu = function(self)
-      local x, y, w, h, xoffset, yoffset, itemCounter, nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
+      local x, y, w, h, xoffset, yoffset, itemCounter
       x, y, w, h = self:getWidthRatio(1, 8), self:getHeightRatio(1, 8), self:getWidthRatio(3, 4), self:getHeightRatio(3, 4)
       xoffset, yoffset = 10, 10
+      local nItemsWide, nItemsTall, itemWidth, itemHeight, actualWidth, actualHeight
       nItemsWide, nItemsTall = w / 6, h / 6
       itemWidth, itemHeight = nItemsWide - xoffset, nItemsTall - yoffset
       actualWidth, actualHeight = itemWidth - xoffset * 2, itemHeight - yoffset * 2
@@ -342,6 +348,8 @@ do
                 graphics.print("floater", ox + actualWidth * (1 / 6), oy + actualHeight * (2 / 5))
               elseif className == "Walker" then
                 graphics.print("walker", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
+              elseif className == "Turret" then
+                graphics.print("turret", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
               elseif className == "Health" then
                 graphics.print("health", ox + actualWidth * (1 / 6), oy + actualHeight * (3 / 8))
               elseif className == "Laser" then
@@ -464,6 +472,9 @@ do
         if v.__class.__name == "Walker" and player then
           v:update(dt, player.body:getX(), player.body:getY())
         end
+        if v.__class.__name == "Turret" and player then
+          v:update(dt, player)
+        end
       end
     end,
     update = function(self, dt)
@@ -487,7 +498,7 @@ do
           if self.tool == "polygon" then
             insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
           elseif self.tool == "object" then
-            if (self.selectedMenuItem == Floater or self.selectedMenuItem == Health) and #self.activeVertices < 1 then
+            if (self.selectedMenuItem == Floater or self.selectedMenuItem == Health or self.selectedMenuItem == Turret) and #self.activeVertices < 1 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
             elseif (self.selectedMenuItem == Walker or self.selectedMenuItem == Laser) and #self.activeVertices < 2 then
               insert(self.activeVertices, self:vec2(self.activeX, self.activeY))
@@ -607,14 +618,14 @@ do
           local className, obj
           if self.selectedMenuItem then
             className = self.selectedMenuItem.__class.__name
-            if className == "Floater" or className == "Health" then
+            if className == "Floater" or className == "Health" or className == "Turret" then
               obj = {
                 x = self.activeVertices[1].x,
                 y = self.activeVertices[1].y,
                 objectType = className,
                 added = false
               }
-            elseif className == "Walker" or className == "Laser" then
+            elseif className == "Walker" or className == "Laser" and #self.activeVertices > 1 then
               obj = {
                 x = self.activeVertices[1].x,
                 y = self.activeVertices[1].y,
@@ -640,7 +651,7 @@ do
         self.viewControls = not self.viewControls
         self.viewObjectMenu = false
       end
-      if key == "j" then
+      if key == "f" then
         self.viewObjectMenu = not self.viewObjectMenu
         self.viewControls = false
       end

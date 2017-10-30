@@ -8,16 +8,29 @@ local function beginContact(a, b, coll)
 end
 
 local function endContact(a, b, coll)
-  
+  local obj1, obj2 = a:getUserData(), b:getUserData()
+  local x, y = coll:getNormal()
+
+  local player = getObject(obj1, obj2, "Player")
+  if player then
+    player.onGround = false
+  end
 end
 
 local function preSolve(a, b, coll)
+  local obj1, obj2 = a:getUserData(), b:getUserData()
+  local x, y = coll:getNormal()
+
+  local player = getObject(obj1, obj2, "Player")
+  if player and y ~= 0 then
+    player.onGround = true
+  end
 end
 
 local hurtSound = love.audio.newSource("audio/steve_hurt.mp3", "static")
 local hitMarkerSound = love.audio.newSource("audio/hit_marker_cut.mp3", "static")
 local goldPickupSound = love.audio.newSource("audio/gold_pickup.wav", "static")
-hurtSound:setVolume(.35)
+hurtSound:setVolume(.15)
 hitMarkerSound:setVolume(.4)
 goldPickupSound:setVolume(.20)
 local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
@@ -32,15 +45,16 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local gold = getObject(obj1, obj2, "Gold")
   local spike = getObject(obj1, obj2, "Spike")
   local bounce = getObject(obj1, obj2, "Bounce")
+  local turret = getObject(obj1, obj2, "Turret")
 
   if player then
+    -- print (player.onGround, os.time())
     if math.abs(x) == 1 and not player.onGround and not bullet and not health and not gold then
       player.xVelocity = 0
     end
-    if y ~= 0 and not health and not bullet and not gold then
-      player.onGround = true
 
-      -- player.xVelocity = player.xVelocity * math.abs(y)
+    if math.abs(x) == 1 and math.abs(y) == 1 then
+      player.body:applyLinearImpulse(0, 10)
     end
 
     player:setNormal({x, y})
@@ -81,7 +95,11 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
       end
 
       if bounce then
-        player.body:applyLinearImpulse(0, y * bounce.bouncePower)
+        if bounce.body:getY() < player.body:getY() and y > 0 then
+          player.body:applyLinearImpulse(x, -y * bounce.bouncePower)
+        else
+          player.body:applyLinearImpulse(x, y * bounce.bouncePower)
+        end
       end
     end
   end
@@ -95,16 +113,25 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   end
 
   if walker and not walker.body:isDestroyed() then
-    if x > 0 then
-      walker.dir = 1
-      walker.xVelocity = 0
-    elseif x < 0 then
-      walker.dir = -1
-      walker.xVelocity = 0
-    end
     if bullet then
       walker:damage(bullet.damage)
       playSound(hitMarkerSound)
+    else
+      if x > 0 then
+        walker.dir = 1
+        walker.xVelocity = 0
+      elseif x < 0 then
+        walker.dir = -1
+        walker.xVelocity = 0
+      end
+    end
+  end
+
+  if turret and not turret.body:isDestroyed() then
+    if bullet then
+      turret:damage(bullet.damage)
+      playSound(hitMarkerSound)
+
     end
   end
 end

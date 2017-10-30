@@ -1,6 +1,6 @@
 class Timer
   new: (@max=.5) =>
-    @time = 0
+    @time = math.random(0, @max * 100) / 100
   update: (dt, callback) =>
     if @time >= @max
       @time = 0

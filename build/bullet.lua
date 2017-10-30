@@ -38,7 +38,7 @@ do
       self.body:setBullet(true)
       self.body:setMass(.01)
       if self.canHurtEnemies then
-        return self.fixture:setFilterData(collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker, 0)
+        return self.fixture:setFilterData(collisionMasks.bulletHurtEnemy, collisionMasks.solid + collisionMasks.walker + collisionMasks.turret, 0)
       else
         return self.fixture:setFilterData(collisionMasks.bulletHurtPlayer, collisionMasks.solid + collisionMasks.player, 0)
       end

@@ -9,19 +9,20 @@ Entity = require "build.entity"
 Floater = require "build.floater"
 Gold = require "build.gold"
 Player = require "build.player"
+Turret = require "build.turret"
 shake = require "build.shake"
 -- Walker = require "build.walker"
 Weapon = require "build.weapon"
 Phone = require "build.phone"
 
-local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold
+local cam, cursorImage, editor, player, phone, spawn, toggleEditor, walker, walker2, weapon, gold, turret
 local togglePhone
 initGame = ->
   editor = Editor!
   -- shake = Shake!
 
   -- Change this string to be the level you want to load!
-  editor\loadSavedFile "levels/level10.lua"
+  editor\loadSavedFile "levels/level6.lua"
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}
@@ -45,6 +46,9 @@ initGame = ->
   cursorImage = love.graphics.newImage "sprites/cursor.png"
   cursor = love.mouse.newCursor "sprites/cursor.png", 0, 0
   love.mouse.setCursor cursor
+  love.mouse.setGrabbed true
+
+  -- turret = Turret 0, 0
 
 initGame!
 
@@ -74,21 +78,15 @@ love.load = ->
       -- print player.weapon.canShoot
       world\update dt
       -- floater\update dt
-
-      
       -- editor\updateWalkers dt, player.body\getX!, player.body\getY!
-
-
       -- print weapon.canShoot, weapon.rateOfFire.time
-
       -- cam\lookAt 300, 200
       cam\lookAt player.body\getX!, player.body\getY!
 
+      -- turret\update dt, player
       -- walker\update dt, player.body\getX!, player.body\getY!
       -- walker2\update dt, player.body\getX!, player.body\getY!
-
       -- print walker2.dir
-
       -- print editor.objects[#editor.objects].dir
       editor\updateObjects dt, player
 
@@ -105,6 +103,7 @@ love.load = ->
         editor.entities[i]\draw!
       editor\drawObjects!
       editor\drawObjectGold!
+
       
       player\draw {0, 255, 255}
       player\drawLaser cam, cursorImage
@@ -115,6 +114,7 @@ love.load = ->
 
       -- walker\draw!
       -- walker2\draw!
+      -- turret\draw!
 
       -- gold\draw!
       shake\postDraw!
@@ -124,10 +124,10 @@ love.load = ->
         phone\draw!
 
       player\drawHealth!
+      player\drawGold!
       if player.weapon
-        player.weapon\drawAmmoCount!
-      love.graphics.setColor 15, 15, 15
-      love.graphics.print "Gold: " .. tostring(player.amountOfGold), 15, love.graphics.getHeight! - 100
+        player\drawAmmo!
+      --   player.weapon\drawAmmoCount!
 
   love.mousepressed = (x, y, button) ->
     if toggleEditor
@@ -138,6 +138,33 @@ love.load = ->
       if player.weapon
         player.weapon\shootSemi targetX, targetY, button
 
+  editorDebugPrint = ->
+    local bodies, count
+    bodies = world\getBodyList!
+    count = 0
+    local className
+    local nLasers, nWalkers, nHealth, nFloaters
+    nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
+    local nSpikes, nBounces, nSolids
+    nSpikes, nBounces, nSolids = 0, 0, 0
+    for i = #bodies, 1, -1
+      -- count = (bodies[i]\getUserData!.__class.__name ~= "Laser" or bodies[i]\getUserData!.__class.__name ~= "Floater") and count + 1 or count
+      className = bodies[i]\getUserData!.__class.__name
+      -- if className ~= "Entity" or className ~= "Spike" or className ~= "Bounce"
+      --   count += 1
+      nLasers = className == "Laser" and nLasers + 1 or nLasers
+      nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
+      nHealth = className == "Health" and nHealth + 1 or nHealth
+      nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
+      -- nSpikes = className == "Spike" and nSpikes + 1 or nSpikes
+      -- nBounces = className == "Bounce" and nBounces + 1 or nBounces
+      -- nSolids = className == "Entity" and nSolids + 1 or nSolids
+
+    
+    print #editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers+nWalkers+nHealth+nFloaters
+    -- print inspect editor.objectData
+    -- print #editor.entities, #editor.shapes, #editor.data, nSpikes, nBounces, nSolids
+
   love.keypressed = (key) ->
     if key == "escape" and not toggleEditor
       editor\saveFile!
@@ -147,33 +174,8 @@ love.load = ->
       cam\lookAt 0, 0
 
     if key == "h"
-      local bodies, count
-      bodies = world\getBodyList!
-      count = 0
-      local className
-      local nLasers, nWalkers, nHealth, nFloaters
-      nLasers, nWalkers, nHealth, nFloaters = 0, 0, 0, 0
-      local nSpikes, nBounces, nSolids
-      nSpikes, nBounces, nSolids = 0, 0, 0
-      for i = #bodies, 1, -1
-        -- count = (bodies[i]\getUserData!.__class.__name ~= "Laser" or bodies[i]\getUserData!.__class.__name ~= "Floater") and count + 1 or count
-        className = bodies[i]\getUserData!.__class.__name
-        -- if className ~= "Entity" or className ~= "Spike" or className ~= "Bounce"
-        --   count += 1
-        nLasers = className == "Laser" and nLasers + 1 or nLasers
-        nWalkers = className == "Walker" and nWalkers + 1 or nWalkers
-        nHealth = className == "Health" and nHealth + 1 or nHealth
-        nFloaters = className == "Floater" and nFloaters + 1 or nFloaters
-        -- nSpikes = className == "Spike" and nSpikes + 1 or nSpikes
-        -- nBounces = className == "Bounce" and nBounces + 1 or nBounces
-        -- nSolids = className == "Entity" and nSolids + 1 or nSolids
-
+      editorDebugPrint!
       
-      print #editor.objects, #editor.objectData, nLasers, nWalkers, nHealth, nFloaters, nLasers+nWalkers+nHealth+nFloaters
-      -- print inspect editor.objectData
-      -- print #editor.entities, #editor.shapes, #editor.data, nSpikes, nBounces, nSolids
-
-
     if toggleEditor
       editor\keypressed key
     else
@@ -193,6 +195,7 @@ love.load = ->
       editor.activeDeleteIndex = -1
 
       togglePhone = false
+      phone.lastBoughtItem = false
 
       editor\flushObjectGold!
       if not toggleEditor
