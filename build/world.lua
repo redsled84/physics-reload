@@ -3,6 +3,13 @@ inspect = require "libs.inspect"
 world = love.physics.newWorld(0, 1050, true)
 -- world = love.physics.newWorld(0, 400, true)
 
+local hurtSound = love.audio.newSource("audio/steve_hurt.mp3", "static")
+local hitMarkerSound = love.audio.newSource("audio/hit_marker_cut.mp3", "static")
+local goldPickupSound = love.audio.newSource("audio/gold_pickup.wav", "static")
+hurtSound:setVolume(.15)
+hitMarkerSound:setVolume(.4)
+goldPickupSound:setVolume(.20)
+
 local function beginContact(a, b, coll)
 
 end
@@ -12,8 +19,20 @@ local function endContact(a, b, coll)
   local x, y = coll:getNormal()
 
   local player = getObject(obj1, obj2, "Player")
+  local walker = getObject(obj1, obj2, "Walker")
   if player then
     player.onGround = false
+    if walker then
+      local signX
+      if walker.body:getY() < player.body:getY() and y > 0 then
+        player:damageByImpulse(-walker.dir*x, -y, walker.hitAttackPower)
+        walker.body:applyLinearImpulse(walker.dir*x*100, y)
+      else
+        player:damageByImpulse(walker.dir*x, y, walker.hitAttackPower)
+        walker.body:applyLinearImpulse(-walker.dir*x*100, y)
+      end
+      playSound(hurtSound)
+    end
   end
 end
 
@@ -27,12 +46,7 @@ local function preSolve(a, b, coll)
   end
 end
 
-local hurtSound = love.audio.newSource("audio/steve_hurt.mp3", "static")
-local hitMarkerSound = love.audio.newSource("audio/hit_marker_cut.mp3", "static")
-local goldPickupSound = love.audio.newSource("audio/gold_pickup.wav", "static")
-hurtSound:setVolume(.15)
-hitMarkerSound:setVolume(.4)
-goldPickupSound:setVolume(.20)
+
 local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
   local obj1, obj2 = a:getUserData(), b:getUserData()
   local x, y = coll:getNormal()
@@ -65,15 +79,6 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
         playSound(hurtSound)
       end
 
-      if walker then
-        if walker.body:getY() < player.body:getY() and y > 0 then
-          player:damageByImpulse(x, -y, walker.hitAttackPower)
-        else
-          player:damageByImpulse(x, y, walker.hitAttackPower)
-        end
-        playSound(hurtSound)
-      end
-
       if health then
         player:addHealth(health:getHealth())
         health:destroy()
@@ -96,9 +101,9 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
 
       if bounce then
         if bounce.body:getY() < player.body:getY() and y > 0 then
-          player.body:applyLinearImpulse(x, -y * bounce.bouncePower)
+          player.body:applyLinearImpulse(x, -y * bounce.bouncePower * player.body:getMass() / 1.5)
         else
-          player.body:applyLinearImpulse(x, y * bounce.bouncePower)
+          player.body:applyLinearImpulse(x, y * bounce.bouncePower * player.body:getMass() / 1.5)
         end
       end
     end
@@ -125,6 +130,10 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
         walker.xVelocity = 0
       end
     end
+
+    if spike then
+      walker.health = 0
+    end
   end
 
   if turret and not turret.body:isDestroyed() then
@@ -133,6 +142,14 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
       playSound(hitMarkerSound)
 
     end
+  end
+
+  if gold and spike then
+    gold:destroy()
+  end
+
+  if health and spike then
+    health:destroy()
   end
 end
 

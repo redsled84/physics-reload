@@ -7,7 +7,7 @@ getSign = () ->
   return math.random(0, 1) == 0 and -1 or 1
 
 class Gold extends Entity
-  new: (@x, @y, @width=8, @height=8, @value=5, @linearForce=getSign! * math.random(22, 34), @yForce=100) =>
+  new: (@x, @y, @width=8, @height=8, @value=5, @linearForce=getSign! * math.random(4, 9), @yForce=-3) =>
   --   super @x, @y, {@width, @height}, "static"
 
   -- new: (@x, @y, @width=8, @height=8) =>

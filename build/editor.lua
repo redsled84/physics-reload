@@ -86,22 +86,25 @@ do
     loadSavedFile = function(self, filename)
       local fileData
       fileData = filesystem.exists(filename) and table.load(filename) or { }
-      self.data = fileData.polygonData
+      if fileData.polygonData then
+        self.data = fileData.polygonData
+      else
+        self.data = fileData
+      end
       if #self.data > 0 then
         for i = 1, #self.data do
           self.shapes[i] = physics.newPolygonShape(self.data[i].vertices)
           print("new polygon: ", inspect(self.data[i].vertices))
-          if self.data[i].object then
-            self.data[i].load()
-          end
         end
         self:hotLoad()
       end
-      self.objectData = fileData.objectData
-      if #self.objectData > 0 then
-        self:hotLoadObjects()
+      if fileData.objectData then
+        self.objectData = fileData.objectData
+        if #self.objectData > 0 then
+          self:hotLoadObjects()
+        end
+        self.loadedFilename = filename
       end
-      self.loadedFilename = filename
     end,
     flushObjects = function(self)
       if self.objects and #self.objects > 0 then

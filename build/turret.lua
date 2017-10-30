@@ -57,9 +57,9 @@ do
     draw = function(self)
       if not self.body:isDestroyed() then
         _class_0.__parent.__base.draw(self, {
-          40,
-          90,
-          140
+          144,
+          65,
+          180
         })
       end
       return self.weapon:drawBullets({

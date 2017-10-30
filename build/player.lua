@@ -4,8 +4,6 @@ local collisionMasks = require("build.collisionMasks")
 local inspect = require("libs.inspect")
 local Entity = require("build.entity")
 local Timer = require("build.timer")
-local Pistol = require("build.pistol")
-local Weapon = require("build.weapon")
 local vx, vy, frc, dec, top, low
 local acc
 frc, acc, dec, top, low = 985, 900, 7500, 540, 45
@@ -71,6 +69,17 @@ do
     update = function(self, dt)
       if self.health <= 0 then
         return 
+      end
+      if self.weapon then
+        if self.weapon.__class.__name == "Pistol" then
+          self.body:setMass(4)
+        elseif self.weapon.__class.__name == "Shotgun" then
+          self.body:setMass(6.5)
+        elseif self.weapon.__class.__name == "AssaultRifle" then
+          self.body:setMass(8.0)
+        elseif self.weapon.__class.__name == "HeavyRifle" then
+          self.body:setMass(15.0)
+        end
       end
       if self.activeHitStun then
         self.hitStunTimer:update(dt, function()
@@ -240,7 +249,7 @@ do
       self.maxHealth = 350
       self.health = self.maxHealth
       self.weapon = nil
-      self.amountOfGold = 0
+      self.amountOfGold = 10000
       self.dir = 0
       self.deathSound = audio.newSource("audio/death.mp3", "static")
       self.deathSoundCount = 0

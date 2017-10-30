@@ -9,7 +9,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y)
       self.x, self.y = x, y
-      return _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 95, true, .15, 5000, 10, 10, 20)
+      return _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 95, true, .15, 5000, 10, 10, 20, 5.5)
     end,
     __base = _base_0,
     __name = "AssaultRifle",

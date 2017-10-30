@@ -22,7 +22,8 @@ initGame = ->
   -- shake = Shake!
 
   -- Change this string to be the level you want to load!
-  editor\loadSavedFile "levels/level6.lua"
+  editor\loadSavedFile "levels/level10.lua"
+  print #editor.data
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}
@@ -201,6 +202,10 @@ love.load = ->
       if not toggleEditor
         editor\hotLoad!
         editor\hotLoadObjects!
+        love.mouse.setGrabbed false
+      else
+        love.mouse.setGrabbed true
+
 
       player.body\setPosition spawn.x, spawn.y
       player.amountOfGold = 0

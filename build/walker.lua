@@ -36,18 +36,18 @@ do
       if self.originalDir == 1 then
         if self.body:getX() - self.width / 2 - buffer <= self.originX then
           self.dir = 1
-          self.xVelocity = 10
+          self.xVelocity = 5
         elseif self.body:getX() + self.width / 2 + buffer >= self.endX then
           self.dir = -1
-          self.xVelocity = -10
+          self.xVelocity = -5
         end
       else
         if self.body:getX() + self.width / 2 + buffer >= self.originX then
           self.dir = -1
-          self.xVelocity = -10
+          self.xVelocity = -5
         elseif self.body:getX() - self.width / 2 - buffer <= self.endX then
           self.dir = 1
-          self.xVelocity = 10
+          self.xVelocity = 5
         end
       end
       self.xVelocity = self.xVelocity + (self.dir * self.moveSpeed * dt)
@@ -134,10 +134,10 @@ do
       self.dir = self.originalDir
       self.body:setFixedRotation(true)
       self.fixture:setFilterData(collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0)
-      self.xVelocity = 0
+      self.xVelocity = 10
       self.moveSpeed = 275
       self.health = math.random(35, 45)
-      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 45, false, .45, 4000, 9, 6, 12)
+      self.weapon = Weapon(self.x, self.y, math.huge, math.pi / 45, false, .45, 4000, 9, 7, 14)
       self.hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
     end,
     __base = _base_0,

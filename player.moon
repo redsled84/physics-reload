@@ -4,8 +4,6 @@ collisionMasks = require "build.collisionMasks"
 inspect = require "libs.inspect"
 Entity = require "build.entity"
 Timer = require "build.timer"
-Pistol = require "build.pistol"
-Weapon = require "build.weapon"
 
 local vx, vy, frc, dec, top, low
 frc, acc, dec, top, low = 985, 900, 7500, 540, 45
@@ -58,7 +56,7 @@ class Player extends Entity
     @health = @maxHealth
 
     @weapon = nil
-    @amountOfGold = 0
+    @amountOfGold = 10000
     @dir = 0
 
     @deathSound = audio.newSource "audio/death.mp3", "static"
@@ -115,6 +113,16 @@ class Player extends Entity
   update: (dt) =>
     if @health <= 0
       return
+
+    if @weapon
+      if @weapon.__class.__name == "Pistol"
+        @body\setMass 4
+      elseif @weapon.__class.__name == "Shotgun"
+        @body\setMass 6.5
+      elseif @weapon.__class.__name == "AssaultRifle"
+        @body\setMass 8.0
+      elseif @weapon.__class.__name == "HeavyRifle"
+        @body\setMass 15.0
 
     if @activeHitStun
       @hitStunTimer\update dt, () ->

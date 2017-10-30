@@ -32,7 +32,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y)
       self.x, self.y = x, y
-      _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 8, true, .85, 1950, 7, 10, 19)
+      _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 8, true, .85, 1950, 7, 10, 19, 8.5)
       self.fireControl = "semi"
       self.shotPerRound = 8
       self.loadSound = love.audio.newSource("audio/shotgun_pump.mp3", "static")

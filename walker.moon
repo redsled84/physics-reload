@@ -30,10 +30,10 @@ class Walker extends Entity
     @body\setFixedRotation true
     @fixture\setFilterData collisionMasks.walker, collisionMasks.solid + collisionMasks.bulletHurtEnemy + collisionMasks.player, 0
 
-    @xVelocity = 0
+    @xVelocity = 10
     @moveSpeed = 275
     @health = math.random(35, 45)
-    @weapon = Weapon @x, @y, math.huge, math.pi / 45, false, .45, 4000, 9, 6, 12
+    @weapon = Weapon @x, @y, math.huge, math.pi / 45, false, .45, 4000, 9, 7, 14
 
     @hitAttackPower = hitAttackPowers[math.random(1, #hitAttackPowers)]
 
@@ -46,17 +46,17 @@ class Walker extends Entity
     if @originalDir == 1
       if @body\getX! - @width / 2 - buffer <= @originX
         @dir = 1
-        @xVelocity = 10
+        @xVelocity = 5
       elseif @body\getX! + @width / 2 + buffer >= @endX
         @dir = -1
-        @xVelocity = -10
+        @xVelocity = -5
     else
       if @body\getX! + @width / 2 + buffer >= @originX
         @dir = -1
-        @xVelocity = -10
+        @xVelocity = -5
       elseif @body\getX! - @width / 2 - buffer <= @endX
         @dir = 1
-        @xVelocity = 10
+        @xVelocity = 5
 
     @xVelocity += @dir * @moveSpeed * dt
     local vy

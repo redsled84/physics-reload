@@ -43,10 +43,10 @@ do
         value = 5
       end
       if linearForce == nil then
-        linearForce = getSign() * math.random(22, 34)
+        linearForce = getSign() * math.random(4, 9)
       end
       if yForce == nil then
-        yForce = 100
+        yForce = -3
       end
       self.x, self.y, self.width, self.height, self.value, self.linearForce, self.yForce = x, y, width, height, value, linearForce, yForce
       _class_0.__parent.__init(self, self.x, self.y, {

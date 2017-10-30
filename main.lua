@@ -17,7 +17,8 @@ local togglePhone
 local initGame
 initGame = function()
   editor = Editor()
-  editor:loadSavedFile("levels/level6.lua")
+  editor:loadSavedFile("levels/level10.lua")
+  print(#editor.data)
   spawn = {
     x = 64,
     y = 32
@@ -160,6 +161,9 @@ love.load = function()
       if not toggleEditor then
         editor:hotLoad()
         editor:hotLoadObjects()
+        love.mouse.setGrabbed(false)
+      else
+        love.mouse.setGrabbed(true)
       end
       player.body:setPosition(spawn.x, spawn.y)
       player.amountOfGold = 0

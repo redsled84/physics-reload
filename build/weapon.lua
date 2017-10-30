@@ -21,7 +21,6 @@ do
   local _base_0 = {
     bullets = { },
     canShoot = true,
-    shakeConstant = 4.25,
     updateRateOfFire = function(self, dt)
       if not self.canShoot then
         return self.rateOfFireTimer:update(dt, function()
@@ -76,7 +75,7 @@ do
     end,
     update = function(self, dt, cam, obj)
       if obj and self.isPlayerWeapon then
-        self.x, self.y = obj.body:getX() + obj.width * (1 / 2) * obj.dir, obj.body:getY() - obj.height * (1 / 4)
+        self.x, self.y = obj.body:getX() + obj.width * (1 / 1.92) * obj.dir, obj.body:getY() - obj.height * (1 / 4)
       end
       self:autoRemoveDestroyedBullets()
       local mouseX, mouseY
@@ -105,7 +104,7 @@ do
   }
   _base_0.__index = _base_0
   _class_0 = setmetatable({
-    __init = function(self, x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower)
+    __init = function(self, x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower, shakeConstant)
       if sprayAngle == nil then
         sprayAngle = math.pi / 100
       end
@@ -127,7 +126,10 @@ do
       if maxAtkPower == nil then
         maxAtkPower = 15
       end
-      self.x, self.y, self.totalAmmo, self.sprayAngle, self.isPlayerWeapon, self.rateOfFire, self.bulletSpeed, self.bulletSize, self.minAtkPower, self.maxAtkPower = x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower
+      if shakeConstant == nil then
+        shakeConstant = 3.5
+      end
+      self.x, self.y, self.totalAmmo, self.sprayAngle, self.isPlayerWeapon, self.rateOfFire, self.bulletSpeed, self.bulletSize, self.minAtkPower, self.maxAtkPower, self.shakeConstant = x, y, totalAmmo, sprayAngle, isPlayerWeapon, rateOfFire, bulletSpeed, bulletSize, minAtkPower, maxAtkPower, shakeConstant
       self.ammoCount = self.totalAmmo
       self.fireControl = "auto"
       self.rateOfFireTimer = Timer(self.rateOfFire)

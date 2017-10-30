@@ -44,6 +44,6 @@ class Turret extends Entity
         @gold[i]\draw!
   draw: =>
     if not @body\isDestroyed!
-      super {40, 90, 140}
+      super {144,65,180}
     @weapon\drawBullets {0, 0, 0}
 return Turret

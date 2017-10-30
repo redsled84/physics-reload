@@ -95,18 +95,20 @@ class Editor
   loadSavedFile: (filename) =>
     local fileData
     fileData = filesystem.exists(filename) and table.load(filename) or {}
-    @data = fileData.polygonData
+    if fileData.polygonData
+      @data = fileData.polygonData
+    else
+      @data = fileData
     if #@data > 0
       for i = 1, #@data
         @shapes[i] = physics.newPolygonShape @data[i].vertices
         print "new polygon: ", inspect @data[i].vertices
-        if @data[i].object
-          @data[i].load!
       @hotLoad!
-    @objectData = fileData.objectData
-    if #@objectData > 0
-      @hotLoadObjects!
-    @loadedFilename = filename
+    if fileData.objectData
+      @objectData = fileData.objectData
+      if #@objectData > 0
+        @hotLoadObjects!
+      @loadedFilename = filename
     
   flushObjects: =>
     if @objects and #@objects > 0

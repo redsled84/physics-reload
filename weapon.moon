@@ -13,7 +13,7 @@ graphics.setFont ammoFont
 
 class Weapon
   new: (@x, @y, @totalAmmo, @sprayAngle=math.pi/100, @isPlayerWeapon=false, @rateOfFire=.25, @bulletSpeed=2700, @bulletSize=10,
-  @minAtkPower=5,@maxAtkPower=15) =>
+  @minAtkPower=5,@maxAtkPower=15, @shakeConstant=3.5) =>
     @ammoCount = @totalAmmo
     -- @drawOffset = {x: @sprite\getWidth! / 4, y: @sprite\getHeight! / 2}
     @fireControl = "auto"
@@ -27,7 +27,6 @@ class Weapon
 
   bullets: {}
   canShoot: true
-  shakeConstant: 4.25
 
   updateRateOfFire: (dt) =>
     if not @canShoot
@@ -94,7 +93,7 @@ class Weapon
 
   update: (dt, cam, obj) =>
     if obj and @isPlayerWeapon
-      @x, @y = obj.body\getX! + obj.width * (1 / 2) * obj.dir, obj.body\getY! - obj.height * (1 / 4)
+      @x, @y = obj.body\getX! + obj.width * (1 / 1.92) * obj.dir, obj.body\getY! - obj.height * (1 / 4)
     @autoRemoveDestroyedBullets!
     local mouseX, mouseY
     mouseX, mouseY = cam\worldCoords mouse.getX!, mouse.getY!
