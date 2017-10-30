@@ -56,7 +56,7 @@ class Player extends Entity
     @health = @maxHealth
 
     @weapon = nil
-    @amountOfGold = 10000
+    @amountOfGold = 0
     @dir = 0
 
     @deathSound = audio.newSource "audio/death.mp3", "static"
