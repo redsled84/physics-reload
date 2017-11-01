@@ -77,7 +77,7 @@ do
         radius = 15
       end
       if health == nil then
-        health = 10
+        health = 20
       end
       if radiusFunction == nil then
         radiusFunction = r
@@ -86,7 +86,7 @@ do
         step = math.pi / 2
       end
       if theta == nil then
-        theta = 0
+        theta = math.random(0, math.pi * 2)
       end
       if amplitude == nil then
         amplitude = 1
@@ -96,7 +96,7 @@ do
       self.popSound:setVolume(.5)
       self.x = self.originX
       self.y = self.originY
-      self.attackPower = 20
+      self.attackPower = 40
       return _class_0.__parent.__init(self, self.x, self.y, {
         self.radius
       }, "static", "circle")

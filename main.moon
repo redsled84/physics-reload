@@ -22,8 +22,8 @@ initGame = ->
   -- shake = Shake!
 
   -- Change this string to be the level you want to load!
-  editor\loadSavedFile "levels/level10.lua"
-  print #editor.data
+  editor\loadSavedFile "levels/jumpbunnylevel.lua"
+  -- print #editor.data
 
   -- spawn position of the player
   spawn = {x: 64, y: 32}

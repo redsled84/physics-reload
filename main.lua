@@ -17,8 +17,7 @@ local togglePhone
 local initGame
 initGame = function()
   editor = Editor()
-  editor:loadSavedFile("levels/level10.lua")
-  print(#editor.data)
+  editor:loadSavedFile("levels/level6.lua")
   spawn = {
     x = 64,
     y = 32

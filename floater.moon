@@ -9,12 +9,12 @@ r = (theta) ->
  return 30 - 40 * cos(theta)
 
 class Floater extends Entity
-  new: (@originX, @originY, @radius=15, @health=10, @radiusFunction=r, @step=math.pi/2, @theta=0, @amplitude=1) =>
+  new: (@originX, @originY, @radius=15, @health=20, @radiusFunction=r, @step=math.pi/2, @theta=math.random(0, math.pi*2), @amplitude=1) =>
     @popSound = audio.newSource "audio/steve_hurt.mp3", "static"
     @popSound\setVolume .5
     @x = @originX
     @y = @originY
-    @attackPower = 20
+    @attackPower = 40
     super @x, @y, {@radius}, "static", "circle"
   attackPower: 20
   damage: (attack) =>

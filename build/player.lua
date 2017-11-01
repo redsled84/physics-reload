@@ -249,7 +249,7 @@ do
       self.maxHealth = 350
       self.health = self.maxHealth
       self.weapon = nil
-      self.amountOfGold = 10000
+      self.amountOfGold = 0
       self.dir = 0
       self.deathSound = audio.newSource("audio/death.mp3", "static")
       self.deathSoundCount = 0

@@ -884,24 +884,24 @@ return {
    ["x"]=-32,
    ["y"]=896,
    ["endY"]=896,
-   ["endX"]=320,
    ["objectType"]="Walker",
+   ["endX"]=320,
 },
 -- Table: {136}
 {
    ["x"]=-1568,
    ["y"]=32,
    ["endY"]=32,
-   ["endX"]=-1856,
    ["objectType"]="Walker",
+   ["endX"]=-1856,
 },
 -- Table: {137}
 {
    ["x"]=-608,
    ["y"]=1088,
    ["endY"]=1088,
-   ["endX"]=-384,
    ["objectType"]="Walker",
+   ["endX"]=-384,
 },
 -- Table: {138}
 {
@@ -944,40 +944,40 @@ return {
    ["x"]=-2720,
    ["y"]=32,
    ["endY"]=32,
-   ["endX"]=-2560,
    ["objectType"]="Walker",
+   ["endX"]=-2560,
 },
 -- Table: {145}
 {
    ["x"]=-1920,
    ["y"]=-192,
    ["endY"]=-192,
-   ["objectType"]="Walker",
    ["endX"]=-2048,
+   ["objectType"]="Walker",
 },
 -- Table: {146}
 {
    ["x"]=-1504,
    ["y"]=-160,
    ["endY"]=-160,
-   ["endX"]=-1632,
    ["objectType"]="Walker",
+   ["endX"]=-1632,
 },
 -- Table: {147}
 {
    ["x"]=-800,
    ["y"]=-832,
    ["endY"]=-832,
-   ["endX"]=-704,
    ["objectType"]="Walker",
+   ["endX"]=-704,
 },
 -- Table: {148}
 {
    ["x"]=-1376,
    ["y"]=-1184,
    ["endY"]=-1184,
-   ["endX"]=-1216,
    ["objectType"]="Walker",
+   ["endX"]=-1216,
 },
 -- Table: {149}
 {
@@ -996,48 +996,48 @@ return {
    ["x"]=-2272,
    ["y"]=-1536,
    ["endY"]=-1536,
-   ["endX"]=-2336,
    ["objectType"]="Walker",
+   ["endX"]=-2336,
 },
 -- Table: {152}
 {
    ["x"]=-2336,
    ["y"]=-2080,
    ["endY"]=-2080,
-   ["endX"]=-2400,
    ["objectType"]="Walker",
+   ["endX"]=-2400,
 },
 -- Table: {153}
 {
    ["x"]=-1888,
    ["y"]=-1952,
    ["endY"]=-1952,
-   ["endX"]=-1792,
    ["objectType"]="Walker",
+   ["endX"]=-1792,
 },
 -- Table: {154}
 {
    ["x"]=-2016,
    ["y"]=-1280,
    ["endY"]=-1280,
-   ["endX"]=-1856,
    ["objectType"]="Walker",
+   ["endX"]=-1856,
 },
 -- Table: {155}
 {
    ["x"]=288,
    ["y"]=352,
    ["endY"]=352,
-   ["endX"]=384,
    ["objectType"]="Walker",
+   ["endX"]=384,
 },
 -- Table: {156}
 {
    ["x"]=224,
    ["y"]=672,
    ["endY"]=672,
-   ["endX"]=128,
    ["objectType"]="Walker",
+   ["endX"]=128,
 },
 -- Table: {157}
 {
@@ -1104,32 +1104,32 @@ return {
    ["x"]=320,
    ["y"]=-1536,
    ["endY"]=-1536,
-   ["endX"]=192,
    ["objectType"]="Walker",
+   ["endX"]=192,
 },
 -- Table: {168}
 {
    ["x"]=-256,
    ["y"]=-1088,
    ["endY"]=-1088,
-   ["endX"]=-160,
    ["objectType"]="Walker",
+   ["endX"]=-160,
 },
 -- Table: {169}
 {
    ["x"]=448,
    ["y"]=-1248,
    ["endY"]=-1248,
-   ["endX"]=352,
    ["objectType"]="Walker",
+   ["endX"]=352,
 },
 -- Table: {170}
 {
    ["x"]=224,
    ["y"]=-960,
    ["endY"]=-960,
-   ["endX"]=128,
    ["objectType"]="Walker",
+   ["endX"]=128,
 },
 -- Table: {171}
 {
@@ -1142,16 +1142,16 @@ return {
    ["x"]=-384,
    ["y"]=832,
    ["endY"]=1024,
-   ["endX"]=-192,
    ["objectType"]="Laser",
+   ["endX"]=-192,
 },
 -- Table: {173}
 {
    ["x"]=-192,
    ["y"]=-128,
    ["endY"]=-160,
-   ["endX"]=-320,
    ["objectType"]="Laser",
+   ["endX"]=-320,
 },
 -- Table: {174}
 {
@@ -1170,16 +1170,16 @@ return {
    ["x"]=-2016,
    ["y"]=-160,
    ["endY"]=-448,
-   ["endX"]=-1984,
    ["objectType"]="Laser",
+   ["endX"]=-1984,
 },
 -- Table: {177}
 {
    ["x"]=-1504,
    ["y"]=96,
    ["endY"]=-64,
-   ["endX"]=-1536,
    ["objectType"]="Laser",
+   ["endX"]=-1536,
 },
 -- Table: {178}
 {
@@ -1324,24 +1324,24 @@ return {
    ["x"]=-1472,
    ["y"]=-2400,
    ["endY"]=-2400,
-   ["endX"]=-1184,
    ["objectType"]="Walker",
+   ["endX"]=-1184,
 },
 -- Table: {202}
 {
    ["x"]=-800,
    ["y"]=-2400,
    ["endY"]=-2400,
-   ["endX"]=-896,
    ["objectType"]="Walker",
+   ["endX"]=-896,
 },
 -- Table: {203}
 {
    ["x"]=-960,
    ["y"]=-2400,
    ["endY"]=-2400,
-   ["endX"]=-1056,
    ["objectType"]="Walker",
+   ["endX"]=-1056,
 },
 -- Table: {204}
 {
@@ -1384,48 +1384,48 @@ return {
    ["x"]=-576,
    ["y"]=-2624,
    ["endY"]=-2624,
-   ["endX"]=-448,
    ["objectType"]="Walker",
+   ["endX"]=-448,
 },
 -- Table: {211}
 {
    ["x"]=-416,
    ["y"]=-2624,
    ["endY"]=-2624,
-   ["endX"]=-256,
    ["objectType"]="Walker",
+   ["endX"]=-256,
 },
 -- Table: {212}
 {
    ["x"]=-224,
    ["y"]=-2624,
    ["endY"]=-2624,
-   ["endX"]=-64,
    ["objectType"]="Walker",
+   ["endX"]=-64,
 },
 -- Table: {213}
 {
    ["x"]=64,
    ["y"]=-2624,
    ["endY"]=-2624,
-   ["endX"]=-32,
    ["objectType"]="Walker",
+   ["endX"]=-32,
 },
 -- Table: {214}
 {
    ["x"]=-1376,
    ["y"]=-1664,
    ["endY"]=-1888,
-   ["endX"]=-1408,
    ["objectType"]="Laser",
+   ["endX"]=-1408,
 },
 -- Table: {215}
 {
    ["x"]=-1024,
    ["y"]=-1664,
    ["endY"]=-1888,
-   ["endX"]=-992,
    ["objectType"]="Laser",
+   ["endX"]=-992,
 },
 -- Table: {216}
 {
@@ -1438,8 +1438,8 @@ return {
    ["x"]=-1216,
    ["y"]=-2592,
    ["endY"]=-2592,
-   ["objectType"]="Walker",
    ["endX"]=-1056,
+   ["objectType"]="Walker",
 },
 -- Table: {218}
 {

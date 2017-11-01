@@ -17,7 +17,7 @@ do
   _class_0 = setmetatable({
     __init = function(self, x, y)
       self.x, self.y = x, y
-      _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 50, true, .2, 3000, 6, 8, 15)
+      _class_0.__parent.__init(self, self.x, self.y, 1000, math.pi / 75, true, .2, 4500, 6, 8, 15)
       self.fireControl = "semi"
     end,
     __base = _base_0,

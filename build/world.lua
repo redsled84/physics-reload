@@ -17,23 +17,11 @@ end
 local function endContact(a, b, coll)
   local obj1, obj2 = a:getUserData(), b:getUserData()
   local x, y = coll:getNormal()
-
   local player = getObject(obj1, obj2, "Player")
-  local walker = getObject(obj1, obj2, "Walker")
   if player then
     player.onGround = false
-    if walker then
-      local signX
-      if walker.body:getY() < player.body:getY() and y > 0 then
-        player:damageByImpulse(-walker.dir*x, -y, walker.hitAttackPower)
-        walker.body:applyLinearImpulse(walker.dir*x*100, y)
-      else
-        player:damageByImpulse(walker.dir*x, y, walker.hitAttackPower)
-        walker.body:applyLinearImpulse(-walker.dir*x*100, y)
-      end
-      playSound(hurtSound)
-    end
   end
+
 end
 
 local function preSolve(a, b, coll)
@@ -91,7 +79,7 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
       end
 
       if floater then
-        player:damageByImpulse(-x, -y, floater.attackPower)
+        player:damageByImpulse(-x*10, -y*4, floater.attackPower)
         playSound(hurtSound)
       end
 
@@ -105,6 +93,12 @@ local function postSolve(a, b, coll, normalimpulse, tangentimpulse)
         else
           player.body:applyLinearImpulse(x, y * bounce.bouncePower * player.body:getMass() / 1.5)
         end
+      end
+
+      if walker then
+        local signX
+        player:damageByImpulse(walker.dir*x, y, walker.hitAttackPower)
+        playSound(hurtSound)
       end
     end
   end
